@@ -1,7 +1,18 @@
 /* CSS */
+:root {
+    --color-link: rgb(92, 0, 252);
+    --color-blue: blue;
+    --color-white: white;
+    --color-black: black;
+    --color-hr: rgb(97, 97, 97);
+    --color-bg-black-grey: rgb(31, 31, 31);
+    --color-hover: rgb(54, 54, 54);
+    --color-border-video: rgba(60, 60, 60, 0.5);
+}
+
 body {
-    background-color: black;
-    color: white;
+    background-color: var(--color-black);
+    color: var(--color-white);
 }
 
 li {
@@ -9,24 +20,24 @@ li {
 }
 
 a {
-    color: white;
+    color: var(--color-white);
 }
 
 a:hover {
-    color: rgb(255, 255, 255);
+    color: var(--color-white);
 }
 
 hr {
-    background-color: rgb(97, 97, 97);
+    background-color: var(--color-hr);
 }
 
 .dark-mod {
     background-color: black;
-    color: white;
+    color: var(--color-white);
 }
 
 .light-mode {
-    background-color: white;
+    background-color: var(--color-white);
     color: black;
 }
 
@@ -40,7 +51,7 @@ hr {
 }
 
 .card {
-    background-color: rgb(31, 31, 31);
+    background-color: var(--color-bg-black-grey);
 }
 
 .div-container {
@@ -65,11 +76,11 @@ hr {
 }
 
 .video-trailer {
-    border: solid rgb(60, 60, 60, 0.5) 2px;
+    border: solid rgba(60, 60, 60, 0.5) 2px;
     border-radius: 4px
 }
 
-.right-trailer-center{
+.right-trailer-center {
     width: 100%;
     height: 49.5%;
     display: flex;
@@ -87,7 +98,8 @@ hr {
     align-items: center;
 }
 
-.right-trailer-center div i, p {
+.right-trailer-center div i,
+.right-trailer-center div p {
     font-size: 20px;
     color: rgb(239, 239, 239);
 }
@@ -129,11 +141,13 @@ hr {
 }
 
 .did-you-know-content-element {
-    border: 1px solid rgb(97, 97, 97);;
+    border: 1px solid var(--color-hr);
+    ;
     border-radius: 5px;
 }
 
-.did-you-know-content-element-name, .did-you-know-content-element-content {
+.did-you-know-content-element-name,
+.did-you-know-content-element-content {
     font-size: 16px;
 }
 
@@ -142,11 +156,13 @@ hr {
 }
 
 .user-reviews-content-element {
-    border: 1px solid rgb(97, 97, 97);;
+    border: 1px solid var(--color-hr);
     border-radius: 5px;
 }
 
-.user-reviews-content-element-name, .user-reviews-content-element-content, .user-reviews-content-element-rate {
+.user-reviews-content-element-name,
+.user-reviews-content-element-content,
+.user-reviews-content-element-rate {
     font-size: 16px;
 }
 
@@ -179,7 +195,8 @@ hr {
 }
 
 
-.text-inline p, a {
+.text-inline p,
+a {
     display: inline-block;
     font-size: 16px;
 }
@@ -190,10 +207,11 @@ hr {
 }
 
 .text-inline a {
-    color: rgb(92, 0, 252);
+    color: var(--color-link);
 }
 
-.text-inline-link p, a {
+.text-inline-link p,
+a {
     display: inline-block;
     font-size: 16px;
 }
@@ -203,13 +221,14 @@ hr {
     margin-right: 5px;
 }
 
-.text-inline-link a, .text-inline-link i {
-    color: rgb(92, 0, 252);
+.text-inline-link a,
+.text-inline-link i {
+    color: var(--color-link);
 }
 
 .intro-stars i {
     font-size: 16px;
-    color: rgb(92, 0, 252);
+    color: var(--color-link);
 }
 
 .link-stars {
@@ -219,6 +238,7 @@ hr {
 
 .intro-stars:hover {
     cursor: pointer;
+
     .link-stars {
         background-color: rgb(79, 79, 79);
     }
@@ -248,6 +268,45 @@ hr {
 
 .box-office-content ul div div li p {
     font-weight: 400;
+    font-size: 16px;
+}
+
+.bg-cast-and-crew,
+.bg-user-reviews {
+    background-color: rgb(21, 21, 21);
+}
+
+.cast-and-crew-name a p {
+    padding-left: 20px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.cast-and-crew-name a {
+    color: var(--color-link);
+}
+
+
+.cast-and-crew-role p {
+    padding-left: 100px;
+    font-size: 16px;
+    margin: 0px;
+}
+
+.review-element {
+    border: 1px solid var(--color-hr);
+    border-radius: 5px;
+}
+
+.title-review a {
+    color: var(--color-link);
+}
+
+.title-review p {
+    font-size: 14px;
+}
+
+.review-content p {
     font-size: 16px;
 }
 
@@ -348,7 +407,7 @@ hr {
 
 .f-fb,
 .f-ins {
-    color: white;
+    color: var(--color-white);
 }
 
 .topic {
@@ -360,14 +419,14 @@ hr {
 }
 
 .topic:hover {
-    color: blue;
+    color: var(--color-blue);
 }
 
 .list-group-item:hover {
     cursor: pointer;
 
     .fa-play-circle-o {
-        color: blue;
+        color: var(--color-blue);
     }
 }
 
@@ -375,4 +434,51 @@ hr {
     display: flex;
     align-items: center;
     /* Căn giữa theo chiều dọc */
+}
+
+/*  */
+/*  */
+/*  */
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.popup-content {
+    background-color: rgb(226, 226, 226);
+    width: 80%;
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.submit-button {
+    margin-top: 30px;
+    text-align: right;
+    display: inline;
+}
+
+.cancel-button {
+    display: inline;
+    margin-top: 30px;
+}
+
+#review-form table tr td {
+    padding-left: 20px;
 }

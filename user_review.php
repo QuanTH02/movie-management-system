@@ -31,43 +31,16 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
-        <a class="navbar-brand ml-5" href="#">QuanFilm</a>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="search-box form-inline ml-auto">
-                <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search"
-                    style="width: 500px;">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-
-            <ul class="navbar-nav ml-auto mr-4">
-                <li class="nav-item">
-                    <a class="nav-link mode-page" href="#">Mode</a>
-                </li>
-
-                <li class="nav-item dropdown ml-4">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cog"></i> Setting
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Log in</a>
-                        <!-- <a class="dropdown-item" href="#">Đăng Xuất</a> -->
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-
-    </nav>
+    <?php
+    include 'nav.php';
+    ?>
 
     <div class="div-container" style="width: 60%;">
         <div class="bg-user-reviews">
             <div class="user-reviews-intro p-3">
                 <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-5" style="width: 72px; height: 102px;">
                 <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                    <a href="#" style="color: rgb(92, 0, 252);">
+                    <a href="detail.php" style="color: rgb(92, 0, 252);">
                         <h5>Ve binh giai ngan ha</h5>
                     </a>
                     <h3>User Reviews</h3>
@@ -355,7 +328,7 @@
                             <h2>Write a Review</h2>
                             <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-1 justify-content-center"
                                 style="width: 40px; height: 60px;">
-                            <div class="d-inline-block ml-3 mb-4" >
+                            <div class="d-inline-block ml-3 mb-4">
                                 <h5>Ve binh giai ngan ha</h5>
                             </div>
                             <form id="review-form" style="width: 100%;">
@@ -401,56 +374,10 @@
     </div>
 
 
-
-
-
-
-
-
-    <br><br><br><br><br><br><br><br><br>
-    <h1 class="text-center">The end</h1>
     <!-- Footer -->
-    <footer class="flex-bottom" style="background-color: #343a40;">
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    Tran Hong Quan
-                    <br>
-                    0123455678
-                </div>
-                <div class="col-md-6 text-center">
-                    <a href="#" class="f-fb">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </a>
-                    <br>
-                    <a href="#" class="f-ins">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-    </footer>
-
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <button class="btn btn-info btn-block mb-2">View Information</button>
-                    <button class="btn btn-danger btn-block">Log Out</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+    include 'footer.php';
+    ?>
 
 </body>
 
