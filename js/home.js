@@ -62,4 +62,44 @@ $(document).ready(function () {
             mode_page.addClass("light-mode");
         }
     });
+
+    // Lặp qua tất cả các review và áp dụng các sự kiện click cho chúng
+    $('.review').each(function () {
+        var $review = $(this);
+        var $thumbsUpIcon = $review.find('.fa-thumbs-up');
+        var $thumbsDownIcon = $review.find('.fa-thumbs-down');
+        var $likeCount = $review.find('.fa-thumbs-up .like-count');
+        var $dislikeCount = $review.find('.fa-thumbs-down .dislike-count');
+
+        $thumbsUpIcon.on('click', function () {
+            if ($thumbsUpIcon.hasClass('fa-regular')) {
+                $thumbsUpIcon.removeClass('fa-regular').addClass('fa-solid');
+                $likeCount.text(parseInt($likeCount.text()) + 1);
+
+                if ($thumbsDownIcon.hasClass('fa-solid')) {
+                    $thumbsDownIcon.removeClass('fa-solid').addClass('fa-regular');
+                    $dislikeCount.text(parseInt($dislikeCount.text()) - 1);
+                }
+            } else {
+                $thumbsUpIcon.removeClass('fa-solid').addClass('fa-regular');
+                $likeCount.text(parseInt($likeCount.text()) - 1);
+            }
+        });
+
+        $thumbsDownIcon.on('click', function () {
+            if ($thumbsDownIcon.hasClass('fa-regular')) {
+                $thumbsDownIcon.removeClass('fa-regular').addClass('fa-solid');
+                $dislikeCount.text(parseInt($dislikeCount.text()) + 1);
+
+                if ($thumbsUpIcon.hasClass('fa-solid')) {
+                    $thumbsUpIcon.removeClass('fa-solid').addClass('fa-regular');
+                    $likeCount.text(parseInt($likeCount.text()) - 1);
+                }
+            } else {
+                $thumbsDownIcon.removeClass('fa-solid').addClass('fa-regular');
+                $dislikeCount.text(parseInt($dislikeCount.text()) - 1);
+            }
+        });
+    });
+
 });

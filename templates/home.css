@@ -4,6 +4,22 @@ body {
     color: white;
 }
 
+li {
+    display: inline-block;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: rgb(255, 255, 255);
+}
+
+hr {
+    background-color: rgb(97, 97, 97);
+}
+
 .dark-mod {
     background-color: black;
     color: white;
@@ -14,7 +30,8 @@ body {
     color: black;
 }
 
-.list-trailer-play, .trailer-play {
+.list-trailer-play,
+.trailer-play {
     background-color: black;
 }
 
@@ -26,7 +43,213 @@ body {
     background-color: rgb(31, 31, 31);
 }
 
+.div-container {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+.div-imdb-rating {
+    position: absolute;
+    right: 20px;
+    width: 20%;
+    padding-right: 5px;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+
+.div-imdb-rating:hover {
+    cursor: pointer;
+    text-decoration: none;
+    background-color: rgb(54, 54, 54);
+}
+
+.video-trailer {
+    border: solid rgb(60, 60, 60, 0.5) 2px;
+    border-radius: 4px
+}
+
+.right-trailer-center{
+    width: 100%;
+    height: 49.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(72, 72, 72, 1));
+    margin-bottom: 2%;
+}
+
+.right-trailer-center div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-trailer-center div i, p {
+    font-size: 20px;
+    color: rgb(239, 239, 239);
+}
+
+.right-trailer-center:hover {
+    cursor: pointer;
+}
+
+.genres ul li {
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid rgb(211, 211, 211);
+    border-radius: 25px;
+    padding: 4px 10px 4px 10px;
+}
+
+.genres ul li a:hover {
+    text-decoration: none;
+}
+
+.genres ul li:hover {
+    background-color: rgb(61, 61, 61);
+}
+
+.intro-user-review {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro-user-review p {
+    display: inline-block;
+}
+
+.intro-user-review-icon {
+    background-color: rgb(91, 106, 170);
+    padding: 0px 5px;
+    margin-right: 5px;
+}
+
+.did-you-know-content-element {
+    border: 1px solid rgb(97, 97, 97);;
+    border-radius: 5px;
+}
+
+.did-you-know-content-element-name, .did-you-know-content-element-content {
+    font-size: 16px;
+}
+
+.did-you-know-content-element-name {
+    font-weight: 700;
+}
+
+.user-reviews-content-element {
+    border: 1px solid rgb(97, 97, 97);;
+    border-radius: 5px;
+}
+
+.user-reviews-content-element-name, .user-reviews-content-element-content, .user-reviews-content-element-rate {
+    font-size: 16px;
+}
+
+.user-reviews-content-element-name {
+    font-weight: 700;
+}
+
+.user-reviews-content-element a:hover {
+    text-decoration: none;
+
+}
+
+.user-reviews-content-element i:hover {
+    cursor: pointer;
+}
+
+.link-to-review {
+    border-radius: 10px;
+}
+
+.link-to-review:hover {
+    background-color: rgb(37, 37, 37);
+    text-decoration: none;
+}
+
+.content-right {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(21, 21, 21);
+}
+
+
+.text-inline p, a {
+    display: inline-block;
+    font-size: 16px;
+}
+
+.text-inline p {
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+.text-inline a {
+    color: rgb(92, 0, 252);
+}
+
+.text-inline-link p, a {
+    display: inline-block;
+    font-size: 16px;
+}
+
+.text-inline-link p {
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+.text-inline-link a, .text-inline-link i {
+    color: rgb(92, 0, 252);
+}
+
+.intro-stars i {
+    font-size: 16px;
+    color: rgb(92, 0, 252);
+}
+
+.link-stars {
+    border-radius: 2px;
+    padding: 2px;
+}
+
+.intro-stars:hover {
+    cursor: pointer;
+    .link-stars {
+        background-color: rgb(79, 79, 79);
+    }
+}
+
+.bg-film {
+    background: linear-gradient(to right, rgb(29, 29, 29), rgb(42, 42, 42));
+}
+
+.content-awards {
+    padding: 5px;
+    border: 1px rgb(252, 252, 146) solid;
+    border-radius: 5px;
+}
+
+.top-cast ul div li {
+    display: block;
+    border-left: 1px solid rgb(117, 117, 247);
+    padding-left: 10px;
+    margin-left: 4px;
+    margin-bottom: 30px;
+}
+
+.top-cast ul div li p {
+    font-size: 14px;
+}
+
+.box-office-content ul div div li p {
+    font-weight: 400;
+    font-size: 16px;
+}
 
 .transparent-animate {
     background-color: transparent !important;
