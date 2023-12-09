@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="templates/home.css">
 
 
@@ -21,16 +22,15 @@
 
         /* Fix for the container */
         body {
-            padding-top: 56px;
+            padding-top: 65px;
             /* Adjust based on your navbar height */
         }
     </style>
 </head>
 
 <body>
-
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
         <a class="navbar-brand ml-5" href="#">QuanFilm</a>
 
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -42,7 +42,7 @@
 
             <ul class="navbar-nav ml-auto mr-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Mode</a>
+                    <a class="nav-link mode-page" href="#">Mode</a>
                 </li>
 
                 <li class="nav-item dropdown ml-4">
@@ -51,8 +51,8 @@
                         <i class="fas fa-cog"></i> Setting
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Xem Thông Tin</a>
-                        <a class="dropdown-item" href="#">Đăng Xuất</a>
+                        <a class="dropdown-item" href="#">Log in</a>
+                        <!-- <a class="dropdown-item" href="#">Đăng Xuất</a> -->
                     </div>
                 </li>
 
@@ -61,194 +61,209 @@
 
     </nav>
 
-    <!-- Container -->
-    <div class="mt-4" style="width: 85%; margin-left: auto; margin-right: auto;">
-        <!-- First div -->
-        <div class="row">
-            <div class="col-md-9">
-                <video controls width="100%">
-                    <source
-                        src="https://imdb-video.media-imdb.com/vi1964427033/1434659607842-pgv4ql-1701124208277.mp4?Expires=1701877503&Signature=QGwsSnk2m3o152buAYFCybpbNOp81jH~S7TaWGCtVI9ijKInA4D~gFCgZNogYVIE0afT6R4YR6xWrUNt2oMz7z6a2aWCi9U7O8WSbMwjUe7y0tM0LRcayfZLreV9mVaE3eJica34aaRAButHT48tzL6E4rZuf2Jo5qqhwkyl6~7YQr-yOScbjS0KbCjvokGqxH83QT5rBoRISsyG4giIZjxRYgKc6rupHsPvuT~BCHYHOyl2i3F-JqHUtKkqWl0nWGWfzSu1~9KsA2SxQHRdET4RFJja8e6sw~zPacGZIs2GvhdzoffEOyjzYGZYniHgGbXYb4KK6jZ6D0y84Lovtw__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
-                        type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div class="col-md-3">
-                <ul class="list-group">
-                    <li class="list-group-item">Movi2222222222222222222222222222222222222222222222222e222222222221</li>
-                    <li class="list-group-item">Movie 2</li>
-                    <li class="list-group-item">Movie 3</li>
-                    <li class="list-group-item">Movie 4</li>
-                    <li class="list-group-item" style="display: none;">Movie 5</li>
-                    <button class="btn btn-primary mt-2" onclick="toggleMovie()">Toggle Movie</button>
-                </ul>
+    <!-- Film -->
+    <div>
+        <div class="bg-film" style="margin-top: 0px;">
+            <div class="div-container pt-2 pb-3">
+                <div class="menu-float" style="width: 100%; text-align: right;">
+                    <ul>
+                        <li><a href="">
+                                <h6>Cast & Crew</h6>
+                            </a> </li>
+                        <i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>
+                        <li><a href="">
+                                <h6>User review</h6>
+                            </a></li>
+                    </ul>
+                </div>
+
+                <!-- Description -->
+                <div class="row">
+                    <div class="col-4">
+                        <h1>Đế chế Napoleon</h1>
+                        <div class="float-left">
+                            <ul class="pl-0">
+                                <li>2023</li>
+                                <i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>
+                                <li>T18</li>
+                                <i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>
+                                <li>2h 38m</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-4"></div>
+                    <div class="col-4" style="text-align: right;">
+                        <h6 class="mb-0 pb-0">IMDb RATING</h6>
+                        <a href="#" class="imdb-rating">
+                            <div class="mr-0 pr-0 div-imdb-rating"
+                                style="display: flex; align-items: center; justify-content: flex-end;">
+                                <i class="fas fa-star pr-2"
+                                    style="color: yellow; display: inline-block; font-size: 24px;"></i>
+                                <div style="display: inline-block;">
+                                    <p class="m-0">6.6/10</p>
+                                    <p class="m-0">51K</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image and trailer -->
+                <div class="row">
+                    <div class="col-3 pr-0">
+                        <img src="img/vebinh1.jpg" alt="Image" style="width: 100%; height: 100%;">
+                    </div>
+                    <div class="col-7 pl-1 pr-0 video-trailer">
+                        <video controls width="100%">
+                            <source
+                                src="https://imdb-video.media-imdb.com/vi3694053145/1434659607842-pgv4ql-1700499564707.mp4?Expires=1702093640&Signature=CzvjsZeifKy0D3Ew~YPgYBsDAueF04Z~Gt7pHBL-CWSpqpqu6CRG2wgKJwHlsgN8~cHUBTQNIi-bbrurB78FfGFe4bls8tAdsaLgVanEMzPByK3k-lEcrnBbgdR5Xw-nbjh5neWfwm2uqWUwFDRgzDQ9S-jvmqek2Nk65NhpKm-3oMZL4KMNg~REAMUWJRUv5gAgC4lSZGmOJXhvmGF9uV6qLuWyepljh9m7Vt8trhYvAT1ATSvTc-fnCPCCQfyJ2y1Jguih5D6BsEeQrtrcZXIRA8IpseRkJtj2PhQLPc~jad85j3jdRKSZqILHltXHKUWLC4tgzUmfvL6fs1~XDw__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                                type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="col-2 pl-1">
+                        <div class="right-trailer-center">
+                            <div>
+                                <i class="fa-solid fa-play mb-2"></i>
+                                <p class="mb-0">Video</p>
+                            </div>
+                        </div>
+
+                        <div class="right-trailer-center">
+                            <div>
+                                <i class="fa-solid fa-image mb-2"></i>
+                                <p class="mb-0">Image</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intro -->
+                <div class="mt-3 div-intro">
+                    <div class="row">
+                        <div class="col-8">
+                            <!-- Genres -->
+                            <div class="genres">
+                                <ul class="pl-0">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Adventure</a></li>
+                                    <li><a href="#">Biography</a></li>
+                                </ul>
+                            </div>
+                            <!-- Des -->
+                            <div>
+                                <p class="intro" style="font-size: 18px;">An epic that details the checkered rise and
+                                    fall
+                                    of French Emperor Napoleon
+                                    Bonaparte and his relentless journey to power through the prism of his addictive,
+                                    volatile relationship with his wife, Josephine.</p>
+                            </div>
+
+                            <hr>
+                            <div class="director-writer-star">
+                                <!-- Director -->
+                                <div>
+                                    <p>Director</p>
+                                    <a href="#">Ridley Scott</a>
+                                </div>
+                                <!-- Writer -->
+                                <hr class="mt-0">
+                                <div>
+                                    <p>Writer</p>
+                                    <a href="#">David Scarpa</a>
+                                </div>
+                                <!-- Stars -->
+                                <hr class="mt-0">
+                                <div class="intro-stars">
+                                    <p class="mb-0">Stars</p>
+                                    <a href="#">John</a>
+                                    <i class="fas fa-circle pl-1 pr-1"
+                                        style="font-size: 2px; vertical-align: middle;"></i>
+                                    <a href="#">David</a>
+                                    <i class="fas fa-circle pl-1 pr-1"
+                                        style="font-size: 2px; vertical-align: middle;"></i>
+                                    <a href="#">Tahar</a>
+
+                                    <div class="link-stars" style="display: inline; float: right; margin-right: 12px;">
+                                        <a href="#"><i class="fa-solid fa-chevron-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4 intro-user-review">
+                            <p class="intro-user-review-icon">20</p>
+                            <p>User review</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
-        <!-- Second div -->
-
-        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row mt-4">
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh1.jpg" class="card-img-top" alt="Movie Image">
+        <!-- Background Content -->
+        <div class="bg-content">
+            <div class="div-container">
+                <!-- Content -->
+                <div class="content pt-4">
+                    <div class="row">
+                        <!-- Content left -->
+                        <div class="col-8">
+                            <!-- Awards-->
+                            <a href="#">
+                                <div class="content-awards pb-0 pt-0">
+                                    <p class="mb-0 pt-2 pb-2 pl-2 d-inline-block">Awards</p>
+                                    <div class="link-stars pb-0 pr-2"
+                                        style="display: inline; float: right; padding-top: 10px;">
+                                        <a href="#"><i class="fa-solid fa-chevron-right"></i></a>
+                                    </div>
                                 </div>
+                            </a>
 
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
+                            <!-- Top cast -->
+                            <!-- Most popular -->
+                            <div>
+                                <a href="#">
+                                    <h3 class="topic mb-0 mt-4">| Top cast <i class="fas fa-chevron-right"></i></h3>
+                                </a>
+
+                                <ul class="pl-0 mt-3">
+                                    <li>Braum</li>
+                                    <li>Xinzhao</li>
+                                    <li>Arhi</li>
+                                    <li>Miss</li>
+                                    <li>Yone</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh2.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
+                        <!-- Content right -->
+                        <div class="col-4">
 
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
                         </div>
-
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh3.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh4.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row mt-4">
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh1.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh2.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh3.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Repeat the following block for each movie -->
-                        <div class="col-md-3 mb-4 mr-0">
-                            <div class="card">
-                                <div class="img-container">
-                                    <img src="img/vebinh4.jpg" class="card-img-top" alt="Movie Image">
-                                </div>
-
-                                <div class="card-body d-flex flex-column align-items-center">
-                                    <p class="card-text ml-auto mb-2"><i class="fas fa-star" style="color: yellow;"></i>
-                                        4.9</p>
-                                    <h5 class="card-title mt-0">Ve Binh Giai Ngan Ha</h5>
-                                    <button class="btn btn-primary">Add to List</button>
-                                    <button class="btn btn-success mt-2">Watch Movie</button>
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
                 </div>
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <h1 class="text-center">The end</h1>
     <!-- Footer -->
-    <footer class="flex-bottom" style="background-color: rgb(157, 163, 174);">
+    <footer class="flex-bottom" style="background-color: #343a40;">
+        <br>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center">
@@ -267,6 +282,7 @@
                 </div>
             </div>
         </div>
+        <br>
     </footer>
 
     <!-- Settings Modal -->
@@ -287,14 +303,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function toggleMovie() {
-            // Toggle the visibility of the fifth movie
-            const fifthMovie = document.querySelector('.list-group-item:last-child');
-            fifthMovie.style.display = fifthMovie.style.display === 'none' ? 'list-item' : 'none';
-        }
-    </script>
 
 </body>
 
