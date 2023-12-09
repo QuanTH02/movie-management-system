@@ -31,36 +31,9 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
-        <a class="navbar-brand ml-5" href="#">QuanFilm</a>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="search-box form-inline ml-auto">
-                <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search"
-                    style="width: 500px;">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-
-            <ul class="navbar-nav ml-auto mr-4">
-                <li class="nav-item">
-                    <a class="nav-link mode-page" href="#">Mode</a>
-                </li>
-
-                <li class="nav-item dropdown ml-4">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cog"></i> Setting
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Log in</a>
-                        <!-- <a class="dropdown-item" href="#">Đăng Xuất</a> -->
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-
-    </nav>
+    <?php
+    include 'nav.php';
+    ?>
 
     <!-- Film -->
     <div>
@@ -68,11 +41,11 @@
             <div class="div-container pt-2 pb-3">
                 <div class="menu-float" style="width: 100%; text-align: right;">
                     <ul>
-                        <li><a href="">
+                        <li><a href="cast_and_crew.php">
                                 <h6>Cast & Crew</h6>
                             </a> </li>
                         <i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>
-                        <li><a href="">
+                        <li><a href="user_review.php">
                                 <h6>User review</h6>
                             </a></li>
                     </ul>
@@ -289,13 +262,13 @@
                                         <p>Writer</p>
                                         <a href="#">David Scarpa</a>
                                     </div>
-                                    <!-- Stars -->
+                                    <!-- All cast and crew -->
                                     <hr class="mt-0">
                                     <div class="intro-stars text-inline-link">
                                         <p class="mb-0">All cast & crew</p>
                                         <div class="link-stars"
                                             style="display: inline; float: right; margin-right: 12px;">
-                                            <a href="#"><i class="fa-solid fa-chevron-right"></i></a>
+                                            <a href="cast_and_crew.php"><i class="fa-solid fa-chevron-right"></i></a>
                                         </div>
                                     </div>
                                     <hr class="">
@@ -397,7 +370,7 @@
                                     <h3 class="topic mb-0 mt-2">| User reviews <i class="fas fa-chevron-right"></i></h3>
                                 </a>
 
-                                <a href="#" class="mt-2 link-to-review" style="float: right; align-items: center;">
+                                <a href="user_review.php" class="mt-2 link-to-review" style="float: right; align-items: center;">
                                     <p class="mb-0 p-1" style="color: rgb(92, 0, 252);;"><i class="fa-solid fa-plus"
                                             style="color: rgb(92, 0, 252);;"></i> Review</p>
                                 </a>
@@ -551,7 +524,7 @@
                                     <hr class="mt-0">
                                     <!-- Language -->
                                     <div class="text-inline-link">
-                                        <p >Language</p>
+                                        <p>Language</p>
                                         <p style="font-weight: 400;">English</p>
                                         <i class="fas fa-circle pl-1 pr-1"
                                             style="font-size: 2px; vertical-align: middle; color: rgb(239, 239, 239);"></i>
@@ -640,62 +613,10 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <br><br><br><br><br><br><br><br><br>
-    <h1 class="text-center">The end</h1>
     <!-- Footer -->
-    <footer class="flex-bottom" style="background-color: #343a40;">
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    Tran Hong Quan
-                    <br>
-                    0123455678
-                </div>
-                <div class="col-md-6 text-center">
-                    <a href="#" class="f-fb">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </a>
-                    <br>
-                    <a href="#" class="f-ins">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-    </footer>
-
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <button class="btn btn-info btn-block mb-2">View Information</button>
-                    <button class="btn btn-danger btn-block">Log Out</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+    include 'footer.php';
+    ?>
 
 </body>
 
