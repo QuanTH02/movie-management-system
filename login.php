@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Movie Website</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="templates/home.css">
+    <link rel="stylesheet" href="templates/login.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/login.js"></script>
+    <style>
+        /* Add your custom styles here */
+
+        /* Fix for the container */
+        body {
+            padding-top: 56px;
+            /* Adjust based on your navbar height */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <?php
+    include 'nav.php';
+    ?>
+
+    <div class="bg-login">
+        <br>
+        <br>
+        <div class="cont">
+            <div class="form sign-in">
+                <h2 style="color: black;">Welcome</h2>
+                <br>
+                <label>
+                    <span>Account</span>
+                    <input class="input-login" type="email" placeholder="Enter your account" />
+                </label>
+                <label>
+                    <span>Password</span>
+                    <div style="width: 100%;">
+                        <input class="input-login" type="password" placeholder="Enter your password" id="passwordField1"/>
+                        <i class="fa fa-eye-slash" id="togglePassword1"
+                            style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
+                    </div>
+                </label>
+
+
+
+                <p class="forgot-pass mt-2" style="font-style: italic; margin-top: 0px;"><a href="#"
+                        style="color: black; font-size: 14px;">Forgot password?</a></p>
+                <button type="button" class="submit">Sign In</button>
+
+            </div>
+            <div class="sub-cont">
+                <div class="img">
+                    <div class="img__text m--up">
+
+                        <h3>Don't have an account? Please Sign up!<h3>
+                    </div>
+                    <div class="img__text m--in">
+
+                        <h3>If you already has an account, just sign in.<h3>
+                    </div>
+                    <div class="img__btn">
+                        <span class="m--up">Sign Up</span>
+                        <span class="m--in">Sign In</span>
+                    </div>
+                </div>
+                <div class="form sign-up">
+                    <h2 style="color: black;">Create your Account</h2>
+                    <label>
+                        <span>Account</span>
+                        <input class="input-login" type="text" placeholder="Account" />
+                    </label>
+                    <label>
+                        <span>Name</span>
+                        <input class="input-login" type="text" placeholder="Enter your name" />
+                    </label>
+                    <label>
+                        <span>Email</span>
+                        <input class="input-login" type="email" placeholder="Enter your email" />
+                    </label>
+                    <label>
+                        <span>Password</span>
+                        <div style="width: 100%;">
+                            <input class="input-login" type="password" placeholder="Password" id="passwordField2"/>
+                            <i class="fa fa-eye-slash" id="togglePassword2"
+                                style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
+                        </div>
+                    </label>
+                    <label>
+                        <span>Confirm password</span>
+                        <div style="width: 100%;">
+                            <input class="input-login" type="password" placeholder="Confirm password" id="confirmPasswordField"/>
+                            <i class="fa fa-eye-slash" id="toggleconfirmPassword"
+                                style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
+                        </div>
+                    </label>
+                    <button type="button" class="submit">Sign Up</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <?php
+        include 'footer.php';
+        ?>
+    </div>
+
+
+
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function () {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+    </script>
+</body>
+
+</html>

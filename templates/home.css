@@ -254,7 +254,8 @@ a {
     border-radius: 5px;
 }
 
-.top-cast ul div li {
+.top-cast ul div li,
+.awards-element {
     display: block;
     border-left: 1px solid rgb(117, 117, 247);
     padding-left: 10px;
@@ -272,7 +273,9 @@ a {
 }
 
 .bg-cast-and-crew,
-.bg-user-reviews {
+.bg-user-reviews,
+.bg-awards,
+.bg-profile {
     background-color: rgb(21, 21, 21);
 }
 
@@ -481,4 +484,82 @@ a {
 
 #review-form table tr td {
     padding-left: 20px;
+}
+
+
+.profile div div ul li {
+    display: block;
+    padding-top: 0px;
+}
+
+.profile div div ul li button{
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    padding: 5px;
+    color: white;
+}
+
+.profile div div ul li button:hover{
+   
+    background-color: rgba(40, 39, 39, 1);
+    
+}
+
+.profile-content div div label span,  .profile-content div div label input{
+    display: block;
+}
+
+.profile-content div div label input{
+    margin-top: 5px;
+    padding: 2px 10px 
+}
+
+.img-profile img {
+    width: 185px;
+    height: 185px;
+    border: 2px white solid;
+    border-radius: 50%;
+    display: block;
+}
+
+.list-film-like div a li ul {
+    padding-left: 0px;
+}
+
+.list-film-like div a li ul li {
+    display: inline;
+}
+
+.list-film-like div a {
+    padding: 10px;
+    border-radius: 5px;
+    display: flex; /* Sử dụng flexbox để sắp xếp các phần tử con */
+    align-items: center; /* Căn nội dung theo chiều dọc */
+    
+}
+
+.list-film-like div a img{
+    width: 20%;
+    height: auto;
+}
+
+.list-film-like div a div{
+    flex-grow: 1; /* Để nội dung tự động mở rộng và nằm cạnh hình ảnh */
+    padding-left: 5px;
+}
+
+.list-film-like div a:hover {
+    text-decoration: none;
+    background-color: rgb(42, 42, 42);
+}
+
+.log-out {
+    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+}
+
+.log-out:hover {
+    background-color: rgb(72, 72, 72);
 }
