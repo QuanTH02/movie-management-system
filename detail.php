@@ -54,7 +54,7 @@
                 <!-- Description -->
                 <div class="row">
                     <div class="col-4">
-                        <h1>Đế chế Napoleon</h1>
+                        <h1>Vệ binh giải ngân hà</h1>
                         <div class="float-left">
                             <ul class="pl-0">
                                 <li>2023</li>
@@ -184,12 +184,12 @@
                         <!-- Content left -->
                         <div class="col-8">
                             <!-- Awards-->
-                            <a href="#">
+                            <a href="awards.php">
                                 <div class="content-awards pb-0 pt-0">
                                     <p class="mb-0 pt-2 pb-2 pl-2 d-inline-block">Awards</p>
                                     <div class="link-stars pb-0 pr-2"
-                                        style="display: inline; float: right; padding-top: 10px;">
-                                        <a href="#"><i class="fa-solid fa-chevron-right"></i></a>
+                                        style="display: inline; float: right; padding-top: 8px;">
+                                        <a href="awards.php"><i class="fa-solid fa-chevron-right"></i></a>
                                     </div>
                                 </div>
                             </a>
@@ -264,13 +264,13 @@
                                     </div>
                                     <!-- All cast and crew -->
                                     <hr class="mt-0">
-                                    <div class="intro-stars text-inline-link">
+                                    <a href="cast_and_crew.php" class="intro-stars text-inline-link">
                                         <p class="mb-0">All cast & crew</p>
                                         <div class="link-stars"
                                             style="display: inline; float: right; margin-right: 12px;">
                                             <a href="cast_and_crew.php"><i class="fa-solid fa-chevron-right"></i></a>
                                         </div>
-                                    </div>
+                                    </a>
                                     <hr class="">
                                 </div>
                             </div>
@@ -370,7 +370,8 @@
                                     <h3 class="topic mb-0 mt-2">| User reviews <i class="fas fa-chevron-right"></i></h3>
                                 </a>
 
-                                <a href="user_review.php" class="mt-2 link-to-review" style="float: right; align-items: center;">
+                                <a href="user_review.php" class="mt-2 link-to-review"
+                                    style="float: right; align-items: center;">
                                     <p class="mb-0 p-1" style="color: rgb(92, 0, 252);;"><i class="fa-solid fa-plus"
                                             style="color: rgb(92, 0, 252);;"></i> Review</p>
                                 </a>

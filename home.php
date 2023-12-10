@@ -50,7 +50,7 @@
             <div class="carousel-item active">
               <video controls width="100%">
                 <source
-                  src="https://imdb-video.media-imdb.com/vi3694053145/1434659607842-pgv4ql-1700499564707.mp4?Expires=1702093640&Signature=CzvjsZeifKy0D3Ew~YPgYBsDAueF04Z~Gt7pHBL-CWSpqpqu6CRG2wgKJwHlsgN8~cHUBTQNIi-bbrurB78FfGFe4bls8tAdsaLgVanEMzPByK3k-lEcrnBbgdR5Xw-nbjh5neWfwm2uqWUwFDRgzDQ9S-jvmqek2Nk65NhpKm-3oMZL4KMNg~REAMUWJRUv5gAgC4lSZGmOJXhvmGF9uV6qLuWyepljh9m7Vt8trhYvAT1ATSvTc-fnCPCCQfyJ2y1Jguih5D6BsEeQrtrcZXIRA8IpseRkJtj2PhQLPc~jad85j3jdRKSZqILHltXHKUWLC4tgzUmfvL6fs1~XDw__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                  src="https://imdb-video.media-imdb.com/vi2046936089/1434659607842-pgv4ql-1680706385480.mp4?Expires=1702237252&Signature=nB3k4f2J6Qhha0-0ITJ31nPHzmWtEMGTnkaQhtTvo7Orx3d38wC0fvM~eYe9b1~0qJc2xggxGut1IgPANOZS8OKiWi5QBoQQ6ZpHzwtjcUqXTamHixM7wFomhcX-tm9cLt3ei~WoiOTaqw9QAwwFFxflW3DY5CWI2mbFgDoDpnMfF89Ebj7UN8jK3SBqNC62woXDvzdZR5QiihP7KZm~NcJs7Rjgc7aFodsWUGwZZDjaqRICbhhB~z9BFMHkPacBR8Y3triiYNC9wgvNGzfjx-qIR81QSftfcCfgbH5VpzjMcJ3RqIfy5rYHaK9nrTQQFQE8c2BCe7-6tEAfggpwPg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
                   type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -59,7 +59,7 @@
             <div class="carousel-item video-trailer">
               <video controls width="100%">
                 <source
-                  src="https://imdb-video.media-imdb.com/vi958252825/1434659607842-pgv4ql-1701639299686.mp4?Expires=1702094248&Signature=Piy0Bjhe19wySRIKmw5kYcDr7cE6sHXqSxi7rka7102FIbY97n2xQYrNTcnwZF-HiKKhd0tzgim186i3JdJkkSGIKvUjpY3iSV3mwzlDXF0TZtfL7FaI87zMYU85e2YoW8aOGdaU2JJKRNjJIzIrNtvaX6GhNchdydvTEnuxmqUesNwS2UcBAGuCSWz3F3A25MKKT7pPDxu-xG4wVDc74lAKjbbUtzh5jxBYr9NwgVvJ99BdFuAvu-xSeeXGlFYr4wvtH~MKp61uae92cID6mxJ8dctpfHtApEy2qbsZHyKNuXKryBJ2DD0gl4Dw~kBM-31tV25nydfHctjLXaHsZw__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                  src="https://imdb-video.media-imdb.com/vi2046936089/1434659607842-pgv4ql-1680706385480.mp4?Expires=1702237252&Signature=nB3k4f2J6Qhha0-0ITJ31nPHzmWtEMGTnkaQhtTvo7Orx3d38wC0fvM~eYe9b1~0qJc2xggxGut1IgPANOZS8OKiWi5QBoQQ6ZpHzwtjcUqXTamHixM7wFomhcX-tm9cLt3ei~WoiOTaqw9QAwwFFxflW3DY5CWI2mbFgDoDpnMfF89Ebj7UN8jK3SBqNC62woXDvzdZR5QiihP7KZm~NcJs7Rjgc7aFodsWUGwZZDjaqRICbhhB~z9BFMHkPacBR8Y3triiYNC9wgvNGzfjx-qIR81QSftfcCfgbH5VpzjMcJ3RqIfy5rYHaK9nrTQQFQE8c2BCe7-6tEAfggpwPg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
                   type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -81,7 +81,7 @@
       </div>
       <div class="col-md-4 pr-0 list-trailer-play">
         <ul class="list-group">
-          <h3 style="margin-top: -10px;">Trailer</h3>
+          <h3 style="margin-top: -10px;">Next Trailer</h3>
 
           <!-- Right Video -->
           <?php for ($i = 1; $i <= 3; $i++): ?>

@@ -120,23 +120,29 @@ $(document).ready(function () {
         }
     });
 
-    // Ngăn sự kiện submit mặc định của form để có thể xử lý dữ liệu theo ý của bạn
-    document.getElementById("review-form").addEventListener("submit", function (event) {
+    // Lấy phần tử biểu mẫu và ô input bằng ID
+    var searchForm = document.getElementById("searchForm");
+    var searchInput = document.getElementById("searchInput");
+
+    console.log(searchForm);
+    console.log(searchInput);
+    // Đặt sự kiện submit cho biểu mẫu
+    searchForm.addEventListener("submit", function (event) {
+        // Ngăn sự kiện submit mặc định của biểu mẫu
         event.preventDefault();
 
-        // Lấy giá trị từ các trường thông tin trong form
-        const rating = document.getElementById("rating").value;
-        const title = document.getElementById("title").value;
-        const content = document.getElementById("content").value;
+        // Lấy giá trị từ ô input
+        var searchText = searchInput.value.trim().toLowerCase();
 
-        // Xử lý dữ liệu theo ý của bạn ở đây, ví dụ: hiển thị thông tin trong console
-        console.log("Rating:", rating);
-        console.log("Title:", title);
-        console.log("Content:", content);
-
-        // Sau khi xử lý xong, đóng popup (có thể thay đổi hành vi này)
-        document.getElementById("review-popup").style.display = "none";
+        // Kiểm tra nếu người dùng đã nhập "Ve"
+        if (searchText === "ve") {
+            // Chuyển hướng đến trang "film.php"
+            window.location.href = "detail.php";
+        }
     });
 
+    $(".log-out").on("click", function () {
+        window.location.href = "home.php";
+    });
 
 });
