@@ -1,0 +1,8 @@
+{
+    "name": "myproject/myapp",
+    "description": "A simple PHP application",
+    "require": {
+        "php": "^7.4",
+        "monolog/monolog": "^2.0"
+    }
+}
