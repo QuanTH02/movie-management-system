@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="templates/home.css">
+    <link rel="stylesheet" href="../static/home.css">
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -17,7 +17,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="js/home.js"></script>
+    <script src="../static/js/home.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -30,10 +30,14 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <?php
-    include 'nav.php';
-    ?>
+    <script>
+        $(function () {
+            $("#includedContentNav").load("nav.html");
+            $("#includedContentFooter").load("footer.html");
+        });
+    </script>
+
+    <nav id="includedContentNav"></nav>
 
     <!-- Film -->
     <div>
@@ -41,11 +45,11 @@
             <div class="div-container pt-2 pb-3">
                 <div class="menu-float" style="width: 100%; text-align: right;">
                     <ul>
-                        <li><a href="cast_and_crew.php">
+                        <li><a href="cast_and_crew.html">
                                 <h6>Cast & Crew</h6>
                             </a> </li>
                         <i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>
-                        <li><a href="user_review.php">
+                        <li><a href="user_review.html">
                                 <h6>User review</h6>
                             </a></li>
                     </ul>
@@ -85,7 +89,7 @@
                 <!-- Image and trailer -->
                 <div class="row">
                     <div class="col-3 pr-0">
-                        <img src="img/vebinh1.jpg" alt="Image" style="width: 100%; height: 100%;">
+                        <img src="../media/vebinh1.jpg" alt="Image" style="width: 100%; height: 100%;">
                     </div>
                     <div class="col-7 pl-1 pr-0 video-trailer">
                         <video controls width="100%">
@@ -184,12 +188,12 @@
                         <!-- Content left -->
                         <div class="col-8">
                             <!-- Awards-->
-                            <a href="awards.php">
+                            <a href="awards.html">
                                 <div class="content-awards pb-0 pt-0">
                                     <p class="mb-0 pt-2 pb-2 pl-2 d-inline-block">Awards</p>
                                     <div class="link-stars pb-0 pr-2"
                                         style="display: inline; float: right; padding-top: 8px;">
-                                        <a href="awards.php"><i class="fa-solid fa-chevron-right"></i></a>
+                                        <a href="awards.html"><i class="fa-solid fa-chevron-right"></i></a>
                                     </div>
                                 </div>
                             </a>
@@ -264,11 +268,11 @@
                                     </div>
                                     <!-- All cast and crew -->
                                     <hr class="mt-0">
-                                    <a href="cast_and_crew.php" class="intro-stars text-inline-link">
+                                    <a href="cast_and_crew.html" class="intro-stars text-inline-link">
                                         <p class="mb-0">All cast & crew</p>
                                         <div class="link-stars"
                                             style="display: inline; float: right; margin-right: 12px;">
-                                            <a href="cast_and_crew.php"><i class="fa-solid fa-chevron-right"></i></a>
+                                            <a href="cast_and_crew.html"><i class="fa-solid fa-chevron-right"></i></a>
                                         </div>
                                     </a>
                                     <hr class="">
@@ -370,7 +374,7 @@
                                     <h3 class="topic mb-0 mt-2">| User reviews <i class="fas fa-chevron-right"></i></h3>
                                 </a>
 
-                                <a href="user_review.php" class="mt-2 link-to-review"
+                                <a href="user_review.html" class="mt-2 link-to-review"
                                     style="float: right; align-items: center;">
                                     <p class="mb-0 p-1" style="color: rgb(92, 0, 252);;"><i class="fa-solid fa-plus"
                                             style="color: rgb(92, 0, 252);;"></i> Review</p>
@@ -614,10 +618,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <?php
-    include 'footer.php';
-    ?>
+    <footer id="includedContentFooter"></footer>
 
 </body>
 

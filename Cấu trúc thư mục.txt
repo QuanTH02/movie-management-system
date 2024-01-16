@@ -1,0 +1,27 @@
+Tôi có cấu trúc thư mục:
+|-- Film_BE
+|-- Film_FE
+|    |-- media
+|    |-- static
+|    |    |-- js
+|    |    |    |-- home.js
+|    |    |    |-- login.js
+|    |    |    |-- profile.js
+|    |    |    |-- review.js
+|    |    |-- lib-bootstrap
+|    |    |    |-- bootstrap.css
+|    |    |-- home.css
+|    |    |-- login.css
+|    |-- templates
+|    |    |-- all_film.html
+|    |    |-- awards.php
+|    |    |-- cast_and_crew.php
+|    |    |-- detail.php
+|    |    |-- footer.php
+|    |    |-- home.php
+|    |    |-- login.html
+|    |    |-- login.php
+|    |    |-- nav.php
+|    |    |-- profile.php
+|    |    |-- test.html
+|    |    |-- user_review.php

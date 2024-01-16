@@ -124,25 +124,26 @@ $(document).ready(function () {
     var searchForm = document.getElementById("searchForm");
     var searchInput = document.getElementById("searchInput");
 
-    console.log(searchForm);
-    console.log(searchInput);
     // Đặt sự kiện submit cho biểu mẫu
-    searchForm.addEventListener("submit", function (event) {
-        // Ngăn sự kiện submit mặc định của biểu mẫu
-        event.preventDefault();
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (event) {
+            // Ngăn sự kiện submit mặc định của biểu mẫu
+            event.preventDefault();
 
-        // Lấy giá trị từ ô input
-        var searchText = searchInput.value.trim().toLowerCase();
+            // Lấy giá trị từ ô input
+            var searchText = searchInput.value.trim().toLowerCase();
 
-        // Kiểm tra nếu người dùng đã nhập "Ve"
-        if (searchText === "ve") {
-            // Chuyển hướng đến trang "film.php"
-            window.location.href = "detail.php";
-        }
-    });
+            // Kiểm tra nếu người dùng đã nhập "Ve"
+            if (searchText === "ve") {
+                // Chuyển hướng đến trang "film.html"
+                window.location.href = "detail.html";
+            }
+        });
+    }
+
 
     $(".log-out").on("click", function () {
-        window.location.href = "home.php";
+        window.location.href = "home.html";
     });
 
 });

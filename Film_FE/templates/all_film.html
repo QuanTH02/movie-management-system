@@ -9,15 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="templates/home.css">
-
+    <link rel="stylesheet" href="../static/home.css">
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="js/home.js"></script>
+    <script src="../static/js/home.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -31,34 +30,14 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
-        <a class="navbar-brand ml-5" href="home.php">QuanFilm</a>
+    <script>
+        $(function () {
+            $("#includedContentNav").load("nav.html");
+            $("#includedContentFooter").load("footer.html");
+        });
+    </script>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="search-box form-inline ml-auto" id="searchForm">
-                <input class="form-control mr-2" type="search" placeholder="Search" id="searchInput" aria-label="Search"
-                    style="width: 500px;">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-
-            <ul class="navbar-nav ml-auto mr-4">
-                <li class="nav-item">
-                    <a class="nav-link mode-page" href="#">Mode</a>
-                </li>
-
-                <li class="nav-item dropdown ml-4">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cog"></i> Setting
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" id="dropdown-item-profile" href="profile.php">Profile</a>
-                        <a class="dropdown-item" id="dropdown-item-login" href="login.php">Log in</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <nav id="includedContentNav"></nav>
 
     <div class="div-container" style="width: 60%;">
         <div class="bg-cast-and-crew">
@@ -71,10 +50,10 @@
                 <div class="cast-and-crew-list">
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
-                        <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-2"
+                        <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-2"
                             style="width: 72px; height: 102px;">
                         <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                            <a href="detail.php" style="color: rgb(92, 0, 252);">
+                            <a href="detail.html" style="color: rgb(92, 0, 252);">
                                 <h5>Ve binh giai ngan ha</h5>
                             </a>
                             <h3></h3>
@@ -102,10 +81,10 @@
                 <div class="cast-and-crew-list">
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
-                        <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-2"
+                        <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-2"
                             style="width: 72px; height: 102px;">
                         <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                            <a href="detail.php" style="color: rgb(92, 0, 252);">
+                            <a href="detail.html" style="color: rgb(92, 0, 252);">
                                 <h5>Ve binh giai ngan ha</h5>
                             </a>
                             <h3></h3>
@@ -133,10 +112,10 @@
                 <div class="cast-and-crew-list">
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
-                        <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-2"
+                        <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-2"
                             style="width: 72px; height: 102px;">
                         <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                            <a href="detail.php" style="color: rgb(92, 0, 252);">
+                            <a href="detail.html" style="color: rgb(92, 0, 252);">
                                 <h5>Ve binh giai ngan ha</h5>
                             </a>
                             <h3></h3>
@@ -164,10 +143,10 @@
                 <div class="cast-and-crew-list">
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
-                        <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-2"
+                        <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-2"
                             style="width: 72px; height: 102px;">
                         <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                            <a href="detail.php" style="color: rgb(92, 0, 252);">
+                            <a href="detail.html" style="color: rgb(92, 0, 252);">
                                 <h5>Ve binh giai ngan ha</h5>
                             </a>
                             <h3></h3>
@@ -195,10 +174,10 @@
                 <div class="cast-and-crew-list">
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
-                        <img src="img/vebinh1.jpg" alt="" class="d-inline-block mb-2"
+                        <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-2"
                             style="width: 72px; height: 102px;">
                         <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
-                            <a href="detail.php" style="color: rgb(92, 0, 252);">
+                            <a href="detail.html" style="color: rgb(92, 0, 252);">
                                 <h5>Ve binh giai ngan ha</h5>
                             </a>
                             <h3></h3>
@@ -233,30 +212,7 @@
     </div>
 
     <!-- Footer -->
-    <br><br><br><br><br><br><br><br><br>
-    <h1 class="text-center">The end</h1>
-    <footer class="flex-bottom" style="background-color: #343a40;">
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    Tran Hong Quan
-                    <br>
-                    0123455678
-                </div>
-                <div class="col-md-6 text-center">
-                    <a href="#" class="f-fb">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </a>
-                    <br>
-                    <a href="#" class="f-ins">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-    </footer>
+    <footer id="includedContentFooter"></footer>
 
 </body>
 

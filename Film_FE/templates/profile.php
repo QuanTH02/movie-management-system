@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="templates/home.css">
+    <link rel="stylesheet" href="../static/home.css">
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -17,8 +17,8 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="js/home.js"></script>
-    <script src="js/profile.js"></script>
+    <script src="../static/js/home.js"></script>
+    <script src="../static/js/profile.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -31,37 +31,14 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
-        <a class="navbar-brand ml-5" href="#">QuanFilm</a>
+    <script>
+        $(function () {
+            $("#includedContentNav").load("nav.html");
+            $("#includedContentFooter").load("footer.html");
+        });
+    </script>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="search-box form-inline ml-auto">
-                <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search"
-                    style="width: 500px;">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-
-            <ul class="navbar-nav ml-auto mr-4">
-                <li class="nav-item">
-                    <a class="nav-link mode-page" href="#">Mode</a>
-                </li>
-
-                <li class="nav-item dropdown ml-4">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cog"></i> Setting
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Log in</a>
-                        <!-- <a class="dropdown-item" href="#">Đăng Xuất</a> -->
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-
-    </nav>
+    <nav id="includedContentNav"></nav>
 
     <!-- Profle -->
     <div class="div-container" style="width: 60%;">
@@ -73,7 +50,8 @@
                             <li class="pb-3 pt-3"><button id="profile">Profile</button></li>
                             <li><button id="list-film">List film</button></li>
                         </ul>
-                        <li style="position: absolute; bottom: 10px; right: 10px;"><button class="log-out">Log out</button></li>
+                        <li style="position: absolute; bottom: 10px; right: 10px;"><button class="log-out">Log
+                                out</button></li>
                     </div>
                     <div class="col-10 pt-4 pl-5">
                         <h3>Profile</h3>
@@ -108,7 +86,7 @@
                                     </form>
                                 </div>
                                 <div class="col-6 img-profile">
-                                    <img src="img/vebinh1.jpg" alt="#">
+                                    <img src="../media/vebinh1.jpg" alt="#">
 
                                     <form class="userForm">
                                         <label style="margin-top: 19px;">
@@ -139,8 +117,8 @@
                         <ul class="pl-0 mt-0">
                             <div class="row list-film-like mt-0">
                                 <div class="col-6">
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>Vệ binh giải ngân hà</h5>
@@ -157,8 +135,8 @@
                                         </div>
                                     </a>
 
-                                    <a href="detail.php">
-                                        <img src="img/vebinh2.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -175,8 +153,8 @@
                                         </div>
                                     </a>
 
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -193,8 +171,8 @@
                                         </div>
                                     </a>
 
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -213,8 +191,8 @@
 
                                 </div>
                                 <div class="col-6">
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -231,8 +209,8 @@
                                         </div>
                                     </a>
 
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -249,8 +227,8 @@
                                         </div>
                                     </a>
 
-                                    <a href="detail.php">
-                                        <img src="img/vebinh1.jpg">
+                                    <a href="detail.html">
+                                        <img src="../media/vebinh1.jpg">
                                         <div>
                                             <li>
                                                 <h5>John David Washington</h5>
@@ -279,54 +257,7 @@
     </div>
 
 
-
-
-
-
-    <br><br><br><br><br><br><br><br><br>
-    <h1 class="text-center">The end</h1>
-    <!-- Footer -->
-    <footer class="flex-bottom" style="background-color: #343a40;">
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    Tran Hong Quan
-                    <br>
-                    0123455678
-                </div>
-                <div class="col-md-6 text-center">
-                    <a href="#" class="f-fb">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </a>
-                    <br>
-                    <a href="#" class="f-ins">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-    </footer>
-
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <button class="btn btn-info btn-block mb-2">View Information</button>
-                    <button class="btn btn-danger btn-block">Log Out</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <footer id="includedContentFooter"></footer>
 
 </body>
 
