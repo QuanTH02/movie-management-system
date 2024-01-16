@@ -9,16 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="templates/home.css">
-    <link rel="stylesheet" href="templates/login.css">
+    <link rel="stylesheet" href="../static/home.css">
+    <link rel="stylesheet" href="../static/login.css">
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="js/home.js"></script>
-    <script src="js/login.js"></script>
+    <script src="../static/js/home.js"></script>
+    <script src="../static/js/login.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -31,10 +31,14 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <?php
-    include 'nav.php';
-    ?>
+    <script>
+        $(function () {
+            $("#includedContentNav").load("nav.html");
+            $("#includedContentFooter").load("footer.html");
+        });
+    </script>
+
+    <nav id="includedContentNav"></nav>
 
     <div class="bg-login">
         <br>
@@ -50,7 +54,8 @@
                 <label>
                     <span>Password</span>
                     <div style="width: 100%;">
-                        <input class="input-login" type="password" placeholder="Enter your password" id="passwordField1"/>
+                        <input class="input-login" type="password" placeholder="Enter your password"
+                            id="passwordField1" />
                         <i class="fa fa-eye-slash" id="togglePassword1"
                             style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
                     </div>
@@ -95,7 +100,7 @@
                     <label>
                         <span>Password</span>
                         <div style="width: 100%;">
-                            <input class="input-login" type="password" placeholder="Password" id="passwordField2"/>
+                            <input class="input-login" type="password" placeholder="Password" id="passwordField2" />
                             <i class="fa fa-eye-slash" id="togglePassword2"
                                 style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
                         </div>
@@ -103,7 +108,8 @@
                     <label>
                         <span>Confirm password</span>
                         <div style="width: 100%;">
-                            <input class="input-login" type="password" placeholder="Confirm password" id="confirmPasswordField"/>
+                            <input class="input-login" type="password" placeholder="Confirm password"
+                                id="confirmPasswordField" />
                             <i class="fa fa-eye-slash" id="toggleconfirmPassword"
                                 style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
                         </div>
@@ -113,10 +119,8 @@
                 </div>
             </div>
         </div>
-        <!-- Footer -->
-        <?php
-        include 'footer.php';
-        ?>
+
+        <footer id="includedContentFooter"></footer>
     </div>
 
 
