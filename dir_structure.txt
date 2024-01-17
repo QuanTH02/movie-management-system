@@ -1,5 +1,10 @@
-Tôi có cấu trúc thư mục:
+Cấu trúc thư mục:
+
 |-- Film_BE
+|    |-- App_Film_BE
+|    |-- Film_BE
+|    |-- manage.py
+
 |-- Film_FE
 |    |-- media
 |    |-- static
@@ -14,14 +19,12 @@ Tôi có cấu trúc thư mục:
 |    |    |-- login.css
 |    |-- templates
 |    |    |-- all_film.html
-|    |    |-- awards.php
-|    |    |-- cast_and_crew.php
-|    |    |-- detail.php
-|    |    |-- footer.php
-|    |    |-- home.php
+|    |    |-- awards.html
+|    |    |-- cast_and_crew.html
+|    |    |-- detail.html
+|    |    |-- footer.html
+|    |    |-- home.html
 |    |    |-- login.html
-|    |    |-- login.php
-|    |    |-- nav.php
-|    |    |-- profile.php
-|    |    |-- test.html
-|    |    |-- user_review.php
+|    |    |-- nav.html
+|    |    |-- profile.html
+|    |    |-- user_review.html
