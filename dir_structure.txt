@@ -9,10 +9,21 @@ Cấu trúc thư mục:
 |    |-- media
 |    |-- static
 |    |    |-- js
+|    |    |    |-- api
+|    |    |    |    |-- render
+|    |    |    |    |    |-- page_award.js
+|    |    |    |    |    |-- page_cast_and_crew.js
+|    |    |    |    |    |-- page_detail.js
+|    |    |    |    |    |-- page_home.js
+|    |    |    |    |    |-- page_nav.js
+|    |    |    |    |    |-- page_profile.js
+|    |    |    |    |    |-- page_review.js
+|    |    |    |    |-- api.js
 |    |    |    |-- home.js
 |    |    |    |-- login.js
 |    |    |    |-- profile.js
 |    |    |    |-- review.js
+|    |    |    |-- detail.js
 |    |    |-- lib-bootstrap
 |    |    |    |-- bootstrap.css
 |    |    |-- home.css
