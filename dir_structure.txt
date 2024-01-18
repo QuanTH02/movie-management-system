@@ -1,4 +1,4 @@
-Cấu trúc thư mục:
+Directory structure:
 
 |-- Film_BE
 |    |-- App_Film_BE
