@@ -1,21 +1,25 @@
 <!-- Footer -->
-<br><br><br><br><br><br><br><br><br>
-<h1 class="text-center">The end</h1>
+<br><br><br><br><br><br>
+<div style="width: 100%; text-align: center;" class="mb-2">
+  <button id="scrollToTopButton" style="background-color: white; border-radius: 50%; width: 70px; height: 70px;"
+    onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-circle-chevron-up"
+      style="font-size: 40px;"></i></button>
+</div>
 <footer class="flex-bottom" style="background-color: #343a40;">
   <br>
   <div class="container">
     <div class="row">
       <div class="col-md-6 text-center">
-        Tran Hong Quan
+        Trần Hồng Quân
         <br>
-        0123455678
+        0826975283
       </div>
       <div class="col-md-6 text-center">
-        <a href="#" class="f-fb">
+        <a href="https://web.facebook.com/profile.php?id=100013011138658" class="f-fb">
           <i class="fab fa-facebook"></i> Facebook
         </a>
         <br>
-        <a href="#" class="f-ins">
+        <a href="https://www.instagram.com/quanth2002/" class="f-ins">
           <i class="fab fa-instagram"></i> Instagram
         </a>
       </div>
@@ -23,3 +27,12 @@
   </div>
   <br>
 </footer>
+
+<script>
+
+  document.getElementById("scrollToTopButton").addEventListener("click", function () {
+    // Cuộn lên đầu trang
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+</script>

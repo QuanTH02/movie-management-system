@@ -19,6 +19,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../static/js/home.js"></script>
     <script src="../static/js/login.js"></script>
+    <script type="module" src="../static/js/api/api.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -117,101 +118,6 @@
         <footer id="includedContentFooter"></footer>
     </div>
 
-
-
-    <script type="module">
-        $(function () {
-            var currentAccount = false;
-
-            $("#includedContentNav").load("nav.html", function () {
-                // Nội dung đã được load hoàn tất
-                var a = document.getElementById("dropdown-item-profile");
-                if (a) {
-                    $("#btn-sign-in").on("click", function () {
-                        var username = document.getElementById("login-account").value;
-                        var password = document.getElementById("passwordField1").value;
-
-                        // Sử dụng Fetch API để gửi yêu cầu POST đến API login
-                        fetch('http://127.0.0.1:8000/api/login/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                username: username,
-                                password: password,
-                            }),
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.message == "Successfully logged in.") {
-                                    currentAccount = username;
-                                    localStorage.setItem('currentAccount', currentAccount);
-                                    window.location.href = "home.html"
-                                } else {
-                                    alert(data.message);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching data:', error);
-                                alert('Error fetching data. See console for details.');
-                            });
-
-                        // 
-                    });
-
-                    $("#btn-sign-up").on("click", function () {
-                        var username = document.getElementById("register-account").value;
-                        var name = document.getElementById("nameField").value;
-                        var gmail = document.getElementById("emailField").value;
-                        var password = document.getElementById("passwordField2").value;
-                        var confirmPassword = document.getElementById("confirmPasswordField").value;
-
-                        if (password != confirmPassword) {
-                            alert("Password and Confirm Password must be the same!");
-                        } else {
-                            const data = {
-                                account: username,
-                                name: name,
-                                gmail: gmail,
-                                password: password,
-                                confirm_password: confirmPassword
-                            };
-
-                            // Sử dụng Fetch API để gửi yêu cầu POST đến API
-                            fetch('http://127.0.0.1:8000/api/register/', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(data),
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    // Xử lý dữ liệu nhận được từ server
-                                    alert(data.message);
-
-                                })
-                                .catch(error => {
-                                    // Xử lý lỗi nếu có
-                                    console.error('Error:', error);
-                                });
-                        }
-                    });
-
-                } else {
-                    console.error("Element not found");
-                }
-            });
-
-            $("#includedContentFooter").load("footer.html");
-
-            document.querySelector('.img__btn').addEventListener('click', function () {
-                document.querySelector('.cont').classList.toggle('s--signup');
-            });
-        });
-
-    </script>
 </body>
 
 </html>

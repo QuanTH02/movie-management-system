@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics
@@ -145,6 +146,27 @@ class RegisterView(generics.ListAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class TicketListView(generics.ListAPIView):
+    serializer_class = TicketRoomSerializer
+
+    def get_queryset(self):
+        # Lấy danh sách TicketRoom từ cơ sở dữ liệu
+        queryset = TicketRoom.objects.all()
+
+        # Cập nhật giá trị gross_worldwide của từng ticket_room
+        for ticket_room in queryset:
+            if ticket_room.gross_worldwide:
+                ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
+
+        return queryset
+
+    def convert_gross_to_number(self, gross_str):
+        if gross_str and '$' in gross_str:
+            # Loại bỏ ký tự "$" và dấu phẩy từ chuỗi
+            cleaned_str = gross_str.replace('$', '').replace(',', '')
+            return int(cleaned_str)
+        else:
+            return None
 
 class ReviewView(generics.CreateAPIView):
     serializer_class = FilmReviewSerializer
@@ -195,7 +217,35 @@ class FilmListView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
-        return Movieinformation.objects.all()
+        queryset = Movieinformation.objects.all()
+        for movie_info in queryset:
+            if movie_info.total_vote:
+                movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
+
+            if movie_info.rating:
+                movie_info.rating = self.extract_rating(movie_info.rating)
+
+        return queryset
+    
+    def convert_vote_to_number(self, vote_str):
+        if vote_str and isinstance(vote_str, str):
+            suffixes = {"K": 1e3, "M": 1e6, "B": 1e9}
+            
+            if vote_str[-1] in suffixes:
+                return int(float(vote_str[:-1]) * suffixes[vote_str[-1]])
+            else:
+                return int(vote_str)
+        else:
+            return None
+
+    def extract_rating(self, rating_str):
+        if rating_str and '/' in rating_str:
+            parts = rating_str.split('/')
+            return parts[0]
+        else:
+            return None
+
+
 
 
 class AwardsListView(generics.ListAPIView):
@@ -626,6 +676,60 @@ class WritersListView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
+class MovieListView(generics.ListAPIView):
+    serializer_class = FilmSerializer
+
+    def get_queryset(self):
+        movie_id = self.kwargs["movie_id"]
+        if movie_id.isdigit():
+            movie_id = int(movie_id)
+            return Movieinformation.objects.filter(movie_id=movie_id)
+        else:
+            # Nếu không phải là số, thử lấy danh sách phim bằng tên
+            return self.get_movie_by_movie_name(movie_id)
+
+    def get_movie_by_movie_name(self, movie_name):
+        try:
+            movie = Movieinformation.objects.filter(movie_name=movie_name)
+
+            # Chưa cần
+            # for movie_info in movie:
+            #     if movie_info.total_vote:
+            #         movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
+
+            #     if movie_info.rating:
+            #         movie_info.rating = self.extract_rating(movie_info.rating)
+
+            return movie
+        except Movieinformation.DoesNotExist:
+            raise generics.NotFound("Movie not found.")
+
+    def convert_vote_to_number(self, vote_str):
+        if vote_str and isinstance(vote_str, str):
+            suffixes = {"K": 1e3, "M": 1e6, "B": 1e9}
+            
+            if vote_str[-1] in suffixes:
+                return int(float(vote_str[:-1]) * suffixes[vote_str[-1]])
+            else:
+                return int(vote_str)
+        else:
+            return None
+
+    def extract_rating(self, rating_str):
+        if rating_str and '/' in rating_str:
+            parts = rating_str.split('/')
+            return parts[0]
+        else:
+            return None
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        response_data = {
+            "message": "Successfully",
+            "data": serializer.data
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
 # Không bảng trung gian
 class AspectRatioListView(generics.ListAPIView):
@@ -633,7 +737,6 @@ class AspectRatioListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
         try:
             movie_id = int(movie_id)
             return AspectRatio.objects.filter(movie__movie_id=movie_id)
@@ -1086,10 +1189,24 @@ class TicketRoomListView(generics.ListAPIView):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
             ticket_rooms = TicketRoom.objects.filter(movie__movie_id=movie_info.movie_id)
+            
+            # Cập nhật giá trị gross_worldwide của từng ticket_room
+            for ticket_room in ticket_rooms:
+                if ticket_room.gross_worldwide:
+                    ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
+
             return ticket_rooms
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
             raise generics.NotFound("Movie not found.")
+
+    def convert_gross_to_number(self, gross_str):
+        if gross_str and '$' in gross_str:
+            # Loại bỏ ký tự "$" và dấu phẩy từ chuỗi
+            cleaned_str = gross_str.replace('$', '').replace(',', '')
+            return int(cleaned_str)
+        else:
+            return None
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -1098,6 +1215,7 @@ class TicketRoomListView(generics.ListAPIView):
             "message": "Successfully",
             "data": serializer.data
         }, status=status.HTTP_200_OK)
+
 
 
 # Create your views here.

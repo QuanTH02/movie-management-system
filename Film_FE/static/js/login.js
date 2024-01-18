@@ -47,4 +47,15 @@ $(document).ready(function () {
         }
     });
 
+    // ##############
+    
+
+    $("#includedContentNav").load("nav.html");
+    $("#includedContentFooter").load("footer.html");
+
+    document.querySelector('.img__btn').addEventListener('click', function () {
+        document.querySelector('.cont').classList.toggle('s--signup');
+    });
+
+
 });

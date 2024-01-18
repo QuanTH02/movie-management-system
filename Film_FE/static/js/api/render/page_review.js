@@ -1,4 +1,7 @@
-function LoadReviewElement(data, totalReviewElement) {
+function LoadReviewElement(data, totalReviewElement, movie_name) {
+    var movieName = document.getElementById('movie_name');
+    movieName.textContent = movie_name;
+
     var displayedReviewCount = 0;
     // Xử lý dữ liệu nhận được từ API ở đây
     data.data.forEach(jsonData => {
