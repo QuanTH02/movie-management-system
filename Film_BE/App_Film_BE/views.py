@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password, check_password
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -46,9 +48,11 @@ from .models import (
     RatingFilm,
     SoundMix,
     TicketRoom,
+    FollowFilmUser,
 )
 from .serializers import (
     # User
+    AccountSerializer,
     LoginSerializer,
     RegisterSerializer,
     ReviewSerializer,
@@ -81,6 +85,7 @@ from .serializers import (
     RatingFilmSerializer,
     SoundMixSerializer,
     TicketRoomSerializer,
+    FollowFilmUserSerializer
 )
 
 
@@ -138,6 +143,15 @@ class RegisterView(generics.ListAPIView):
             )
             user.last_name = name
             user.save()
+
+
+            # Thêm vào Follow
+            user_id = User.objects.get(username=account).id
+            movies = Movieinformation.objects.all()
+
+            for movie in movies:
+                FollowFilmUser.objects.create(user_id=user_id, movie_id=movie.movie_id, total_view=0)
+
 
             return Response(
                 {"message": "User successfully registered."},
@@ -218,6 +232,12 @@ class FilmListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Movieinformation.objects.all()
+        # members = User.objects.all()
+
+        # for member in members:
+        #     for film in queryset:
+        #         FollowFilmUser.objects.create(user_id=member.id, movie_id=film.movie_id, total_view=0)
+
         for movie_info in queryset:
             if movie_info.total_vote:
                 movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
@@ -312,7 +332,6 @@ class DirectorListView(generics.ListAPIView):
             "message": "Successfully",
             "data": serializer.data
         }, status=status.HTTP_200_OK)
-
 
 class CameraListView(generics.ListAPIView):
     serializer_class = CameraSerializer
@@ -679,51 +698,46 @@ class WritersListView(generics.ListAPIView):
 class MovieListView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, current_account):
         movie_id = self.kwargs["movie_id"]
         if movie_id.isdigit():
             movie_id = int(movie_id)
             return Movieinformation.objects.filter(movie_id=movie_id)
         else:
-            # Nếu không phải là số, thử lấy danh sách phim bằng tên
-            return self.get_movie_by_movie_name(movie_id)
+            return self.get_movie_by_movie_name(movie_id, current_account)
 
-    def get_movie_by_movie_name(self, movie_name):
+    def get_movie_by_movie_name(self, movie_name, current_account):
         try:
+            if current_account:
+                user = User.objects.get(username=current_account)
+                user_id = user.id
             movie = Movieinformation.objects.filter(movie_name=movie_name)
 
-            # Chưa cần
-            # for movie_info in movie:
-            #     if movie_info.total_vote:
-            #         movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
+            movie_id = movie.first().movie_id
+            print("User_id: ", user_id)
+            print("Movie_id: ", movie_id)
 
-            #     if movie_info.rating:
-            #         movie_info.rating = self.extract_rating(movie_info.rating)
+            try:
+                follow_instance = FollowFilmUser.objects.get(user_id=user_id, movie_id=movie_id)
+                follow_instance.total_view = F('total_view') + 1
+                follow_instance.save()
+            except FollowFilmUser.DoesNotExist:
+                FollowFilmUser.objects.create(user_id=user_id, movie_id=movie_id, total_view=1)
 
             return movie
+        except User.DoesNotExist:
+            raise generics.NotFound("User not found.")
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
 
-    def convert_vote_to_number(self, vote_str):
-        if vote_str and isinstance(vote_str, str):
-            suffixes = {"K": 1e3, "M": 1e6, "B": 1e9}
-            
-            if vote_str[-1] in suffixes:
-                return int(float(vote_str[:-1]) * suffixes[vote_str[-1]])
-            else:
-                return int(vote_str)
-        else:
-            return None
+    def post(self, request, *args, **kwargs):
+        current_account = request.data.get('currentAccount')
+        
 
-    def extract_rating(self, rating_str):
-        if rating_str and '/' in rating_str:
-            parts = rating_str.split('/')
-            return parts[0]
-        else:
-            return None
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+            # for member in members:
+            #     for film in queryset:
+            #         FollowFilmUser.objects.create(user_id=member.id, movie_id=film.movie_id, total_view=0)
+        queryset = self.get_queryset(current_account)
         serializer = self.serializer_class(queryset, many=True)
         response_data = {
             "message": "Successfully",
@@ -1219,3 +1233,42 @@ class TicketRoomListView(generics.ListAPIView):
 
 
 # Create your views here.
+
+class AccountListView(generics.ListAPIView):
+    serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        accounts = User.objects.all()
+        return accounts
+
+    def post(self, request, *args, **kwargs):
+        current_account = request.data.get('currentAccount')
+        if current_account:
+            # Tìm người dùng dựa trên tên tài khoản
+            try:
+                user = User.objects.get(username=current_account)
+                serialized_user = self.serializer_class(user)  # Không sử dụng many=True
+
+                return Response({'data': serialized_user.data})  # Trả về serialized data
+            except User.DoesNotExist:
+                return Response({'message': 'User not found'}, status=404)
+        else:
+            pfFName = request.data.get('pfFName')
+            pfLName = request.data.get('pfLName')
+            pfEmail = request.data.get('pfEmail')
+            user_id = request.data.get('pfId')
+
+            print(pfFName)
+            print(pfLName)
+            print(pfEmail)
+            print(user_id)
+
+            user = User.objects.get(id=user_id)
+            user.first_name = pfFName
+            user.last_name = pfLName
+            user.email = pfEmail
+            user.save()    
+
+            print(user)
+
+            return Response({'message': 'Update Success'})

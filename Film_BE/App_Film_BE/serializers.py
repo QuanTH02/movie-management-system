@@ -31,6 +31,7 @@ from .models import (
     RatingFilm,
     SoundMix,   
     TicketRoom,
+    FollowFilmUser,
 )
 
 
@@ -80,6 +81,11 @@ class DirectorSerializer(serializers.ModelSerializer):
         model = Director
         fields = "__all__"
 
+class FilmDirectorSerializer(serializers.ModelSerializer):
+    film = DirectorSerializer()
+    class Meta:
+        model = Movieinformation
+        fields = "__all__"
 
 class CastSerializer(serializers.ModelSerializer):
     class Meta:
@@ -224,3 +230,16 @@ class TicketRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = TicketRoom
         fields = "__all__"
+
+
+# Thêm
+class FollowFilmUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowFilmUser
+        fields = "__all__"
+
+class AccountSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined']
