@@ -1,21 +1,29 @@
 function LoadFilmNav(data) {
+    var filmFilter = document.querySelector('select[name="filmFilter"]');
     document.getElementById('searchInput').addEventListener('input', function () {
         // Lấy giá trị từ ô tìm kiếm
         // console.log(this.value);
         var searchTerm = this.value;
 
-        // Kiểm tra xem searchTerm có tồn tại không
-        if (searchTerm) {
-            // Chuyển đổi thành chữ thường
+        if (searchTerm.toLowerCase()) {
             searchTerm = searchTerm.toLowerCase();
-
-            // Gọi hàm tìm kiếm và cập nhật kết quả
         }
 
-        // Lọc danh sách phim theo giá trị tìm kiếm
-        var filteredMovies = data.filter(function (movie) {
-            return movie.movie_name.toLowerCase().includes(searchTerm);
-        });
+        console.log(filmFilter.value);
+
+        if (filmFilter.value == 0 || filmFilter.value == 1) {
+            var filteredMovies = data.filter(function (movie) {
+                return movie.movie_name.toLowerCase().includes(searchTerm);
+            });
+        } else if (filmFilter.value == 2) {
+            var filteredMovies = data.filter(function (movie) {
+                return movie.year_manufacture.toLowerCase().includes(searchTerm);
+            });
+        } else {
+            var filteredMovies = data.filter(function (movie) {
+                return String(movie.rating).toLowerCase().includes(searchTerm);
+            });
+        }
 
         // Hiển thị kết quả tìm kiếm
         var searchResultsElement = document.getElementById('searchResults');
@@ -24,12 +32,20 @@ function LoadFilmNav(data) {
         var stt = 0;
         filteredMovies.forEach(function (movie) {
             // Tạo phần tử li mới cho mỗi kết quả tìm kiếm
+            if (filmFilter.value == 0 || filmFilter.value == 1) {
+                var content = 'Describe: ' + movie.describe_movie;
+            } else if (filmFilter.value == 2) {
+                var content = 'Year manufacture: ' + movie.year_manufacture;
+            } else {
+                var content = 'Rating: ' + movie.rating;
+            }
+
             var liElement = document.createElement('li');
             liElement.innerHTML = `
               <div>
                 <a href="detail.html" class="name-and-des-search">
                   <h6 class="name-search">${movie.movie_name}</h6>
-                  <p>${movie.describe_movie}</p>
+                  <p>${content}</p>
                 </a>
               </div>
             `;
@@ -67,7 +83,6 @@ function LoadFilmNav(data) {
                     localStorage.setItem('movie_name', movieName);
                 }
             }
-
         });
     });
 }

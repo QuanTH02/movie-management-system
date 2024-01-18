@@ -53,6 +53,7 @@ from App_Film_BE.views import (
     SoundMixListView,
     TicketRoomListView,
     TicketListView,
+    AccountListView,
 )
 
 urlpatterns = [
@@ -60,9 +61,11 @@ urlpatterns = [
     # User
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/login/', LoginView.as_view(), name='login'),
+
     path('api/ticketroom/', TicketListView.as_view(), name='ticketroom-list'),
     path('api/review/', ReviewView.as_view(), name='review'),
     path('api/film/', FilmListView.as_view(), name='film-list'),
+    path('api/account/', AccountListView.as_view(), name='account-list'),
 
     # Bảng trung gian
     path('api/movie/<str:movie_id>/award/', AwardsListView.as_view(), name='award-list'),

@@ -1,9 +1,10 @@
-import { LoadReviewElement } from "./render/page_review.js";
+import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail } from "./render/page_home.js";
-import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice } from "./render/page_detail.js";
+import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent } from "./render/page_detail.js";
 import { LoadDirectorAll, LoadWriterAll, LoadCastAll, LoadProducedAll, LoadCinematographyAll, LoadEditingAll, LoadSpecialEffectsAll, LoadMusicAll } from "./render/page_cast_and_crew.js";
 import { LoadAwardAll } from "./render/page_award.js";
 import { LoadFilmNav } from "./render/page_nav.js";
+import { LoadProfile } from "./render/page_profile.js";
 
 $(function () {
     var currentAccount = false;
@@ -123,7 +124,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                // console.log(data);
+                console.log(data);
                 LoadFilmHome(data);
                 LoadFilmNav(data);
                 MostPopularHome(data);
@@ -150,6 +151,77 @@ $(function () {
     //         });
     // }
 
+    // ##############################################################################################################
+    // PAGE PROFILE
+    // ##############################################################################################################
+    // ##############################################################################################################
+    // Load Profile
+    // ##############################################################################################################
+    if (document.getElementById('pf-f-name')) {
+        var currentAccount = localStorage.getItem('currentAccount');
+
+        console.log(currentAccount);
+        fetch(`http://127.0.0.1:8000/api/account/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currentAccount: currentAccount,
+            }),
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                LoadProfile(data);
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                console.error('Fetch error:', error);
+            });
+    }
+
+    // ##############################################################################################################
+    // Change Profile
+    // ##############################################################################################################
+    if (document.getElementById("saveButton")) {
+        document.getElementById("saveButton").addEventListener("click", function () {
+            var pfFName = document.getElementById('pf-f-name').value;
+            var pfLName = document.getElementById('pf-l-name').value;
+            var pfEmail = document.getElementById('pf-email').value;
+            var pfId = document.getElementById('pf-id');
+
+            if (pfFName == "") pfFName = document.getElementById('pf-f-name').placeholder;
+            if (pfLName == "") pfLName = document.getElementById('pf-l-name').placeholder;
+            if (pfEmail == "") pfEmail = document.getElementById('pf-email').placeholder;
+
+            fetch(`http://127.0.0.1:8000/api/account/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    pfFName: pfFName,
+                    pfLName: pfLName,
+                    pfEmail: pfEmail,
+                    pfId: pfId.placeholder,
+                }),
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    location.reload();
+                })
+                .catch(error => {
+                    // Xử lý lỗi nếu có
+                    console.error('Fetch error:', error);
+                });
+        });
+    }
 
     // ##############################################################################################################
     // PAGE DETAIL
@@ -159,13 +231,23 @@ $(function () {
     // ##############################################################################################################
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
+        var currentAccount = localStorage.getItem('currentAccount');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`)
+        console.log(currentAccount);
+        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currentAccount: currentAccount,
+            }),
+        })
             .then(response => {
                 return response.json();
             })
             .then(data => {
-                // console.log(data);
+                console.log(data);
                 LoadDetail(data, movieName);
             })
             .catch(error => {
@@ -305,7 +387,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadDidyouknow(data);
             })
             .catch(error => {
@@ -327,6 +409,7 @@ $(function () {
             .then(data => {
                 // console.log(data);
                 LoadReview(data);
+                LikeAndDisLikeEvent();
             })
             .catch(error => {
                 // Xử lý lỗi nếu có
@@ -445,7 +528,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                // console.log(data);
+                console.log(data);
                 LoadBoxOffice(data);
             })
             .catch(error => {
@@ -634,6 +717,7 @@ $(function () {
             })
             .then(data => {
                 LoadReviewElement(data, totalReviewElement, movieName);
+                LikeAndDisLikeEventPageReview();
             })
             .catch(error => {
                 // Xử lý lỗi nếu có
