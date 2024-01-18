@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from App_Film_BE.views import (
+    LoginView,
+    RegisterView,
+    ReviewView,
+
     FilmListView, 
     AwardsListView, 
     DirectorListView, 
@@ -47,11 +51,16 @@ from App_Film_BE.views import (
     RatingFilmListView,
     SoundMixListView,
     TicketRoomListView,
-
+    
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # User
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/login/', LoginView.as_view(), name='login'),
+    path('api/review/', ReviewView.as_view(), name='review'),
+
     path('api/film/', FilmListView.as_view(), name='film-list'),
     path('api/movie/<str:movie_id>/award/', AwardsListView.as_view(), name='award-list'),
     path('api/movie/<str:movie_id>/director/', DirectorListView.as_view(), name='director-list'),
@@ -66,6 +75,7 @@ urlpatterns = [
     path('api/movie/<str:movie_id>/taglines/', TaglinesListView.as_view(), name='taglines-list'),
     path('api/movie/<str:movie_id>/writers/', WritersListView.as_view(), name='writers-list'),
 
+    # Không bảng trung gian
     path('api/movie/<str:movie_id>/aspectratio/', AspectRatioListView.as_view(), name='aspectratio-list'),
     path('api/movie/<str:movie_id>/cinematographicprocess/', CinematographicProcessListView.as_view(), name='cinematographicprocess-list'),
     path('api/movie/<str:movie_id>/color/', ColorProcessListView.as_view(), name='color-list'),

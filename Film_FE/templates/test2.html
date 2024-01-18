@@ -1,0 +1,66 @@
+<!-- HTML -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Awards</title>
+</head>
+
+<body>
+    <!-- Hiển thị kết quả ở đây -->
+    <button id="click">Click</button>
+    <div id="result"></div>
+
+
+    <script>
+        var clicka = document.querySelector('#click');
+        // JavaScript
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy movie_id từ URL hoặc tự đặt giá trị
+            clicka.addEventListener('click', function () {
+
+                var test = localStorage.getItem('currentAccount');
+                console.log(test);
+
+                localStorage.removeItem('currentAccount');
+
+                const movieId = '3';
+                // Sử dụng Fetch API để gửi yêu cầu GET đến API
+                fetch(`http://127.0.0.1:8000/api/movie/${movieId}/cast/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Xử lý dữ liệu nhận được
+                        displayResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        alert('Error fetching data. See console for details.');
+                    });
+
+                // Hiển thị kết quả lên màn hình
+                function displayResults(data) {
+                    const resultContainer = document.getElementById('result');
+                    resultContainer.innerHTML = ''; // Xóa nội dung trước khi hiển thị
+
+                    // Xử lý dữ liệu và hiển thị lên màn hình
+                    data.forEach(award => {
+                        const awardElement = document.createElement('p');
+                        awardElement.textContent = `Award Name: ${award.name}`;
+                        resultContainer.appendChild(awardElement);
+                    });
+                    
+                }
+                
+            });
+        });
+
+
+    </script>
+
+</body>
+
+</html>

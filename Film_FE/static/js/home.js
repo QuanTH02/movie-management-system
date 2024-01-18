@@ -3,6 +3,7 @@ $(document).ready(function () {
     var searchBox = $(".search-box");
     var scrolled = false;
 
+    // Cuộn xuống thì mất Navbar
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) {
             if (!scrolled) {
@@ -20,7 +21,6 @@ $(document).ready(function () {
     });
 
     let currentIndex = 0;
-
     function changeSlide(direction) {
         const carouselInner = document.getElementById('carouselInner');
         const cardWidth = document.querySelector('.col-md-3.mb-4').offsetWidth;
@@ -102,24 +102,7 @@ $(document).ready(function () {
         });
     });
 
-
-    // Mở popup khi nhấp vào nút "Write a Review"
-    $(".open-popup").on("click", function () {
-        document.getElementById("review-popup").style.display = "block";
-    });
-
-    // Đóng popup khi nhấp vào nút đóng hoặc nền đen xung quanh
-    $(".close-popup").on("click", function () {
-        document.getElementById("review-popup").style.display = "none";
-    });
-
-    // Đóng popup khi nhấn ESC
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            document.getElementById("review-popup").style.display = "none";
-        }
-    });
-
+    // SEARCH
     // Lấy phần tử biểu mẫu và ô input bằng ID
     var searchForm = document.getElementById("searchForm");
     var searchInput = document.getElementById("searchInput");
@@ -142,8 +125,8 @@ $(document).ready(function () {
     }
 
 
-    $(".log-out").on("click", function () {
-        window.location.href = "home.html";
-    });
+    // $(".log-out").on("click", function () {
+    //     window.location.href = "home.html";
+    // });
 
 });

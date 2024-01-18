@@ -47,9 +47,4 @@ $(document).ready(function () {
         }
     });
 
-    $(".submit").on("click", function () {
-        window.location.href = "home.html";
-        document.getElementById("dropdown-item-profile").style.display = "block";
-        document.getElementById("dropdown-item-login").style.display = "none";
-    });
 });

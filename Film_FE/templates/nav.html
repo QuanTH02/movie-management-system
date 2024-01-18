@@ -14,18 +14,48 @@
         <a class="nav-link mode-page" href="#">Mode</a>
       </li>
 
-      <li class="nav-item dropdown ml-4">
+      <li class="nav-item dropdown ml-4" style="display: none;" id="nav-setting">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-cog"></i> Setting
+          <div><i class="fas fa-cog"></i> Setting</div>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" id="dropdown-item-profile" href="profile.html">Profile</a>
-          <a class="dropdown-item" id="dropdown-item-login" href="login.html">Log in</a>
+          <!-- <a class="dropdown-item" id="dropdown-item-login" href="login.html">Log in</a> -->
+          <a class="dropdown-item" id="dropdown-item-logout" href="#">Log out</a>
         </div>
       </li>
+
+      <li class="nav-item dropdown ml-4" id="nav-login"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+          role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div>Login</div>
+        </a></li>
+
     </ul>
   </div>
 </nav>
 
 <script src="../static/js/home.js"></script>
+<script>
+  var currentAccount = localStorage.getItem('currentAccount');
+  var navLogin = document.getElementById("nav-login");
+  var navSetting = document.getElementById("nav-setting");
+  
+  if (currentAccount) {
+    navSetting.style.display = "block";
+    navLogin.style.display = "none";
+  } else {
+    navSetting.style.display = "none";
+    navLogin.style.display = "block";
+  }
+
+  var logOut = document.getElementById("dropdown-item-logout");
+  logOut.addEventListener("click", function () {
+    localStorage.removeItem('currentAccount');
+    window.location.href = "login.html";
+  });
+
+  navLogin.addEventListener("click", function () {
+    window.location.href = "login.html";
+  });
+</script>

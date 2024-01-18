@@ -1,19 +1,51 @@
-$(document).ready(function () {
-    // Ngăn sự kiện submit mặc định của form để có thể xử lý dữ liệu theo ý của bạn
-    document.getElementById("review-form").addEventListener("submit", function (event) {
-        event.preventDefault();
+$(function () {
+    var totalReviewElement = document.querySelector('.total-review');
+    var movieName = document.getElementById('movie_name').innerHTML;
+    var movieNamePopup = document.getElementsByClassName('movie-name-popup')[0];
 
-        // Lấy giá trị từ các trường thông tin trong form
-        const rating = document.getElementById("rating").value;
-        const title = document.getElementById("title").value;
-        const content = document.getElementById("content").value;
+    movieNamePopup.textContent = movieName;
 
-        // Xử lý dữ liệu theo ý của bạn ở đây, ví dụ: hiển thị thông tin trong console
-        console.log("Rating:", rating);
-        console.log("Title:", title);
-        console.log("Content:", content);
+    // Chọn số sao để filter
+    var ratingFilter = document.querySelector('select[name="ratingFilter"]');
+    
+    // Gán sự kiện change cho thẻ select
+    ratingFilter.addEventListener('change', function () {
+        // Lấy thẻ select và tất cả các thẻ review
+        var reviewElements = document.querySelectorAll('.review-element');
+        // Lấy giá trị đã chọn từ dropdown và chuyển đổi thành số nguyên
+        var selectedValueString = ratingFilter.value;
+        var selectedValue = parseInt(selectedValueString.split(" ")[0]);
+        var displayedReviewCount = 0;
+        // Duyệt qua tất cả các thẻ review
+        reviewElements.forEach(function (reviewElement) {
+            // Lấy thẻ voteRateValue từ thẻ review
+            var voteRateValue = reviewElement.querySelector('.vote-rate');
 
-        // Sau khi xử lý xong, đóng popup (có thể thay đổi hành vi này)
+            // Lấy giá trị số sao từ thẻ voteRateValue và chuyển đổi thành số nguyên
+            var reviewValueString = voteRateValue.textContent;
+            var reviewValue = parseInt(reviewValueString.split(" ")[0]);
+
+            // Ẩn hoặc hiển thị thẻ review dựa trên giá trị đã chọn
+            if (selectedValue === 0 || reviewValue === selectedValue) {
+                reviewElement.style.display = 'block'; // Hiển thị
+                displayedReviewCount++;
+            } else {
+                reviewElement.style.display = 'none'; // Ẩn
+            }
+        });
+
+        totalReviewElement.textContent = displayedReviewCount;
+    });
+
+    // Open the popup when clicking the "Write a Review" button
+    $(".open-popup").on("click", function () {
+        document.getElementById("review-popup").style.display = "block";
+    });
+
+    // Close the popup when clicking the close button or the black background around
+    $(".close-popup").on("click", function () {
         document.getElementById("review-popup").style.display = "none";
     });
+
+    
 });

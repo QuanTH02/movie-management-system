@@ -31,12 +31,6 @@
 </head>
 
 <body>
-    <script>
-        $(function () {
-            $("#includedContentNav").load("nav.html");
-            $("#includedContentFooter").load("footer.html");
-        });
-    </script>
 
     <nav id="includedContentNav"></nav>
 
@@ -49,7 +43,7 @@
                 <br>
                 <label>
                     <span>Account</span>
-                    <input class="input-login" type="email" placeholder="Enter your account" />
+                    <input class="input-login" id="login-account" type="email" placeholder="Enter your account" />
                 </label>
                 <label>
                     <span>Password</span>
@@ -65,7 +59,7 @@
 
                 <p class="forgot-pass mt-2" style="font-style: italic; margin-top: 0px;"><a href="#"
                         style="color: black; font-size: 14px;">Forgot password?</a></p>
-                <button type="button" class="submit">Sign In</button>
+                <button type="button" class="submit" id="btn-sign-in">Sign In</button>
 
             </div>
             <div class="sub-cont">
@@ -87,15 +81,15 @@
                     <h2 style="color: black;">Create your Account</h2>
                     <label>
                         <span>Account</span>
-                        <input class="input-login" type="text" placeholder="Account" />
+                        <input class="input-login" id="register-account" type="text" placeholder="Account" />
                     </label>
                     <label>
                         <span>Name</span>
-                        <input class="input-login" type="text" placeholder="Enter your name" />
+                        <input class="input-login" id="nameField" type="text" placeholder="Enter your name" />
                     </label>
                     <label>
                         <span>Email</span>
-                        <input class="input-login" type="email" placeholder="Enter your email" />
+                        <input class="input-login" id="emailField" type="email" placeholder="Enter your email" />
                     </label>
                     <label>
                         <span>Password</span>
@@ -114,7 +108,7 @@
                                 style="color: black; font-size: 16px; position: absolute; margin-top: -20px; margin-left: 238px;"></i>
                         </div>
                     </label>
-                    <button type="button" class="submit">Sign Up</button>
+                    <button type="button" class="submit" id="btn-sign-up">Sign Up</button>
 
                 </div>
             </div>
@@ -125,10 +119,98 @@
 
 
 
-    <script>
-        document.querySelector('.img__btn').addEventListener('click', function () {
-            document.querySelector('.cont').classList.toggle('s--signup');
+    <script type="module">
+        $(function () {
+            var currentAccount = false;
+
+            $("#includedContentNav").load("nav.html", function () {
+                // Nội dung đã được load hoàn tất
+                var a = document.getElementById("dropdown-item-profile");
+                if (a) {
+                    $("#btn-sign-in").on("click", function () {
+                        var username = document.getElementById("login-account").value;
+                        var password = document.getElementById("passwordField1").value;
+
+                        // Sử dụng Fetch API để gửi yêu cầu POST đến API login
+                        fetch('http://127.0.0.1:8000/api/login/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                password: password,
+                            }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message == "Successfully logged in.") {
+                                    currentAccount = username;
+                                    localStorage.setItem('currentAccount', currentAccount);
+                                    window.location.href = "home.html"
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                alert('Error fetching data. See console for details.');
+                            });
+
+                        // 
+                    });
+
+                    $("#btn-sign-up").on("click", function () {
+                        var username = document.getElementById("register-account").value;
+                        var name = document.getElementById("nameField").value;
+                        var gmail = document.getElementById("emailField").value;
+                        var password = document.getElementById("passwordField2").value;
+                        var confirmPassword = document.getElementById("confirmPasswordField").value;
+
+                        if (password != confirmPassword) {
+                            alert("Password and Confirm Password must be the same!");
+                        } else {
+                            const data = {
+                                account: username,
+                                name: name,
+                                gmail: gmail,
+                                password: password,
+                                confirm_password: confirmPassword
+                            };
+
+                            // Sử dụng Fetch API để gửi yêu cầu POST đến API
+                            fetch('http://127.0.0.1:8000/api/register/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(data),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Xử lý dữ liệu nhận được từ server
+                                    alert(data.message);
+
+                                })
+                                .catch(error => {
+                                    // Xử lý lỗi nếu có
+                                    console.error('Error:', error);
+                                });
+                        }
+                    });
+
+                } else {
+                    console.error("Element not found");
+                }
+            });
+
+            $("#includedContentFooter").load("footer.html");
+
+            document.querySelector('.img__btn').addEventListener('click', function () {
+                document.querySelector('.cont').classList.toggle('s--signup');
+            });
         });
+
     </script>
 </body>
 
