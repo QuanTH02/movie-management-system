@@ -31,7 +31,9 @@
 <body>
   <script>
     $(function () {
-      $("#includedContentNav").load("nav.html");
+      $("#includedContentNav").load("nav.html", function () {
+      });
+
       $("#includedContentFooter").load("footer.html");
     });
   </script>

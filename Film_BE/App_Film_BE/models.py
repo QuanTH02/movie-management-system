@@ -133,6 +133,7 @@ class FilmReview(models.Model):
         db_table = 'film_review'
 
 
+
 class FilmingLocations(models.Model):
     filming_locations_id = models.IntegerField(primary_key=True)
     movie = models.ForeignKey('Movieinformation', models.DO_NOTHING, blank=True, null=True)

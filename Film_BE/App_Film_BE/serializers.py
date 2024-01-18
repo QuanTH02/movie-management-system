@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import (
     Movieinformation,
     Awards,
@@ -31,6 +32,35 @@ from .models import (
     SoundMix,   
     TicketRoom,
 )
+
+
+# User
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+class RegisterSerializer(serializers.Serializer):
+    account = serializers.CharField()
+    name = serializers.CharField()
+    gmail = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError("Passwords do not match.")
+        
+        return data
+
+class ReviewSerializer(serializers.Serializer):
+    star_review = serializers.IntegerField()
+    title_review = serializers.CharField()
+    content_review = serializers.CharField()
+    movie_name = serializers.CharField()
+    name_review = serializers.CharField()
 
 
 class FilmSerializer(serializers.ModelSerializer):
@@ -137,7 +167,13 @@ class DidYouKnowSerializer(serializers.ModelSerializer):
 class FilmReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = FilmReview
-        fields = "__all__"
+        fields = ['movie', 'name_review', 'star_review', 'title_review', 'content_review', 'date_review']
+
+    def create(self, validated_data):
+        movie_name = validated_data.pop('movie_name')
+        movie = Movieinformation.objects.get(movie_name=movie_name)
+        validated_data['movie'] = movie
+        return super().create(validated_data)
 
 class FilmingLocationsSerializer(serializers.ModelSerializer):
     class Meta:
