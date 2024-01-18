@@ -18,6 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../static/js/home.js"></script>
+    <script type="module" src="../static/js/api/api.js"></script>
     <style>
         /* Add your custom styles here */
 
@@ -40,13 +41,13 @@
     <nav id="includedContentNav"></nav>
 
 
-    <div class="div-container" style="width: 60%;">
+    <div class="div-container" style="width: 60%;" id="page_cast_and_crew">
         <div class="bg-cast-and-crew">
             <div class="cast-and-crew-intro p-3">
                 <img src="../media/vebinh1.jpg" alt="" class="d-inline-block mb-5" style="width: 72px; height: 102px;">
                 <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
                     <a href="detail.html" style="color: rgb(92, 0, 252);">
-                        <h5>Ve binh giai ngan ha</h5>
+                        <h5 id="h5-name-movie-cast-and-crew">Ve binh giai ngan ha</h5>
                     </a>
                     <h3>Full Cast & Crew</h3>
                 </div>
@@ -56,16 +57,15 @@
                     <!-- Director -->
                     <div class="cast-and-crew-director mb-4">
                         <h6>Directed by</h6>
-                        <table>
-                            <tr>
+                        <table id="tb-movie-director-all">
+                            <!-- <tr>
                                 <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p></p>
+                                    <p>Role</p>
                                 </td>
-                            </tr>
-
+                            </tr> -->
                         </table>
                     </div>
 
@@ -73,47 +73,16 @@
                     <hr class="mt-0">
                     <div class="cast-and-crew-writing mb-4">
                         <h6>Writing Credits</h6>
-                        <table>
-                            <tr>
+                        <table id="tb-movie-writer-all">
+                            <!-- <tr>
                                 <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+                            </tr> -->
+                            
                         </table>
                     </div>
 
@@ -121,47 +90,16 @@
                     <hr class="mt-0">
                     <div class="cast-and-crew-cast mb-4">
                         <h6>Cast</h6>
-                        <table>
-                            <tr>
+                        <table id="tb-movie-cast-all">
+                            <!-- <tr>
                                 <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+                            </tr> -->
+                            
                         </table>
                     </div>
 
@@ -169,47 +107,16 @@
                     <hr class="mt-0">
                     <div class="cast-and-crew-producer mb-4">
                         <h6>Produced by</h6>
-                        <table>
-                            <tr>
+                        <table id="tb-movie-produced-all">
+                            <!-- <tr>
                                 <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+                            </tr> -->
+
                         </table>
                     </div>
 
@@ -218,46 +125,15 @@
                     <div class="cast-and-crew-cinematography mb-4">
                         <h6>Cinematography by</h6>
                         <table>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
+                            <tr id="tb-movie-cinematography-all">
+                                <!-- <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
-                                </td>
+                                </td> -->
                             </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+
                         </table>
                     </div>
 
@@ -266,46 +142,15 @@
                     <div class="cast-and-crew-editing mb-4">
                         <h6>Editing by</h6>
                         <table>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
+                            <tr id="tb-movie-editing-all">
+                                <!-- <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
-                                </td>
+                                </td> -->
                             </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+                            
                         </table>
                     </div>
 
@@ -314,46 +159,15 @@
                     <div class="cast-and-crew-special-effect mb-4">
                         <h6>Special Effects by</h6>
                         <table>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
+                            <tr id="tb-movie-special-effects-all">
+                                <!-- <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
-                                </td>
+                                </td> -->
                             </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jim Starlin</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Drax & Gamora created by)</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Stan Lee</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) &</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Larry Lieber</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by) and</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
-                                        <p>Jack Kirby</p>
-                                    </a></td>
-                                <td style="vertical-align: top;" class="cast-and-crew-role">
-                                    <p>(Groot created by)</p>
-                                </td>
-                            </tr>
+                            
                         </table>
                     </div>
 
@@ -362,13 +176,13 @@
                     <div class="cast-and-crew-special-music mb-2">
                         <h6>Music by</h6>
                         <table>
-                            <tr>
-                                <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
+                            <tr id="tb-movie-music-all">
+                                <!-- <td style="vertical-align: top;" class="cast-and-crew-name"><a href="#">
                                         <p>James Gunn</p>
                                     </a></td>
                                 <td style="vertical-align: top;" class="cast-and-crew-role">
                                     <p>(screenplay by)</p>
-                                </td>
+                                </td> -->
                             </tr>
                         </table>
                     </div>

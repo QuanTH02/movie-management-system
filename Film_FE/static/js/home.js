@@ -116,11 +116,8 @@ $(document).ready(function () {
             // Lấy giá trị từ ô input
             var searchText = searchInput.value.trim().toLowerCase();
 
-            // Kiểm tra nếu người dùng đã nhập "Ve"
-            if (searchText === "ve") {
-                // Chuyển hướng đến trang "film.html"
-                window.location.href = "detail.html";
-            }
+            localStorage.setItem("movie_name", searchText);
+            window.location.href = "detail.html";
         });
     }
 
@@ -128,5 +125,8 @@ $(document).ready(function () {
     // $(".log-out").on("click", function () {
     //     window.location.href = "home.html";
     // });
+
+
+    
 
 });

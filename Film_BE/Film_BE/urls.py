@@ -34,8 +34,9 @@ from App_Film_BE.views import (
     SpecialeffectsListView, 
     TaglinesListView,
     WritersListView,
-    AspectRatioListView,
     # Không bảng trung gian
+    AspectRatioListView,
+    MovieListView,
     CinematographicProcessListView,
     ColorProcessListView,
     CountryOriginListView,
@@ -51,7 +52,7 @@ from App_Film_BE.views import (
     RatingFilmListView,
     SoundMixListView,
     TicketRoomListView,
-    
+    TicketListView,
 )
 
 urlpatterns = [
@@ -59,9 +60,11 @@ urlpatterns = [
     # User
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/login/', LoginView.as_view(), name='login'),
+    path('api/ticketroom/', TicketListView.as_view(), name='ticketroom-list'),
     path('api/review/', ReviewView.as_view(), name='review'),
-
     path('api/film/', FilmListView.as_view(), name='film-list'),
+
+    # Bảng trung gian
     path('api/movie/<str:movie_id>/award/', AwardsListView.as_view(), name='award-list'),
     path('api/movie/<str:movie_id>/director/', DirectorListView.as_view(), name='director-list'),
     path('api/movie/<str:movie_id>/camera/', CameraListView.as_view(), name='camera-list'),
@@ -76,6 +79,7 @@ urlpatterns = [
     path('api/movie/<str:movie_id>/writers/', WritersListView.as_view(), name='writers-list'),
 
     # Không bảng trung gian
+    path('api/movie/<str:movie_id>/', MovieListView.as_view(), name='movie-list'),
     path('api/movie/<str:movie_id>/aspectratio/', AspectRatioListView.as_view(), name='aspectratio-list'),
     path('api/movie/<str:movie_id>/cinematographicprocess/', CinematographicProcessListView.as_view(), name='cinematographicprocess-list'),
     path('api/movie/<str:movie_id>/color/', ColorProcessListView.as_view(), name='color-list'),
@@ -92,8 +96,5 @@ urlpatterns = [
     path('api/movie/<str:movie_id>/ratingfilm/', RatingFilmListView.as_view(), name='ratingfilm-list'),
     path('api/movie/<str:movie_id>/soundmix/', SoundMixListView.as_view(), name='soundmix-list'),
     path('api/movie/<str:movie_id>/ticketroom/', TicketRoomListView.as_view(), name='ticketroom-list'),
-
-
-
 ]
 

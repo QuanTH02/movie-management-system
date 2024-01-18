@@ -17,6 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="../static/js/home.js"></script>
+  <script type="module" src="../static/js/api/api.js"></script>
   <style>
     /* Add your custom styles here */
 
@@ -56,7 +57,7 @@
             <div class="carousel-item active">
               <video controls width="100%">
                 <source
-                  src="https://imdb-video.media-imdb.com/vi2046936089/1434659607842-pgv4ql-1680706385480.mp4?Expires=1702968113&Signature=AyVZixTbZ1R-CYzMFFgrMmDuc5Td9t3ybUF2A-M6DzK6eYU7oYUEEjuBexFvCJRhVOsuRBci2T1gdar6kJm6h9EDjZajtlxlZN2SqVpCLYbef2gWL-E2FANWJCbNuEeIrZp1NOkTIqQoUpRlhLxBbimUNFO6N1-PgWPtqatqd5hcvQeZeJcalancla4NyFiovxUgeWmJJoEZZbznFEjZr-pNcZf0UtnEMoqoZHKPUlYuVxOotdRIDyeDTyDGviCM87foFygwM9pEcHjkTJiG0OUgDVoIOziQPepePo-91UfGzddolnLXjzA67uc12yu4EMoKlP7ZeL0xtlVGgyysYQ__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                  src="https://imdb-video.media-imdb.com/vi87213849/1434659607842-pgv4ql-1698417533740.mp4?Expires=1705650979&Signature=SVdLmunlAL6vKfVt0a21bf1A9Kv~9i8Ltof2uUspx~xK6b79ZAiurbfg6sO9ABwGArZwxNaR4QpcuE09aeszz1grFna2dykeDJT4xV0uX0wkNStejkot7yZs2i4r0XwOeP9PTWGPjSJjLWRi2ReEL5j1Nmwj-Nw6fvx56ahfXu9K23vNVFQAOqCSTBO1Cdcl7-0rZTQarcFnwHam6s-r4NWRkjn5ttyEV23e~I1xrlHiMn5nmAm8l19AomKP2TcPZ4bGFJ7U3sFzP~XuPbzHdqzymvrMmwIvR3oIFEXnOXC-Ulptt8nAvF9MJj-Q-phB1duh4JaRVqzqPa7b5Q0DQA__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
                   type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -65,7 +66,7 @@
             <div class="carousel-item video-trailer">
               <video controls width="100%">
                 <source
-                  src="https://imdb-video.media-imdb.com/vi2046936089/1434659607842-pgv4ql-1680706385480.mp4?Expires=1702968113&Signature=AyVZixTbZ1R-CYzMFFgrMmDuc5Td9t3ybUF2A-M6DzK6eYU7oYUEEjuBexFvCJRhVOsuRBci2T1gdar6kJm6h9EDjZajtlxlZN2SqVpCLYbef2gWL-E2FANWJCbNuEeIrZp1NOkTIqQoUpRlhLxBbimUNFO6N1-PgWPtqatqd5hcvQeZeJcalancla4NyFiovxUgeWmJJoEZZbznFEjZr-pNcZf0UtnEMoqoZHKPUlYuVxOotdRIDyeDTyDGviCM87foFygwM9pEcHjkTJiG0OUgDVoIOziQPepePo-91UfGzddolnLXjzA67uc12yu4EMoKlP7ZeL0xtlVGgyysYQ__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                  src="https://imdb-video.media-imdb.com/vi87213849/1434659607842-pgv4ql-1698417533740.mp4?Expires=1705650979&Signature=SVdLmunlAL6vKfVt0a21bf1A9Kv~9i8Ltof2uUspx~xK6b79ZAiurbfg6sO9ABwGArZwxNaR4QpcuE09aeszz1grFna2dykeDJT4xV0uX0wkNStejkot7yZs2i4r0XwOeP9PTWGPjSJjLWRi2ReEL5j1Nmwj-Nw6fvx56ahfXu9K23vNVFQAOqCSTBO1Cdcl7-0rZTQarcFnwHam6s-r4NWRkjn5ttyEV23e~I1xrlHiMn5nmAm8l19AomKP2TcPZ4bGFJ7U3sFzP~XuPbzHdqzymvrMmwIvR3oIFEXnOXC-Ulptt8nAvF9MJj-Q-phB1duh4JaRVqzqPa7b5Q0DQA__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
                   type="video/mp4">
                 Your browser does not support the video tag.
               </video>
@@ -281,464 +282,6 @@
 
   <!-- SCRIPT -->
   <script>
-    // List Right Video
-    var videos = [
-      {
-        image: "../media/vebinh1.jpg",
-        playTime: "0:49",
-        title: "Ve Binh Giai Ngan Ha di giai cuu the gioi dong vat",
-        description: "Description 1"
-      },
-      {
-        image: "../media/vebinh2.jpg",
-        playTime: "0:49",
-        title: "Another Video Title",
-        description: "Description 2"
-      },
-      {
-        image: "../media/vebinh3.jpg",
-        playTime: "0:49",
-        title: "Yet Another Video Title",
-        description: "Description 3"
-      }
-    ];
-
-    // Lặp qua mảng video và tạo các phần tử HTML tương ứng
-    var videoList = document.getElementById('listRightVideo'); // Thay 'yourListId' bằng id thích hợp của danh sách ul
-
-    videos.forEach(function (videos, index) {
-      // Tạo các phần tử HTML
-      var listItem = document.createElement('li');
-      listItem.classList.add('list-group-item', 'pt-0', 'pb-0', 'mb-1', 'trailer-play');
-
-      var rowDiv = document.createElement('div');
-      rowDiv.classList.add('row');
-
-      var imgDiv = document.createElement('div');
-      imgDiv.classList.add('col-md-2', 'img-small');
-
-      var img = document.createElement('img');
-      img.src = videos.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var bodyDiv = document.createElement('div');
-      bodyDiv.classList.add('col-md-10', 'card-body', 'd-flex', 'flex-column', 'mt-0', 'pt-0');
-
-      var playTime = document.createElement('p');
-      playTime.classList.add('play-time');
-      playTime.innerHTML = '<i class="fa fa-play-circle-o mr-2" style="font-size:30px"></i> ' + videos.playTime;
-
-      var title = document.createElement('h5');
-      title.classList.add('card-title', 'mt-0', 'mb-1');
-      title.style.color = 'rgba(255, 255, 255, 0.9)';
-      title.innerText = videos.title;
-
-      var description = document.createElement('p');
-      description.classList.add('des');
-      description.innerText = videos.description;
-
-      // Gắn các phần tử con vào phần tử cha
-      imgDiv.appendChild(img);
-      rowDiv.appendChild(imgDiv);
-      bodyDiv.appendChild(playTime);
-      bodyDiv.appendChild(title);
-      bodyDiv.appendChild(description);
-      rowDiv.appendChild(bodyDiv);
-      listItem.appendChild(rowDiv);
-
-      // Thêm listItem vào danh sách
-      videoList.appendChild(listItem);
-    });
-
-
-    // List Most Popular
-    // #################################################################
-    // #################################################################
-    // #################################################################
-    // Tạo một đối tượng chứa thông tin phim
-    var movies = [
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      // ... Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listMostpopular = document.getElementById('listMostpopular');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    movies.forEach(function (movie, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'mostPopular-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movie.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movie.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopular
-      listMostpopular.appendChild(movieDiv);
-    });
-
-    // ListMostPopular-Carousel
-    var moviesData = [
-      {
-        image: "../media/vebinh6.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh5.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh4.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh3.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh2.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      }
-      // Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listMostpopularCarousel = document.getElementById('listMostpopular-Carousel');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesData.forEach(function (movieData, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'mostPopularCarousel-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movieData.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movieData.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movieData.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopularCarousel
-      listMostpopularCarousel.appendChild(movieDiv);
-    });
-
-    // #################################################################
-    // #################################################################
-    // #################################################################
-
-    // List Most Favourites
-    // #################################################################
-    // #################################################################
-    // #################################################################
-    // Tạo một đối tượng chứa thông tin phim
-    var moviesMostFavourites = [
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      // ... Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listMostFavourites = document.getElementById('listMostFavourites');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesMostFavourites.forEach(function (movie, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'mostFavourite-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movie.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movie.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopular
-      listMostFavourites.appendChild(movieDiv);
-    });
-
-    // ListMostPopular-Carousel
-    var moviesMostFavouritesDataCarousel = [
-      {
-        image: "../media/vebinh6.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh5.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh4.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh3.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh2.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      }
-      // Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listMostFavouritesCarousel = document.getElementById('listMostFavourites-Carousel');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesMostFavouritesDataCarousel.forEach(function (movieData, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'mostFavouriteCarousel-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movieData.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movieData.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movieData.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopularCarousel
-      listMostFavouritesCarousel.appendChild(movieDiv);
-    });
 
     // #################################################################
     // #################################################################
@@ -750,33 +293,33 @@
     // #################################################################
     // Tạo một đối tượng chứa thông tin phim
     var moviesHighestRevenue = [
-      {
-        image: "../media/vebinh1.jpg",
+    {
+        image: "../media/film11.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film10.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film2.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film7.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film1.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film8.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
@@ -790,7 +333,7 @@
     moviesHighestRevenue.forEach(function (movie, index) {
       // Tạo các phần tử HTML
       var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
+      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
       var cardDiv = document.createElement('div');
       cardDiv.classList.add('card');
@@ -884,7 +427,7 @@
     moviesHighestRevenueDataCarousel.forEach(function (movieData, index) {
       // Tạo các phần tử HTML
       var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
+      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
       var cardDiv = document.createElement('div');
       cardDiv.classList.add('card');
@@ -946,32 +489,32 @@
     // Tạo một đối tượng chứa thông tin phim
     var moviesLatest = [
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film4.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film5.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film6.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film7.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film11.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
       {
-        image: "../media/vebinh1.jpg",
+        image: "../media/film12.jpg",
         rating: 4.9,
         title: "Ve Binh Giai Ngan Ha"
       },
@@ -985,7 +528,7 @@
     moviesLatest.forEach(function (movie, index) {
       // Tạo các phần tử HTML
       var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
+      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
       var cardDiv = document.createElement('div');
       cardDiv.classList.add('card');
@@ -1079,7 +622,7 @@
     moviesLatestDataCarousel.forEach(function (movieData, index) {
       // Tạo các phần tử HTML
       var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0');
+      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
       var cardDiv = document.createElement('div');
       cardDiv.classList.add('card');

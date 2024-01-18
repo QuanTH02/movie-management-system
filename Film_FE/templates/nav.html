@@ -1,13 +1,86 @@
+<style>
+  .result li {
+    display: block;
+    margin-right: 15px;
+    background-color: rgb(43, 43, 43);
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+  }
+
+  .result li:hover {
+    opacity: 0.8;
+  }
+
+  .result li a:hover {
+    text-decoration: none;
+  }
+
+  .result li p {
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+
+  .parent-result {
+    margin-top: 50px;
+    margin-left: 120px;
+    position: absolute;
+    display: none;
+  }
+
+  .result {
+    width: 500px;
+    height: auto;
+    position: absolute;
+    margin-top: 0px;
+    border-radius: 3px;
+    background-color: rgb(21, 21, 21);
+    color: black;
+  }
+</style>
+
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar">
   <a class="navbar-brand ml-5" href="home.html">QuanFilm</a>
 
   <div class="collapse navbar-collapse" id="navbarNav">
+
     <form class="search-box form-inline ml-auto" id="searchForm">
+      <select name="filmFilter" class="d-inline-block mr-2">
+        <option value="0" selected="selected">Filter</option>
+        <option value="1">Movie Name</option>
+        <option value="2">Director</option>
+        <option value="3">Star</option>
+        <option value="4">Genres</option>
+      </select>
+
       <input class="form-control mr-2" type="search" placeholder="Search" id="searchInput" aria-label="Search"
         style="width: 500px;">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <div class="parent-result" id="div-parent-result">
+        <div class="result">
+          <ul class="pl-3 pt-2 add-li-search">
+            <li>
+              <div>
+                <a href="detail.html" class="name-and-des-search" id="searchResults">
+                  <h6 class="name-search">The Lord of the Rings: The Return of</h6>
+                  <p>Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam
+                    as they approach Mount Doom with the One Ring.
+                  </p>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </form>
+
+
+    <!-- <a href="detail.html" class="ml-5"
+      style="background-color: rgb(254, 251, 246); border-radius: 3px; color: black; padding: 6px 10px; font-weight: 500;"
+      onmouseover="this.style.textDecoration='none'; this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">All
+      Film</a> -->
 
     <ul class="navbar-nav ml-auto mr-4">
       <li class="nav-item">
@@ -36,11 +109,12 @@
 </nav>
 
 <script src="../static/js/home.js"></script>
+<script type="module" src="../static/js/api/api.js"></script>
 <script>
   var currentAccount = localStorage.getItem('currentAccount');
   var navLogin = document.getElementById("nav-login");
   var navSetting = document.getElementById("nav-setting");
-  
+
   if (currentAccount) {
     navSetting.style.display = "block";
     navLogin.style.display = "none";
