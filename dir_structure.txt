@@ -39,3 +39,18 @@ Directory structure:
 |    |    |-- nav.html
 |    |    |-- profile.html
 |    |    |-- user_review.html
+
+|-- ReportWord
+|    |-- ReportGR1.docx
+|    |-- ReportGR2.docx
+
+
+|-- ReportMarkdown
+|    |-- ReportGR1
+|    |    |-- ReportGR1.md
+|    |-- ReportGR2
+|    |    |-- ReportGR2.md
+
+|-- dir_structure
+
+|-- README
