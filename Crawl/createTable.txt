@@ -1,0 +1,456 @@
+
+CREATE TABLE `filmdata`.`cast` (
+  `cast_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`cast_id`));
+
+  CREATE TABLE `filmdata`.`movie_cast` (
+  `movie_id` INT NOT NULL,
+  `cast_id` INT NOT NULL,
+  INDEX `movie_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `cast_idx` (`cast_id` ASC) VISIBLE,
+  CONSTRAINT `movie_cast`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `cast`
+    FOREIGN KEY (`cast_id`)
+    REFERENCES `filmdata`.`cast` (`cast_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`music` (
+  `music_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`music_id`));
+
+
+CREATE TABLE `filmdata`.`movie_music` (
+  `movie_id` INT NOT NULL,
+  `music_id` INT NOT NULL,
+  INDEX `music_idx` (`music_id` ASC) VISIBLE,
+  INDEX `movie_music_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_music`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `music`
+    FOREIGN KEY (`music_id`)
+    REFERENCES `filmdata`.`music` (`music_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`cinematography` (
+  `cinematography_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`cinematography_id`));
+
+
+CREATE TABLE `filmdata`.`movie_cinematography` (
+  `movie_id` INT NOT NULL,
+  `cinematography_id` INT NOT NULL,
+  INDEX `movie_cinematography_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `cinematography_idx` (`cinematography_id` ASC) VISIBLE,
+  CONSTRAINT `movie_cinematography`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `cinematography`
+    FOREIGN KEY (`cinematography_id`)
+    REFERENCES `filmdata`.`cinematography` (`cinematography_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`editing` (
+  `editing_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`idediting_id`));
+
+
+CREATE TABLE `filmdata`.`movie_editing` (
+  `movie_id` INT NOT NULL,
+  `editing_id` INT NOT NULL,
+  INDEX `editing_idx` (`editing_id` ASC) VISIBLE,
+  INDEX `movie_editing_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_editing`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `editing`
+    FOREIGN KEY (`editing_id`)
+    REFERENCES `filmdata`.`editing` (`editing_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`director` (
+  `director_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`director_id`));
+
+
+CREATE TABLE `filmdata`.`movie_director` (
+  `movie_id` INT NOT NULL,
+  `director_id` INT NOT NULL,
+  INDEX `movie_director_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `director_idx` (`director_id` ASC) VISIBLE,
+  CONSTRAINT `movie_director`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `director`
+    FOREIGN KEY (`director_id`)
+    REFERENCES `filmdata`.`director` (`director_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`produced` (
+  `produced_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`produced_id`));
+
+
+CREATE TABLE `filmdata`.`movie_produced` (
+  `movie_id` INT NOT NULL,
+  `produced_id` INT NOT NULL,
+  INDEX `movie_produced_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `produced_idx` (`produced_id` ASC) VISIBLE,
+  CONSTRAINT `movie_produced`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `produced`
+    FOREIGN KEY (`produced_id`)
+    REFERENCES `filmdata`.`produced` (`produced_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`specialeffects` (
+  `special_effect_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `role` VARCHAR(200) NULL,
+  PRIMARY KEY (`special_effect_id`));
+
+
+CREATE TABLE `filmdata`.`movie_specialeffects` (
+  `movie_id` INT NOT NULL,
+  `special_effect_id` INT NOT NULL,
+  INDEX `specialeffects_idx` (`special_effect_id` ASC) VISIBLE,
+  CONSTRAINT `movie_specialeffects`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `specialeffects`
+    FOREIGN KEY (`special_effect_id`)
+    REFERENCES `filmdata`.`specialeffects` (`special_effect_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`content` (
+  `content_id` INT NOT NULL,
+  `describe` TEXT NULL,
+  `storyline` TEXT NULL,
+  `taglines` TEXT NULL,
+  PRIMARY KEY (`content_id`));
+
+//// Thiếu 2 bảng
+
+CREATE TABLE `filmdata`.`movie_genres` (
+  `movie_id` INT NOT NULL,
+  `genres_id` INT NOT NULL,
+  INDEX `movie_genres_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `genres_idx` (`genres_id` ASC) VISIBLE,
+  CONSTRAINT `movie_genres`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `genres`
+    FOREIGN KEY (`genres_id`)
+    REFERENCES `filmdata`.`genres` (`genres_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`did_you_know` (
+  `did_you_know_id` INT NOT NULL,
+  `movie_id` INT NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `content` TEXT NULL,
+  PRIMARY KEY (`did_you_know_id`),
+  INDEX `movie_did_you_know_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_did_you_know`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`taglines` (
+  `taglines_id` INT NOT NULL,
+  `taglines_content` TEXT NULL,
+  PRIMARY KEY (`taglines_id`));
+
+CREATE TABLE `filmdata`.`movie_taglines` (
+  `movie_id` INT NULL,
+  `taglines_id` INT NULL,
+  INDEX `movie_taglines_idx` (`movie_id` ASC) VISIBLE,
+  INDEX `taglines_idx` (`taglines_id` ASC) VISIBLE,
+  CONSTRAINT `movie_taglines`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `taglines`
+    FOREIGN KEY (`taglines_id`)
+    REFERENCES `filmdata`.`taglines` (`taglines_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`country_origin` (
+  `country_origin_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `country_origin_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`country_origin_id`),
+  INDEX `movie_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`official_site` (
+  `official_site_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `official_site_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`official_site_id`),
+  INDEX `movie_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_official_site`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`language` (
+  `language_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `language_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`language_id`),
+  INDEX `movie_language_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_language`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`filming_locations` (
+  `filming_locations_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `filming_locations_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`filming_locations_id`),
+  INDEX `movie_filming_locations_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_filming_locations`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`production_companies` (
+  `production_companies_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `production_companies_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`production_companies_id`),
+  INDEX `movie_production_companies_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_production_companies`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`sound_mix` (
+  `sound_mix_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `sound_mix_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`sound_mix_id`),
+  INDEX `movie_sound_mix_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_sound_mix`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`color` (
+  `color_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `color_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`color_id`),
+  INDEX `movie_color_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_color`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`aspect_ratio` (
+  `aspect_ratio_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `aspect_ratio_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`aspect_ratio_id`),
+  INDEX `movie_aspect_ratio_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_aspect_ratio`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`camera` (
+  `camera_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `camera_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`camera_id`),
+  INDEX `movie_camera_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_camera`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`laboratory` (
+  `laboratory_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `laboratory_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`laboratory_id`),
+  INDEX `movie_laboratory_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_laboratory`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`new_tablenegative_format` (
+  `negative_format_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `negative_format_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`negative_format_id`),
+  INDEX `movie_negative_format_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_negative_format`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`cinematographic_process` (
+  `cinematographic_process_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `cinematographic_process_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`cinematographic_process_id`),
+  INDEX `movie_cinematographic_process_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_cinematographic_process`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`printed_film_format` (
+  `printed_film_format_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `printed_film_format_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`printed_film_format_id`),
+  INDEX `movie_printed_film_format_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_printed_film_format`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`ticket_room` (
+  `ticket_room_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `budget` VARCHAR(45) NULL,
+  `gross` VARCHAR(45) NULL,
+  `opening_weekend` VARCHAR(45) NULL,
+  `gross_worldwide` VARCHAR(45) NULL,
+  PRIMARY KEY (`ticket_room_id`),
+  INDEX `movie_ticket_room_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_ticket_room`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`film_review` (
+  `film_review_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `star_review` VARCHAR(45) NULL,
+  `title_review` TEXT NULL,
+  `name_review` VARCHAR(45) NULL,
+  `date_review` VARCHAR(45) NULL,
+  `content_review` TEXT NULL,
+  PRIMARY KEY (`film_review_id`),
+  INDEX `movie_film_review_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_film_review`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `filmdata`.`rating` (
+  `rating_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `number_of_stars` VARCHAR(45) NULL,
+  `percent_people_vote` VARCHAR(45) NULL,
+  `number_people_vote` VARCHAR(45) NULL,
+  PRIMARY KEY (`rating_id`),
+  INDEX `movie_rating_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_rating`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
+CREATE TABLE `filmdata`.`negative_format` (
+  `negative_format_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `negative_format_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`negative_format_id`),
+  INDEX `movie_negative_format_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_negative_format`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `filmdata`.`awards` (
+  `awards_id` INT NOT NULL,
+  `movie_id` INT NULL,
+  `awards_name` TEXT NULL,
+  PRIMARY KEY (`awards_id`),
+  INDEX `movie_awards_idx` (`movie_id` ASC) VISIBLE,
+  CONSTRAINT `movie_awards`
+    FOREIGN KEY (`movie_id`)
+    REFERENCES `filmdata`.`movieinformation` (`movie_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);

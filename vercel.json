@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "Film_FE/**/*",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+        {
+          "src": "/Film_FE/templates/login.html",
+          "dest": "/Film_FE/templates/login.html"
+        }
+      ]
+  }
+  

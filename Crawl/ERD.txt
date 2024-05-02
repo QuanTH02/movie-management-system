@@ -1,0 +1,124 @@
+Movie information: Thông tin phim
+- movie_id: ID phim
+- movie_name: Tên phim 
+- original_name_movie: Tên gốc của phim
+- year_manufacture: Năm sản xuất
+- release_date: Ngày phát hành
+- time: Thời lượng
+- link_img: Ảnh nền
+- link_trailer
+- describe: Mô tả
+- storyline: Cốt truyện
+- rating: Số sao trung bình
+- total_vote: Tổng số người đánh giá
+
+Director: Đạo diễn 
+- director_id
+- name
+- role
+
+Cast: Diễn viên
+- cast_id
+- name
+- role
+
+Produced: Sản xuất
+- produced_id
+- name
+- role
+
+Cinematography
+- cinematography_id
+- name
+- role
+
+Editing
+- editing_id
+- name
+- role
+
+Special Effects: Hiệu ứng đặc biệt
+- special_effects_id
+- name
+- role
+
+Music
+- music_id
+- name
+- role
+
+Taglines
+- taglines_id
+- taglines_content: Khẩu hiệu
+
+Genres: Thể loại
+- genres_id
+- genres_name
+
+Did_you_know: Bạn có biết ?
+- did_you_know_id
+- movie_id: ID phim
+- name: Tên người viết
+- content: Nội dung
+
+!!!!!!!!!!!!!!!
+Bảng trung gian: Gồm movie_id và ...id
+movie_cast
+movie_cinematography
+movie_director
+movie_editing
+movie_genres
+movie_music
+movie_produced
+movie_specialeffects
+movie_taglines
+movie_writers
+!!!!!!!!!!!!!!!
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Details: Chi tiết
+- movie_id: ID phim
+
+- country_origin: Quốc gia xuất xứ
+- official_site: Web phát hành chính thức
+- language: Ngôn ngữ
+- filming_locations: Địa điểm quay phim
+- production_companies: Công ty sản xuất
+    
+Specifications: Thông số kỹ thuật
+- movie_id: ID phim
+- sound_mix: Trộn âm thanh
+- color: Màu
+- aspect_ratio: Tỷ lệ khung hình
+- camera: Máy ảnh
+- laboratory: Phòng thí nghiệm
+- negative_format
+- cinematographic_process: Quá trình quay phim
+- printed_film_format: Định dạng phim in
+
+Ticket room: Phòng vé
+- ticket_room_id
+- movie_id: ID phim
+- budget: Ngân sách
+- gross: Tổng trong nước
+- opening_weekend: Tuần đầu tiên
+- gross_worldwide: Tổng trên thế giới
+
+Awards: Các giải thưởng
+- award_id
+- movie_id: ID phim
+- name: Tên giải thưởng
+
+Film review: Đánh giá phim
+- movie_id: ID phim
+- star_review: Số sao
+- title_review: Tiêu đề
+- name_review: Người review
+- date_review: Ngày
+- content_review: Nội dung
+
+IMDb_rating: Xếp hạng IMDb
+
+- number_of_stars: Sao số (10, 9, 8, ...)
+- percent_people_vote: Phần trăm đánh giá sao số ...
+- number_people_vote: Số người đánh giá sao số ...
