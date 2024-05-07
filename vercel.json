@@ -1,16 +1,11 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "Film_FE/**/*",
-        "use": "@vercel/static"
-      }
-    ],
-    "routes": [
-        {
-          "src": "/Film_FE/templates/login.html",
-          "dest": "/Film_FE/templates/login.html"
-        }
-      ]
-  }
-  
+  "version": 2,
+  "builds": [
+    { "src": "Film_FE/*", "use": "@vercel/static-build" }
+  ],
+  "routes": [
+    { "src": "/(templates/login\\.html|login\\.css|home\\.css|login\\.js|home\\.js)", "dest": "/$1" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/templates/login.html" }
+  ]
+}
