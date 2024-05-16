@@ -54,6 +54,8 @@ from App_Film_BE.views import (
     TicketRoomListView,
     TicketListView,
     AccountListView,
+    RecommendContentBasedView,
+    RecommendCollaborativeView,
 )
 
 urlpatterns = [
@@ -99,5 +101,9 @@ urlpatterns = [
     path('api/movie/<str:movie_id>/ratingfilm/', RatingFilmListView.as_view(), name='ratingfilm-list'),
     path('api/movie/<str:movie_id>/soundmix/', SoundMixListView.as_view(), name='soundmix-list'),
     path('api/movie/<str:movie_id>/ticketroom/', TicketRoomListView.as_view(), name='ticketroom-list'),
+
+    # Recommend
+    path('api/recommend/contentbased/<int:movie_id>/', RecommendContentBasedView.as_view(), name='recommend-contentbased-movies'),
+    path('api/recommend/collaborative/<int:user_id>/', RecommendCollaborativeView.as_view(), name='recommend-collaborative-movies'),
 ]
 

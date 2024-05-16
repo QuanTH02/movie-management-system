@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import generics
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from .Reconmmendation.Collaborative.load_model import *
+from .Reconmmendation.Content_Based.load_model import *
 from rest_framework import status
 from .models import (
     Movieinformation,
@@ -1258,10 +1260,10 @@ class AccountListView(generics.ListAPIView):
             pfEmail = request.data.get('pfEmail')
             user_id = request.data.get('pfId')
 
-            print(pfFName)
-            print(pfLName)
-            print(pfEmail)
-            print(user_id)
+            # print(pfFName)
+            # print(pfLName)
+            # print(pfEmail)
+            # print(user_id)
 
             user = User.objects.get(id=user_id)
             user.first_name = pfFName
@@ -1269,6 +1271,34 @@ class AccountListView(generics.ListAPIView):
             user.email = pfEmail
             user.save()    
 
-            print(user)
+            # print(user)
 
             return Response({'message': 'Update Success'})
+        
+
+# Collaborative and Content-Based Filtering
+class RecommendContentBasedView(generics.ListAPIView):
+    serializer_class = FilmSerializer
+
+    def get_queryset(self):
+        movie_id = self.kwargs['movie_id']
+        
+        recommended_ids = recommend_content_based_by_movie_id(movie_id)
+        
+        # Truy vấn thông tin các movie_id từ model Movieinformation
+        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+        
+        return queryset
+
+class RecommendCollaborativeView(generics.ListAPIView):
+    serializer_class = FilmSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        
+        recommended_ids = recommend_collaborative_by_user_id(user_id)
+        
+        # Truy vấn thông tin các movie_id từ model Movieinformation
+        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+        
+        return queryset

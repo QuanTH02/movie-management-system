@@ -2,6 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from App_Film_BE.Reconmmendation.Collaborative.load_model import *
+
 
 
 def main():
