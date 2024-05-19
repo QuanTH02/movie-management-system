@@ -243,3 +243,10 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined']
+
+# Trailer
+class LinkTrailerSerializer(serializers.Serializer):
+    link_trailer = serializers.CharField()
+
+class LinkImgSerializer(serializers.Serializer):
+    link_img = serializers.CharField()

@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .Reconmmendation.Collaborative.load_model import *
 from .Reconmmendation.Content_Based.load_model import *
+from .Func.link_trailer import *
 from rest_framework import status
 from .models import (
     Movieinformation,
@@ -87,9 +88,10 @@ from .serializers import (
     RatingFilmSerializer,
     SoundMixSerializer,
     TicketRoomSerializer,
-    FollowFilmUserSerializer
+    FollowFilmUserSerializer,
+    LinkTrailerSerializer,
+    LinkImgSerializer
 )
-
 
 # User
 class LoginView(generics.ListAPIView):
@@ -1283,12 +1285,22 @@ class RecommendContentBasedView(generics.ListAPIView):
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
         
-        recommended_ids = recommend_content_based_by_movie_id(movie_id)
+        try:
+            movie_id = int(movie_id)
+            recommended_ids = recommend_content_based_by_movie_id(movie_id)
+            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+            return queryset
+        except ValueError:
+            return self.get_recommend_content_based_by_movie_name(movie_id)
         
-        # Truy vấn thông tin các movie_id từ model Movieinformation
-        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-        
-        return queryset
+    def get_recommend_content_based_by_movie_name(self, movie_name):
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+            recommended_ids = recommend_content_based_by_movie_id(movie_info.movie_id)
+            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+            return queryset
+        except Movieinformation.DoesNotExist:
+            raise generics.NotFound("Movie not found.")
 
 class RecommendCollaborativeView(generics.ListAPIView):
     serializer_class = FilmSerializer
@@ -1296,9 +1308,45 @@ class RecommendCollaborativeView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         
-        recommended_ids = recommend_collaborative_by_user_id(user_id)
+        try:
+            user_id = int(user_id)
+            recommended_ids = recommend_collaborative_by_user_id(user_id)
+            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+            return queryset
+
+        except ValueError:
+            return self.get_recommend_collaborative_by_movie_name(user_id)
         
-        # Truy vấn thông tin các movie_id từ model Movieinformation
-        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+    def get_recommend_collaborative_by_movie_name(self, movie_name):
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+            recommended_ids = recommend_collaborative_by_user_id(movie_info.movie_id)
+            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+            return queryset
+        except Movieinformation.DoesNotExist:
+            raise generics.NotFound("Movie not found.")
         
-        return queryset
+
+# Load trailer video
+class TrailerMovieView(generics.ListAPIView):
+    serializer_class = LinkTrailerSerializer
+
+    def get_queryset(self):
+        link_page_trailer = self.kwargs['link_page_trailer']
+
+        link_trailer = main_link_trailer(link_page_trailer)
+
+        # Trả về một danh sách với một phần tử chứa link_trailer
+        return [{'link_trailer': link_trailer}]
+        
+
+class ImgMovieView(generics.ListAPIView):
+    serializer_class = LinkImgSerializer
+
+    def get_queryset(self):
+        link_page_img = self.kwargs['link_page_img']
+
+        link_img = main_link_img(link_page_img)
+
+        # Trả về một danh sách với một phần tử chứa link_img
+        return [{'link_img': link_img}]

@@ -582,4 +582,41 @@ a {
     opacity: 0.7;
 }
 
+#title-maybe-you-like {
+    margin: 0px 20px;
+    padding-top: 10px;
+}
 
+
+
+.movie_maybe_like ul {
+    padding-left: 0px;
+
+}
+
+.movie_maybe_like, .a-movie-maybe-like {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.a-movie-maybe-like {
+    padding: 10px 20px;
+    border: 0px solid red;
+}
+
+.a-movie-maybe-like:hover {
+    text-decoration: none;
+    background-color: rgb(42, 42, 42);
+}
+
+.img-movie-maybe-like {
+    width: 50px;
+    height: 75px;
+    margin-right: 10px;
+}
+
+.div-movie-maybe-like {
+    margin-left: 10px;
+    margin-top: 10px;
+}
