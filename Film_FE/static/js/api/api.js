@@ -1,6 +1,6 @@
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail } from "./render/page_home.js";
-import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent } from "./render/page_detail.js";
+import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg } from "./render/page_detail.js";
 import { LoadDirectorAll, LoadWriterAll, LoadCastAll, LoadProducedAll, LoadCinematographyAll, LoadEditingAll, LoadSpecialEffectsAll, LoadMusicAll } from "./render/page_cast_and_crew.js";
 import { LoadAwardAll } from "./render/page_award.js";
 import { LoadFilmNav } from "./render/page_nav.js";
@@ -124,7 +124,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadFilmHome(data);
                 LoadFilmNav(data);
                 MostPopularHome(data);
@@ -160,7 +160,7 @@ $(function () {
     if (document.getElementById('pf-f-name')) {
         var currentAccount = localStorage.getItem('currentAccount');
 
-        console.log(currentAccount);
+        // console.log(currentAccount);
         fetch(`http://127.0.0.1:8000/api/account/`, {
             method: 'POST',
             headers: {
@@ -174,7 +174,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadProfile(data);
             })
             .catch(error => {
@@ -213,7 +213,7 @@ $(function () {
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    // console.log(data);
                     location.reload();
                 })
                 .catch(error => {
@@ -229,11 +229,13 @@ $(function () {
     // ##############################################################################################################
     // Load Detail
     // ##############################################################################################################
+    let linkTrailer;
+    let linkImg;
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
         var currentAccount = localStorage.getItem('currentAccount');
 
-        console.log(currentAccount);
+        // console.log(currentAccount);
         fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`, {
             method: 'POST',
             headers: {
@@ -248,13 +250,50 @@ $(function () {
             })
             .then(data => {
                 console.log(data);
+                linkTrailer = data.data[0].link_trailer;
+                linkImg = data.data[0].link_img;
+
                 LoadDetail(data, movieName);
+
+                // ##############################################################################################################
+                // Load Trailer
+                // ##############################################################################################################
+
+                fetch(`http://127.0.0.1:8000/api/link_trailer/${encodeURIComponent(linkTrailer)}/`)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        LoadTrailer(data);
+                    })
+                    .catch(error => {
+                        // Xử lý lỗi nếu có
+                        console.error('Fetch error:', error);
+                    });
+
+                // ##############################################################################################################
+                // Load Img
+                // ##############################################################################################################
+                fetch(`http://127.0.0.1:8000/api/link_img/${encodeURIComponent(linkImg)}/`)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        LoadImg(data);
+                    })
+                    .catch(error => {
+                        // Xử lý lỗi nếu có
+                        console.error('Fetch error:', error);
+                    });
+
             })
             .catch(error => {
                 // Xử lý lỗi nếu có
                 console.error('Fetch error:', error);
             });
     }
+
+
 
     // ##############################################################################################################
     // Load Genres
@@ -267,7 +306,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadGenres(data);
             })
             .catch(error => {
@@ -528,8 +567,26 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 LoadBoxOffice(data);
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                console.error('Fetch error:', error);
+            });
+    }
+
+    // ##############################################################################################################
+    // Load Maybe you like
+    // ##############################################################################################################
+    if (document.getElementById('page_film')) {
+        var movieName = localStorage.getItem('movie_name');
+
+        fetch(`http://127.0.0.1:8000/api/recommend/contentbased/${encodeURIComponent(movieName)}/`)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                LoadMovieMaybeLike(data);
             })
             .catch(error => {
                 // Xử lý lỗi nếu có
@@ -631,7 +688,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadCinematographyAll(data);
             })
             .catch(error => {
@@ -796,7 +853,7 @@ $(function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 LoadAwardAll(data);
             })
             .catch(error => {

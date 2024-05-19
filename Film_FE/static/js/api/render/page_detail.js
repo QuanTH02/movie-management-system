@@ -22,7 +22,6 @@ function LoadDetail(data, movieName) {
 
     var pMovieRelaeaseDate = document.getElementById("p-movie-releasedate");
     pMovieRelaeaseDate.textContent = data.data[0].release_date;
-
 };
 
 function LoadGenres(data) {
@@ -496,7 +495,7 @@ function LoadBoxOffice(data) {
 
 function LikeAndDisLikeEvent() {
     $('.review-div-detail').each(function () {
-        console.log("Hello");
+        // console.log("Hello");
         var $review = $(this);
         var $thumbsUpIcon = $review.find('.fa-thumbs-up');
         var $thumbsDownIcon = $review.find('.fa-thumbs-down');
@@ -536,4 +535,66 @@ function LikeAndDisLikeEvent() {
     });
 }
 
-export { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent }
+function LoadMovieMaybeLike(data) {
+    data.forEach(jsonData => {
+        const movieMaybeLikeDiv = document.createElement('div');
+        movieMaybeLikeDiv.classList.add('movie_maybe_like');
+
+        const movieLink = document.createElement('a');
+        movieLink.href = 'detail.html';
+        movieLink.classList.add('a-movie-maybe-like');
+
+        const movieImage = document.createElement('img');
+        movieImage.src = '../media/vebinh1.jpg';
+        movieImage.classList.add('img-movie-maybe-like');
+
+        const movieInfoDiv = document.createElement('div');
+        movieInfoDiv.classList.add('div-movie-maybe-like');
+
+        const ul1 = document.createElement('ul');
+        const li1 = document.createElement('li');
+        const h5 = document.createElement('h5');
+        h5.textContent = jsonData.movie_name;
+        li1.appendChild(h5);
+
+        const ul2 = document.createElement('ul');
+        const li2_1 = document.createElement('li');
+        li2_1.textContent = jsonData.year_manufacture;
+        const li2_2 = document.createElement('li');
+        li2_2.innerHTML = '<i class="fas fa-circle pl-1 pr-1" style="font-size: 2px; vertical-align: middle;"></i>';
+        const li2_3 = document.createElement('li');
+        li2_3.textContent = jsonData.time;
+
+        // Ghép các phần tử vào cấu trúc HTML
+        ul2.appendChild(li2_1);
+        ul2.appendChild(li2_2);
+        ul2.appendChild(li2_3);
+
+        li1.appendChild(ul2);
+
+        ul1.appendChild(li1);
+
+        movieInfoDiv.appendChild(ul1);
+
+        movieLink.appendChild(movieImage);
+        movieLink.appendChild(movieInfoDiv);
+
+        movieMaybeLikeDiv.appendChild(movieLink);
+
+        document.querySelector('#content-right-id').appendChild(movieMaybeLikeDiv);
+
+    });
+}
+
+function LoadTrailer(data) {
+    var video = document.getElementById("link-trailer-id");
+    video.src = data[0].link_trailer;
+    video.type = "video/mp4";
+}
+
+function LoadImg(data) {
+    var img = document.getElementById("img_movie");
+    img.src = data[0].link_img;
+}
+
+export { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg }
