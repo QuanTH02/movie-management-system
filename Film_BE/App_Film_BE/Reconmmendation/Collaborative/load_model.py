@@ -137,7 +137,7 @@ class CF(object):
         return recommended_items
 
 def recommend_collaborative_by_user_id(user_id):
-    loaded_rs = load("F:\\Quan_Hoc\\2023.1\\GR1\\New folder\\FE_GR2\\Film_BE\\App_Film_BE\\Reconmmendation\\Collaborative\\collaborative_filtering_model.joblib")
+    loaded_rs = load("F:\\Quan_Hoc\\2023.1\\GR1\\movie-management-system\\movie-management-system\\Film_BE\\App_Film_BE\\Reconmmendation\\Collaborative\\collaborative_filtering_model.joblib")
     recommended_items = loaded_rs.print_recommendation_for_user(user_id)
     return recommended_items
 

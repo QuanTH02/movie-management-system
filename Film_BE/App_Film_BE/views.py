@@ -718,8 +718,8 @@ class MovieListView(generics.ListAPIView):
             movie = Movieinformation.objects.filter(movie_name=movie_name)
 
             movie_id = movie.first().movie_id
-            print("User_id: ", user_id)
-            print("Movie_id: ", movie_id)
+            # print("User_id: ", user_id)
+            # print("Movie_id: ", movie_id)
 
             try:
                 follow_instance = FollowFilmUser.objects.get(user_id=user_id, movie_id=movie_id)
