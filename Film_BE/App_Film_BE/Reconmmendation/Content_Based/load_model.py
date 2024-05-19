@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 
 # Specify the absolute path to the directory containing the model files
-model_dir = 'F:\\Quan_Hoc\\2023.1\\GR1\\New folder\\FE_GR2\\Film_BE\\App_Film_BE\\Reconmmendation\\Content_Based\\model\\'
+model_dir = 'F:\\Quan_Hoc\\2023.1\\GR1\\movie-management-system\\movie-management-system\\Film_BE\\App_Film_BE\\Reconmmendation\\Content_Based\\model\\'
 
 # Load the model files
 tfidf_vectorizer = joblib.load(os.path.join(model_dir, 'tfidf_vectorizer.pkl'))
