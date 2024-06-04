@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .Reconmmendation.Collaborative.load_model import *
@@ -1289,7 +1290,9 @@ class RecommendContentBasedView(generics.ListAPIView):
             movie_id = int(movie_id)
             recommended_ids = recommend_content_based_by_movie_id(movie_id)
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            return queryset
+            movie_dict = {movie.movie_id: movie for movie in queryset}
+            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
+            return sorted_queryset
         except ValueError:
             return self.get_recommend_content_based_by_movie_name(movie_id)
         
@@ -1298,7 +1301,9 @@ class RecommendContentBasedView(generics.ListAPIView):
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
             recommended_ids = recommend_content_based_by_movie_id(movie_info.movie_id)
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            return queryset
+            movie_dict = {movie.movie_id: movie for movie in queryset}
+            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
+            return sorted_queryset
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
 
@@ -1312,7 +1317,9 @@ class RecommendCollaborativeView(generics.ListAPIView):
             user_id = int(user_id)
             recommended_ids = recommend_collaborative_by_user_id(user_id)
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            return queryset
+            movie_dict = {movie.movie_id: movie for movie in queryset}
+            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
+            return sorted_queryset
 
         except ValueError:
             return self.get_recommend_collaborative_by_movie_name(user_id)
@@ -1322,9 +1329,11 @@ class RecommendCollaborativeView(generics.ListAPIView):
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
             recommended_ids = recommend_collaborative_by_user_id(movie_info.movie_id)
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            return queryset
+            movie_dict = {movie.movie_id: movie for movie in queryset}
+            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
+            return sorted_queryset
         except Movieinformation.DoesNotExist:
-            raise generics.NotFound("Movie not found.")
+            raise NotFound("Movie not found.")
         
 
 # Load trailer video

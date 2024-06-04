@@ -146,7 +146,7 @@ function MostFavouritesHome(data) {
     const mostPopularMovies = data.slice(0, 12);
 
     // In ra console để kiểm tra
-    console.log(mostPopularMovies);
+    // console.log(mostPopularMovies);
     var listMostpopular = document.getElementById('listMostFavourites');
     var listMostpopularCarousel = document.getElementById('listMostFavourites-Carousel');
 
@@ -284,7 +284,7 @@ function MostPopularHome(data) {
     const mostPopularMovies = data.slice(0, 12);
 
     // In ra console để kiểm tra
-    console.log(mostPopularMovies);
+    // console.log(mostPopularMovies);
     var listMostpopular = document.getElementById('listMostpopular');
     var listMostpopularCarousel = document.getElementById('listMostpopular-Carousel');
 

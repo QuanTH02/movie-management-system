@@ -436,6 +436,23 @@ async function apiMaybeYouLikeMovie(movieName) {
     }
 }
 
+// ##############################################################################################################
+// Api Return All Maybe you like Movie (Recommend Movie Content-Based)
+// ##############################################################################################################
+async function apiMaybeYouLikeMovieCollab(username) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/recommend/collaborative/${encodeURIComponent(username)}/`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch recommended movies');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
 
 // ##############################################################################################################
 // Api Return All Produced Movie
@@ -579,4 +596,4 @@ async function apiSubmitReviewMovie(movieName, currentAccount, starReview, title
     }
 }
 
-export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie }
+export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab }

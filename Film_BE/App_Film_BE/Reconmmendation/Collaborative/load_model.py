@@ -109,14 +109,19 @@ class CF(object):
         have not been rated by u yet. 
         """
         ids = np.where(self.Y_data[:, 0] == u)[0]
-        items_rated_by_u = self.Y_data[ids, 1].tolist()              
+        items_rated_by_u = self.Y_data[ids, 1].tolist()
+        if len(ids) > 0:
+            user_mean_rating = np.mean(self.Y_data[ids, 2])
+        else:
+            user_mean_rating = 0
+    
         recommended_items = []
         for i in range(self.n_items):
             if i not in items_rated_by_u:
                 rating = self.__pred(u, i)
-                if rating > 0: 
+                # print(rating, user_mean_rating)
+                if rating > user_mean_rating: 
                     recommended_items.append(i)
-        
         return recommended_items 
 
     def print_recommendation(self):
@@ -141,5 +146,7 @@ def recommend_collaborative_by_user_id(user_id):
     recommended_items = loaded_rs.print_recommendation_for_user(user_id)
     return recommended_items
 
-# recommendations = recommend_collaborative_by_user_id(4)
-# print(recommendations)
+if __name__ == '__main__':
+    print(recommend_collaborative_by_user_id(7))
+    # loaded_rs = load("F:\\Quan_Hoc\\2023.1\\GR1\\movie-management-system\\movie-management-system\\Film_BE\\App_Film_BE\\Reconmmendation\\Collaborative\\collaborative_filtering_model.joblib")
+    # recommended_items = loaded_rs.print_recommendation()

@@ -603,6 +603,7 @@ a {
 .a-movie-maybe-like {
     padding: 10px 20px;
     border: 0px solid red;
+    width: 100%;
 }
 
 .a-movie-maybe-like:hover {
@@ -620,3 +621,4 @@ a {
     margin-left: 10px;
     margin-top: 10px;
 }
+
