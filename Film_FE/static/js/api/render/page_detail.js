@@ -223,7 +223,9 @@ function LoadCast(data) {
 function LoadTagline(data) {
     var pMovieTagline = document.getElementById("p-movie-tagline");
 
-    pMovieTagline.textContent = data.data[0].taglines_content;
+    if (data.data[0] && data.data[0].taglines_content) {
+        pMovieTagline.textContent = data.data[0].taglines_content;
+    }
 
     // data.data.forEach(jsonData => {
 
@@ -545,7 +547,7 @@ function LoadMovieMaybeLike(data) {
         movieLink.classList.add('a-movie-maybe-like');
 
         const movieImage = document.createElement('img');
-        movieImage.src = '../media/vebinh1.jpg';
+        // movieImage.src = '../media/vebinh1.jpg';
         movieImage.classList.add('img-movie-maybe-like');
 
         const movieInfoDiv = document.createElement('div');

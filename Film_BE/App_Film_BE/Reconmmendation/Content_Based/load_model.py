@@ -31,5 +31,6 @@ def recommend_content_based_by_movie_id(movie_id, cosine_sim=cosine_sim):
     
     return movie_df['movie_id'].iloc[movie_indices].tolist()
 
-# recommendations = recommend_content_based_by_movie_id(2)
-# print(recommendations)
+if __name__ == '__main__':
+    recommendations = recommend_content_based_by_movie_id(6)
+    print(recommendations)

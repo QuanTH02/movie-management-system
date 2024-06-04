@@ -1,4 +1,4 @@
-import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie } from "./api_func.js"
+import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab } from "./api_func.js"
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail } from "./render/page_home.js";
 import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg } from "./render/page_detail.js";
@@ -97,6 +97,8 @@ $(function () {
     // ##############################################################################################################
 
     if (document.getElementById('listRightVideo')) {
+        var currentAccount = localStorage.getItem('currentAccount');
+
         (async () => {
             try {
                 const data = await apiAllMovie();
@@ -105,6 +107,9 @@ $(function () {
                 MostPopularHome(data);
                 MostFavouritesHome(data);
                 toDetail();
+
+                const dataRecommend = await apiMaybeYouLikeMovieCollab(currentAccount);
+                console.log(dataRecommend);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -441,11 +446,36 @@ $(function () {
     // Load Maybe you like
     // ##############################################################################################################
     if (document.getElementById('page_film')) {
+        var movieName = localStorage.getItem('movie_name');
+        var currentAccount = localStorage.getItem('currentAccount');
+
         (async () => {
             try {
-                var movieName = localStorage.getItem('movie_name');
                 const data = await apiMaybeYouLikeMovie(movieName);
+                console.log(data);
                 LoadMovieMaybeLike(data);
+
+                $(".a-movie-maybe-like").each(async function () {
+                    let aTag = $(this);
+                    let movieNameTag = aTag.find('h5').text();
+                    try {
+                        let dataDetailMovie = await apiDetailMovie(movieNameTag, currentAccount);
+                        let srcImg = await apiImgMovie(dataDetailMovie.data[0].link_img);
+                        let imgTag = $(aTag.find('img'));
+                        console.log(imgTag);
+                        imgTag.attr('src', srcImg);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+                $(".a-movie-maybe-like").click(function () {
+                    let movie_name = $(this).find('h5').text();
+                    console.log(movie_name);
+                    localStorage.setItem("movie_name", movie_name);
+                    window.location.href = "detail.html";
+                });
+
             } catch (error) {
                 console.error('Error:', error);
                 // Xử lý lỗi khi gọi apiMaybeYouLikeMovie()
@@ -599,23 +629,29 @@ $(function () {
     // ##############################################################################################################
 
     if (document.querySelector('.total-review')) {
-        var movieName = localStorage.getItem('movie_name');
-        var totalReviewElement = document.querySelector('.total-review');
+        (async () => {
+            try {
+                var movieName = localStorage.getItem('movie_name');
+                var totalReviewElement = document.querySelector('.total-review');
 
-        const data = apiUserReviewMovie(movieName);
-
-        LoadReviewElement(data, totalReviewElement, movieName);
-        LikeAndDisLikeEventPageReview();
+                const data = await apiUserReviewMovie(movieName); // Chờ đợi dữ liệu từ API trước khi tiếp tục
+                LoadReviewElement(data, totalReviewElement, movieName);
+                LikeAndDisLikeEventPageReview();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
     }
+
 
     // ##############################################################################################################
     // Submit Review 
     // ##############################################################################################################
     if (document.getElementById('submit-review')) {
-        var movieName = localStorage.getItem('movie_name');
-        document.getElementById('submit-review').addEventListener('click', function (event) {
+        document.getElementById('submit-review').addEventListener('click', async function (event) {
             event.preventDefault(); // Prevent the default submit behavior
 
+            var movieName = localStorage.getItem('movie_name');
             var starReview = document.getElementById('rating').value;
             var titleReview = document.getElementById('title').value;
             var contentReview = document.getElementById('content').value;
@@ -627,15 +663,19 @@ $(function () {
                 return;
             }
 
-            const data = apiSubmitReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview);
-            alert(data.message);
-            console.log("Success");
-            document.getElementById("review-popup").style.display = "none"; // Close the popup on successful submission
-            location.reload();
-
-
+            try {
+                const data = await apiSubmitReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview);
+                alert(data.message);
+                console.log("Success");
+                document.getElementById("review-popup").style.display = "none"; // Close the popup on successful submission
+                location.reload();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the review. Please try again later.');
+            }
         });
     }
+
 
 
     // ##############################################################################################################
