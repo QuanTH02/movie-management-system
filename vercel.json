@@ -2,18 +2,12 @@
   "version": 2,
   "name": "Film_FE",
   "builds": [
-    { "src": "Film_FE/**", "use": "@vercel/static-build" }
+    { "src": "/Film_FE/templates/home.html", "use": "@vercel/static-build" }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/Film_FE/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/Film_FE/$1"
+      "dest": "/Film_FE/templates/*"
     }
   ]
 }
