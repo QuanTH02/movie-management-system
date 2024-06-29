@@ -127,16 +127,14 @@ async function apiChangeProfile(pfFName, pfLName, pfEmail, pfId) {
 // ##############################################################################################################
 // Api Return Detail Movie
 // ##############################################################################################################
-async function apiDetailMovie(movieName, currentAccount) {
+async function apiDetailMovie(movieName) {
     try {
         const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                currentAccount: currentAccount,
-            }),
+            
         });
         if (!response.ok) {
             throw new Error('Failed to fetch movie detail');

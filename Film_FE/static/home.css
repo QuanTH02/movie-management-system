@@ -589,12 +589,15 @@ a {
 
 
 
-.movie_maybe_like ul {
+.movie_maybe_like ul,
+.search-result ul {
     padding-left: 0px;
 
 }
 
-.movie_maybe_like, .a-movie-maybe-like {
+.movie_maybe_like,
+.a-movie-maybe-like,
+.search-result {
     display: flex;
     align-items: center;
     margin-top: 5px;
@@ -617,11 +620,18 @@ a {
     margin-right: 10px;
 }
 
-.div-movie-maybe-like {
+.div-movie-maybe-like,
+.div-search-result {
     margin-left: 10px;
     margin-top: 10px;
 }
 
-/* #row-img-trailer {
-    height: 400px;
-} */
+#result-describe {
+    margin-bottom: 0px;
+    max-width: 600px;
+    white-space: nowrap;
+    /* Ngăn ngừa chuỗi từ việc xuống dòng */
+    overflow: hidden;
+    /* Ẩn phần chuỗi bị tràn */
+    text-overflow: ellipsis;
+}

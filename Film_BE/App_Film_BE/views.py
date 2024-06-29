@@ -52,7 +52,6 @@ from .models import (
     RatingFilm,
     SoundMix,
     TicketRoom,
-    FollowFilmUser,
 )
 from .serializers import (
     # User
@@ -89,7 +88,6 @@ from .serializers import (
     RatingFilmSerializer,
     SoundMixSerializer,
     TicketRoomSerializer,
-    FollowFilmUserSerializer,
     LinkTrailerSerializer,
     LinkImgSerializer
 )
@@ -148,15 +146,6 @@ class RegisterView(generics.ListAPIView):
             )
             user.last_name = name
             user.save()
-
-
-            # Thêm vào Follow
-            user_id = User.objects.get(username=account).id
-            movies = Movieinformation.objects.all()
-
-            for movie in movies:
-                FollowFilmUser.objects.create(user_id=user_id, movie_id=movie.movie_id, total_view=0)
-
 
             return Response(
                 {"message": "User successfully registered."},
@@ -238,10 +227,6 @@ class FilmListView(generics.ListAPIView):
     def get_queryset(self):
         queryset = Movieinformation.objects.all()
         # members = User.objects.all()
-
-        # for member in members:
-        #     for film in queryset:
-        #         FollowFilmUser.objects.create(user_id=member.id, movie_id=film.movie_id, total_view=0)
 
         for movie_info in queryset:
             if movie_info.total_vote:
@@ -703,46 +688,27 @@ class WritersListView(generics.ListAPIView):
 class MovieListView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
-    def get_queryset(self, current_account):
+    def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
         if movie_id.isdigit():
             movie_id = int(movie_id)
             return Movieinformation.objects.filter(movie_id=movie_id)
         else:
-            return self.get_movie_by_movie_name(movie_id, current_account)
+            return self.get_movie_by_movie_name(movie_id)
 
-    def get_movie_by_movie_name(self, movie_name, current_account):
+    def get_movie_by_movie_name(self, movie_name):
         try:
-            if current_account:
-                user = User.objects.get(username=current_account)
-                user_id = user.id
             movie = Movieinformation.objects.filter(movie_name=movie_name)
 
-            movie_id = movie.first().movie_id
             # print("User_id: ", user_id)
             # print("Movie_id: ", movie_id)
 
-            try:
-                follow_instance = FollowFilmUser.objects.get(user_id=user_id, movie_id=movie_id)
-                follow_instance.total_view = F('total_view') + 1
-                follow_instance.save()
-            except FollowFilmUser.DoesNotExist:
-                FollowFilmUser.objects.create(user_id=user_id, movie_id=movie_id, total_view=1)
-
             return movie
-        except User.DoesNotExist:
-            raise generics.NotFound("User not found.")
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
 
     def post(self, request, *args, **kwargs):
-        current_account = request.data.get('currentAccount')
-        
-
-            # for member in members:
-            #     for film in queryset:
-            #         FollowFilmUser.objects.create(user_id=member.id, movie_id=film.movie_id, total_view=0)
-        queryset = self.get_queryset(current_account)
+        queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
         response_data = {
             "message": "Successfully",
@@ -1194,6 +1160,7 @@ class SoundMixListView(generics.ListAPIView):
 
 class TicketRoomListView(generics.ListAPIView):
     serializer_class = TicketRoomSerializer
+    film_serializer_class = FilmSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
@@ -1203,6 +1170,21 @@ class TicketRoomListView(generics.ListAPIView):
             return TicketRoom.objects.filter(movie__movie_id=movie_id)
         except ValueError:
             return self.get_ticket_rooms_by_movie_name(movie_id)
+    
+    def get_top_gross_worldwide(self):
+        ticket_rooms = TicketRoom.objects.all()
+        # Loại bỏ những phòng vé có giá trị gross_worldwide là None
+        ticket_rooms = [tr for tr in ticket_rooms if self.convert_gross_to_number(tr.gross_worldwide) is not None]
+        # Sắp xếp theo giá trị gross_worldwide đã chuyển đổi
+        ticket_rooms = sorted(ticket_rooms, key=lambda x: self.convert_gross_to_number(x.gross_worldwide), reverse=True)[:12]
+
+        # Lấy thông tin Movieinformation cho mỗi ticket_room
+        movie_infos = []
+        for ticket_room in ticket_rooms:
+            movie_info = Movieinformation.objects.get(movie_id=ticket_room.movie.movie_id)
+            movie_infos.append(movie_info)
+
+        return movie_infos
 
     def get_ticket_rooms_by_movie_name(self, movie_name):
         try:
@@ -1229,10 +1211,13 @@ class TicketRoomListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+        queryset_top = self.get_top_gross_worldwide()
         serializer = self.serializer_class(queryset, many=True)
+        serializer_top = self.film_serializer_class(queryset_top, many=True)
         return Response({
             "message": "Successfully",
-            "data": serializer.data
+            "data": serializer.data,
+            "data_top": serializer_top.data
         }, status=status.HTTP_200_OK)
 
 
@@ -1319,19 +1304,20 @@ class RecommendCollaborativeView(generics.ListAPIView):
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
             movie_dict = {movie.movie_id: movie for movie in queryset}
             sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset
+            return sorted_queryset[:12]
 
         except ValueError:
-            return self.get_recommend_collaborative_by_movie_name(user_id)
+            return self.get_recommend_collaborative_by_user_name(user_id)
         
-    def get_recommend_collaborative_by_movie_name(self, movie_name):
+    def get_recommend_collaborative_by_user_name(self, user_name):
         try:
-            movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            recommended_ids = recommend_collaborative_by_user_id(movie_info.movie_id)
+            user = User.objects.get(username=user_name)
+            user_id = user.id
+            recommended_ids = recommend_collaborative_by_user_id(user_id)
             queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
             movie_dict = {movie.movie_id: movie for movie in queryset}
             sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset
+            return sorted_queryset[:12]
         except Movieinformation.DoesNotExist:
             raise NotFound("Movie not found.")
         
