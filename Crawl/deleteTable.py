@@ -8,265 +8,288 @@ mycursor = conn.cursor()
 
 # Delete ----------------------------------------------------------------
 
-# # movie_specialeffects
-# mycursor.execute("DELETE FROM `filmdata`.`movie_specialeffects` WHERE movie_id = 1;")
-# conn.commit()
+# user_name_fake
+mycursor.execute("DELETE FROM `moviedata`.`user_name_fake`;")
+conn.commit()
 
-# # specialeffects
-# mycursor.execute("DELETE FROM `filmdata`.`specialeffects` WHERE special_effect_id < 1000;")
-# conn.commit()
+# like_movie
+mycursor.execute("DELETE FROM `moviedata`.`like_movie`;")
+conn.commit()
 
-# # movie_produced
-# mycursor.execute("DELETE FROM `filmdata`.`movie_produced` WHERE movie_id = 1;")
-# conn.commit()
+# link_img
+mycursor.execute("DELETE FROM `moviedata`.`link_img`;")
+conn.commit()
 
-# # produced
-# mycursor.execute("DELETE FROM `filmdata`.`produced` WHERE produced_id < 1000;")
-# conn.commit()
+# link_trailler
+mycursor.execute("DELETE FROM `moviedata`.`link_trailler`;")
+conn.commit()
 
-# # movie_director
-# mycursor.execute("DELETE FROM `filmdata`.`movie_director` WHERE movie_id = 1;")
-# conn.commit()
+# movie_img
+mycursor.execute("DELETE FROM `moviedata`.`movie_img`;")
+conn.commit()
 
-# # director
-# mycursor.execute("DELETE FROM `filmdata`.`director` WHERE director_id < 1000;")
-# conn.commit()
+# movie_trailler
+mycursor.execute("DELETE FROM `moviedata`.`movie_trailler`;")
+conn.commit()
 
-# # movie_editing
-# mycursor.execute("DELETE FROM `filmdata`.`movie_editing` WHERE movie_id = 1;")
-# conn.commit()
-
-# # editing
-# mycursor.execute("DELETE FROM `filmdata`.`editing` WHERE editing_id < 1000;")
-# conn.commit()
-
-# # movie_music
-# mycursor.execute("DELETE FROM `filmdata`.`movie_cinematography` WHERE movie_id = 1;")
-# conn.commit()
-
-# # music
-# mycursor.execute("DELETE FROM `filmdata`.`cinematography` WHERE cinematography_id < 1000;")
-# conn.commit()
-
-# # movie_music
-# mycursor.execute("DELETE FROM `filmdata`.`movie_music` WHERE movie_id = 1;")
-# conn.commit()
-
-# # music
-# mycursor.execute("DELETE FROM `filmdata`.`music` WHERE music_id < 1000;")
-# conn.commit()
-
-# # movie_cast
-# mycursor.execute("DELETE FROM `filmdata`.`movie_cast` WHERE movie_id = 1;")
-# conn.commit()
-
-# # cast
-# mycursor.execute("DELETE FROM `filmdata`.`cast` WHERE cast_id < 1000;")
-# conn.commit()
-
-# # movie_writers
-# mycursor.execute("DELETE FROM `filmdata`.`movie_writers` WHERE movie_id = 1;")
-# conn.commit()
-
-# # writers
-# mycursor.execute("DELETE FROM `filmdata`.`writers` WHERE writers_id < 1000;")
-# conn.commit()
-
-# # # movie_content
-# # mycursor.execute("DELETE FROM `filmdata`.`movie_content` WHERE movie_id = 1;")
-# # conn.commit()
-
-# # # content
-# # mycursor.execute("DELETE FROM `filmdata`.`content` WHERE content_id < 1000;")
-# # conn.commit()
-
-# # movie_genres
-# mycursor.execute("DELETE FROM `filmdata`.`movie_genres` WHERE movie_id = 1;")
-# conn.commit()
-
-# # genres
-# mycursor.execute("DELETE FROM `filmdata`.`genres` WHERE genres_id < 1000;")
-# conn.commit()
-
-# # movie_taglines
-# mycursor.execute("DELETE FROM `filmdata`.`movie_taglines` WHERE movie_id = 1;")
-# conn.commit()
-
-# # taglines
-# mycursor.execute("DELETE FROM `filmdata`.`taglines` WHERE taglines_id < 1000;")
-# conn.commit()
-
-# # did_you_know
-# mycursor.execute("DELETE FROM `filmdata`.`did_you_know` WHERE did_you_know_id < 1000;")
-# conn.commit()
-
-# # movieinformation
-# mycursor.execute("DELETE FROM `filmdata`.`movieinformation` WHERE movie_id = 1;")
-# conn.commit()
-
+# follow_film_user
+mycursor.execute("DELETE FROM `moviedata`.`follow_film_user`;")
+conn.commit()
 
 # movie_specialeffects
-mycursor.execute("DELETE FROM `filmdata`.`movie_specialeffects`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_specialeffects`;")
 conn.commit()
 
 # specialeffects
-mycursor.execute("DELETE FROM `filmdata`.`specialeffects`;")
+mycursor.execute("DELETE FROM `moviedata`.`specialeffects`;")
 conn.commit()
 
 # movie_produced
-mycursor.execute("DELETE FROM `filmdata`.`movie_produced`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_produced`;")
 conn.commit()
 
 # produced
-mycursor.execute("DELETE FROM `filmdata`.`produced`;")
+mycursor.execute("DELETE FROM `moviedata`.`produced`;")
 conn.commit()
 
 # movie_director
-mycursor.execute("DELETE FROM `filmdata`.`movie_director`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_director`;")
 conn.commit()
 
 # director
-mycursor.execute("DELETE FROM `filmdata`.`director`;")
+mycursor.execute("DELETE FROM `moviedata`.`director`;")
 conn.commit()
 
 # movie_editing
-mycursor.execute("DELETE FROM `filmdata`.`movie_editing`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_editing`;")
 conn.commit()
 
 # editing
-mycursor.execute("DELETE FROM `filmdata`.`editing`;")
+mycursor.execute("DELETE FROM `moviedata`.`editing`;")
 conn.commit()
 
 # movie_music
-mycursor.execute("DELETE FROM `filmdata`.`movie_cinematography`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_cinematography`;")
 conn.commit()
 
 # music
-mycursor.execute("DELETE FROM `filmdata`.`cinematography`;")
+mycursor.execute("DELETE FROM `moviedata`.`cinematography`;")
 conn.commit()
 
 # movie_music
-mycursor.execute("DELETE FROM `filmdata`.`movie_music`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_music`;")
 conn.commit()
 
 # music
-mycursor.execute("DELETE FROM `filmdata`.`music`;")
+mycursor.execute("DELETE FROM `moviedata`.`music`;")
 conn.commit()
 
 # movie_cast
-mycursor.execute("DELETE FROM `filmdata`.`movie_cast`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_cast`;")
 conn.commit()
 
 # cast
-mycursor.execute("DELETE FROM `filmdata`.`cast`;")
+mycursor.execute("DELETE FROM `moviedata`.`cast`;")
 conn.commit()
 
 # movie_writers
-mycursor.execute("DELETE FROM `filmdata`.`movie_writers`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_writers`;")
 conn.commit()
 
 # writers
-mycursor.execute("DELETE FROM `filmdata`.`writers`;")
+mycursor.execute("DELETE FROM `moviedata`.`writers`;")
 conn.commit()
 
 # # movie_content
-# mycursor.execute("DELETE FROM `filmdata`.`movie_content` WHERE movie_id = 1;")
+# mycursor.execute("DELETE FROM `moviedata`.`movie_content`;")
 # conn.commit()
 
 # # content
-# mycursor.execute("DELETE FROM `filmdata`.`content` WHERE content_id < 1000;")
+# mycursor.execute("DELETE FROM `moviedata`.`content` WHERE content_id < 100000;")
 # conn.commit()
 
 # movie_genres
-mycursor.execute("DELETE FROM `filmdata`.`movie_genres`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_genres`;")
 conn.commit()
 
 # genres
-mycursor.execute("DELETE FROM `filmdata`.`genres`;")
+mycursor.execute("DELETE FROM `moviedata`.`genres`;")
 conn.commit()
 
 # movie_taglines
-mycursor.execute("DELETE FROM `filmdata`.`movie_taglines`;")
+mycursor.execute("DELETE FROM `moviedata`.`movie_taglines`;")
 conn.commit()
 
 # taglines
-mycursor.execute("DELETE FROM `filmdata`.`taglines`;")
+mycursor.execute("DELETE FROM `moviedata`.`taglines`;")
 conn.commit()
 
 # did_you_know
-mycursor.execute("DELETE FROM `filmdata`.`did_you_know`;")
+mycursor.execute("DELETE FROM `moviedata`.`did_you_know`;")
+conn.commit()
+
+# movie_specialeffects
+mycursor.execute("DELETE FROM `moviedata`.`movie_specialeffects`;")
+conn.commit()
+
+# specialeffects
+mycursor.execute("DELETE FROM `moviedata`.`specialeffects`;")
+conn.commit()
+
+# movie_produced
+mycursor.execute("DELETE FROM `moviedata`.`movie_produced`;")
+conn.commit()
+
+# produced
+mycursor.execute("DELETE FROM `moviedata`.`produced`;")
+conn.commit()
+
+# movie_director
+mycursor.execute("DELETE FROM `moviedata`.`movie_director`;")
+conn.commit()
+
+# director
+mycursor.execute("DELETE FROM `moviedata`.`director`;")
+conn.commit()
+
+# movie_editing
+mycursor.execute("DELETE FROM `moviedata`.`movie_editing`;")
+conn.commit()
+
+# editing
+mycursor.execute("DELETE FROM `moviedata`.`editing`;")
+conn.commit()
+
+# movie_music
+mycursor.execute("DELETE FROM `moviedata`.`movie_cinematography`;")
+conn.commit()
+
+# music
+mycursor.execute("DELETE FROM `moviedata`.`cinematography`;")
+conn.commit()
+
+# movie_music
+mycursor.execute("DELETE FROM `moviedata`.`movie_music`;")
+conn.commit()
+
+# music
+mycursor.execute("DELETE FROM `moviedata`.`music`;")
+conn.commit()
+
+# movie_cast
+mycursor.execute("DELETE FROM `moviedata`.`movie_cast`;")
+conn.commit()
+
+# cast
+mycursor.execute("DELETE FROM `moviedata`.`cast`;")
+conn.commit()
+
+# movie_writers
+mycursor.execute("DELETE FROM `moviedata`.`movie_writers`;")
+conn.commit()
+
+# writers
+mycursor.execute("DELETE FROM `moviedata`.`writers`;")
+conn.commit()
+
+# # movie_content
+# mycursor.execute("DELETE FROM `moviedata`.`movie_content`;")
+# conn.commit()
+
+# # content
+# mycursor.execute("DELETE FROM `moviedata`.`content` WHERE content_id < 100000;")
+# conn.commit()
+
+# movie_genres
+mycursor.execute("DELETE FROM `moviedata`.`movie_genres`;")
+conn.commit()
+
+# genres
+mycursor.execute("DELETE FROM `moviedata`.`genres`;")
+conn.commit()
+
+# movie_taglines
+mycursor.execute("DELETE FROM `moviedata`.`movie_taglines`;")
+conn.commit()
+
+# taglines
+mycursor.execute("DELETE FROM `moviedata`.`taglines`;")
+conn.commit()
+
+# did_you_know
+mycursor.execute("DELETE FROM `moviedata`.`did_you_know`;")
 conn.commit()
 
 # country_origin
-mycursor.execute("DELETE FROM `filmdata`.`country_origin`;")
+mycursor.execute("DELETE FROM `moviedata`.`country_origin`;")
 conn.commit()
 
 # official_site
-mycursor.execute("DELETE FROM `filmdata`.`official_site`;")
+mycursor.execute("DELETE FROM `moviedata`.`official_site`;")
 conn.commit()
 
 # language
-mycursor.execute("DELETE FROM `filmdata`.`language`;")
+mycursor.execute("DELETE FROM `moviedata`.`language`;")
 conn.commit()
 
 # filming_locations
-mycursor.execute("DELETE FROM `filmdata`.`filming_locations`;")
+mycursor.execute("DELETE FROM `moviedata`.`filming_locations`;")
 conn.commit()
 
 # production_companies
-mycursor.execute("DELETE FROM `filmdata`.`production_companies`;")
+mycursor.execute("DELETE FROM `moviedata`.`production_companies`;")
 conn.commit()
 
 # sound_mix
-mycursor.execute("DELETE FROM `filmdata`.`sound_mix`;")
+mycursor.execute("DELETE FROM `moviedata`.`sound_mix`;")
 conn.commit()
 
 # color
-mycursor.execute("DELETE FROM `filmdata`.`color`;")
+mycursor.execute("DELETE FROM `moviedata`.`color`;")
 conn.commit()
 
 # aspect_ratio
-mycursor.execute("DELETE FROM `filmdata`.`aspect_ratio`;")
+mycursor.execute("DELETE FROM `moviedata`.`aspect_ratio`;")
 conn.commit()
 
 # camera
-mycursor.execute("DELETE FROM `filmdata`.`camera`;")
+mycursor.execute("DELETE FROM `moviedata`.`camera`;")
 conn.commit()
 
 # laboratory
-mycursor.execute("DELETE FROM `filmdata`.`laboratory`;")
+mycursor.execute("DELETE FROM `moviedata`.`laboratory`;")
 conn.commit()
 
 # negative_format
-mycursor.execute("DELETE FROM `filmdata`.`negative_format`;")
+mycursor.execute("DELETE FROM `moviedata`.`negative_format`;")
 conn.commit()
 
 # cinematographic_process
-mycursor.execute("DELETE FROM `filmdata`.`cinematographic_process`;")
+mycursor.execute("DELETE FROM `moviedata`.`cinematographic_process`;")
 conn.commit()
 
 # printed_film_format
-mycursor.execute("DELETE FROM `filmdata`.`printed_film_format`;")
+mycursor.execute("DELETE FROM `moviedata`.`printed_film_format`;")
 conn.commit()
 
 # ticket_room
-mycursor.execute("DELETE FROM `filmdata`.`ticket_room`;")
+mycursor.execute("DELETE FROM `moviedata`.`ticket_room`;")
 conn.commit()
 
 # awards
-mycursor.execute("DELETE FROM `filmdata`.`awards`;")
+mycursor.execute("DELETE FROM `moviedata`.`awards`;")
 conn.commit()
 
 # film_review
-mycursor.execute("DELETE FROM `filmdata`.`film_review`;")
+mycursor.execute("DELETE FROM `moviedata`.`film_review`;")
 conn.commit()
 
 # rating
-mycursor.execute("DELETE FROM `filmdata`.`rating`;")
+mycursor.execute("DELETE FROM `moviedata`.`rating`;")
 conn.commit()
 
 # movieinformation
-mycursor.execute("DELETE FROM `filmdata`.`movieinformation`;")
+mycursor.execute("DELETE FROM `moviedata`.`movieinformation`;")
 conn.commit()
 
 mycursor.close()

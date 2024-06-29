@@ -65,77 +65,6 @@ function LoadFilmHome(data) {
         }
     });
 
-    // document.getElementById('searchInput').addEventListener('input', function () {
-    //     // Lấy giá trị từ ô tìm kiếm
-    //     console.log(this.value);
-    //     var searchTerm = this.value;
-
-    //     // Kiểm tra xem searchTerm có tồn tại không
-    //     if (searchTerm) {
-    //         // Chuyển đổi thành chữ thường
-    //         searchTerm = searchTerm.toLowerCase();
-
-    //         // Gọi hàm tìm kiếm và cập nhật kết quả
-    //     }
-
-    //     // Lọc danh sách phim theo giá trị tìm kiếm
-    //     var filteredMovies = data.filter(function (movie) {
-    //         return movie.movie_name.toLowerCase().includes(searchTerm);
-    //     });
-
-    //     // Hiển thị kết quả tìm kiếm
-    //     var searchResultsElement = document.getElementById('searchResults');
-    //     searchResultsElement.innerHTML = ''; // Xóa nội dung cũ
-
-    //     var stt = 0;
-    //     filteredMovies.forEach(function (movie) {
-    //         // Tạo phần tử li mới cho mỗi kết quả tìm kiếm
-    //         var liElement = document.createElement('li');
-    //         liElement.innerHTML = `
-    //           <div>
-    //             <a href="detail.html" class="name-and-des-search">
-    //               <h6 class="name-search">${movie.movie_name}</h6>
-    //               <p>${movie.describe_movie}</p>
-    //             </a>
-    //           </div>
-    //         `;
-    //         if (stt < 5) {
-    //             searchResultsElement.appendChild(liElement);
-    //         }
-    //         stt++;
-    //     });
-
-    //     var divParentResult = document.getElementById('div-parent-result');
-    //     var liElements = divParentResult.querySelectorAll('li');
-
-    //     var numberOfLiElements = liElements.length;
-
-    //     if (numberOfLiElements > 1) {
-    //         divParentResult.style.display = 'block'; // Hiển thị
-    //     } else {
-    //         divParentResult.style.display = 'none';
-    //     }
-
-    //     document.addEventListener('click', function (event) {
-    //         var targetElement = event.target; // Phần tử được click
-
-    //         // Kiểm tra xem phần tử được click có là con của div-parent-result hay không
-    //         var isClickInsideDiv = divParentResult.contains(targetElement);
-
-    //         // Nếu không phải là con của div-parent-result, ẩn div-parent-result
-    //         if (!isClickInsideDiv) {
-    //             divParentResult.style.display = 'none';
-    //         } else {
-    //             var h6Element = targetElement.closest('div').querySelector('h6');
-    //             var movieName = h6Element ? h6Element.textContent : '';
-
-    //             if (movieName) {
-    //                 localStorage.setItem('movie_name', movieName);
-    //             }
-    //         }
-
-    //     });
-    // });
 }
 
 function MostFavouritesHome(data) {
@@ -413,141 +342,277 @@ function MostPopularHome(data) {
 }
 
 
-// function HighestRevenueHome(data) {
-//     var filmCount = 0;
-//     data.sort((a, b) => b.gross_worldwide - a.gross_worldwide);
+function HighestRevenueHome(data) {
+    $("#no-login").css("display", "none");
+    $("#div-recommend").css("display", "block");
+    
+    var filmCount = 0;
+    
+    var listMostpopular = document.getElementById('listHighest');
+    var listMostpopularCarousel = document.getElementById('listHighest-Carousel');
 
-//     // Lấy 12 movie có số lượt vote cao nhất
-//     const mostPopularMovies = data.slice(0, 12);
+    // console.log(data.data_top);
+    data.data_top.forEach((movie, index) => {
 
-//     // In ra console để kiểm tra
-//     console.log(mostPopularMovies);
-//     var listMostpopular = document.getElementById('listHighest');
-//     var listMostpopularCarousel = document.getElementById('listHighest-Carousel');
+        if (filmCount < 6) {
+            var movieDiv = document.createElement('div');
+            movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
-//     mostPopularMovies.forEach((movie, index) => {
-//         if (filmCount < 6) {
-//             var movieDiv = document.createElement('div');
-//             movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
+            var cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            var cardId = 'listHighest-' + index;
+            cardDiv.setAttribute('id', cardId);
 
-//             var cardDiv = document.createElement('div');
-//             cardDiv.classList.add('card');
-//             var cardId = 'listHighest-' + index;
-//             cardDiv.setAttribute('id', cardId);
+            var imgContainerDiv = document.createElement('div');
+            imgContainerDiv.classList.add('img-container');
 
-//             var imgContainerDiv = document.createElement('div');
-//             imgContainerDiv.classList.add('img-container');
+            var img = document.createElement('img');
+            // img.src = movie.image;
+            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
+            img.src = linkFake;
+            img.classList.add('card-img-top');
+            img.alt = 'Movie Image';
 
-//             var img = document.createElement('img');
-//             // img.src = movie.image;
-//             var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-//             img.src = linkFake;
-//             img.classList.add('card-img-top');
-//             img.alt = 'Movie Image';
+            var cardBodyDiv = document.createElement('div');
+            cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
 
-//             var cardBodyDiv = document.createElement('div');
-//             cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
+            var ratingP = document.createElement('p');
+            ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
+            ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating.split('/')[0];
 
-//             var ratingP = document.createElement('p');
-//             ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-//             ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
+            var titleH6 = document.createElement('h6');
+            titleH6.classList.add('card-title', 'mt-0');
+            // if (movie.movie_name.length >= 16) {
+            //     // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
+            //     movie.movie_name = movie.movie_name.substring(0, 16) + '...';
+            // }
+            titleH6.innerText = movie.movie_name;
 
-//             var titleH6 = document.createElement('h6');
-//             titleH6.classList.add('card-title', 'mt-0');
-//             if (movie.movie_name.length >= 16) {
-//                 // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
-//                 movie.movie_name = movie.movie_name.substring(0, 16) + '...';
-//             }
-//             titleH6.innerText = movie.movie_name;
+            var addButton = document.createElement('button');
+            addButton.classList.add('btn', 'btn-primary');
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
-//             var addButton = document.createElement('button');
-//             addButton.classList.add('btn', 'btn-primary');
-//             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
+            var watchButton = document.createElement('a');
+            watchButton.href = 'detail.html';
+            watchButton.classList.add('mt-2');
+            watchButton.style.width = '150px';
+            watchButton.style.textAlign = 'center';
+            watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
 
-//             var watchButton = document.createElement('a');
-//             watchButton.href = 'detail.html';
-//             watchButton.classList.add('mt-2');
-//             watchButton.style.width = '150px';
-//             watchButton.style.textAlign = 'center';
-//             watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
+            // Gắn các phần tử con vào phần tử cha
+            imgContainerDiv.appendChild(img);
+            cardDiv.appendChild(imgContainerDiv);
+            cardBodyDiv.appendChild(ratingP);
+            cardBodyDiv.appendChild(titleH6);
+            cardBodyDiv.appendChild(document.createElement('br'));
+            cardBodyDiv.appendChild(addButton);
+            cardBodyDiv.appendChild(watchButton);
+            cardDiv.appendChild(cardBodyDiv);
+            movieDiv.appendChild(cardDiv);
 
-//             // Gắn các phần tử con vào phần tử cha
-//             imgContainerDiv.appendChild(img);
-//             cardDiv.appendChild(imgContainerDiv);
-//             cardBodyDiv.appendChild(ratingP);
-//             cardBodyDiv.appendChild(titleH6);
-//             cardBodyDiv.appendChild(document.createElement('br'));
-//             cardBodyDiv.appendChild(addButton);
-//             cardBodyDiv.appendChild(watchButton);
-//             cardDiv.appendChild(cardBodyDiv);
-//             movieDiv.appendChild(cardDiv);
+            // Thêm movieDiv vào listMostpopular
+            listMostpopular.appendChild(movieDiv);
+        } else {
+            var movieDiv = document.createElement('div');
+            movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
 
-//             // Thêm movieDiv vào listMostpopular
-//             listMostpopular.appendChild(movieDiv);
-//         } else {
-//             var movieDiv = document.createElement('div');
-//             movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
+            var cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            var cardId = 'listHighest-' + index;
+            cardDiv.setAttribute('id', cardId);
 
-//             var cardDiv = document.createElement('div');
-//             cardDiv.classList.add('card');
-//             var cardId = 'listHighest-' + index;
-//             cardDiv.setAttribute('id', cardId);
+            var imgContainerDiv = document.createElement('div');
+            imgContainerDiv.classList.add('img-container');
 
-//             var imgContainerDiv = document.createElement('div');
-//             imgContainerDiv.classList.add('img-container');
+            var img = document.createElement('img');
+            // img.src = movie.image;
+            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
+            img.src = linkFake;
+            img.classList.add('card-img-top');
+            img.alt = 'Movie Image';
 
-//             var img = document.createElement('img');
-//             // img.src = movie.image;
-//             var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-//             img.src = linkFake;
-//             img.classList.add('card-img-top');
-//             img.alt = 'Movie Image';
+            var cardBodyDiv = document.createElement('div');
+            cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
 
-//             var cardBodyDiv = document.createElement('div');
-//             cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
+            var ratingP = document.createElement('p');
+            ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
+            ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating.split('/')[0];
 
-//             var ratingP = document.createElement('p');
-//             ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-//             ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
+            var titleH6 = document.createElement('h6');
+            titleH6.classList.add('card-title', 'mt-0');
+            // if (movie.movie_name.length >= 16) {
+            //     // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
+            //     movie.movie_name = movie.movie_name.substring(0, 16) + '...';
+            // }
+            titleH6.innerText = movie.movie_name;
 
-//             var titleH6 = document.createElement('h6');
-//             titleH6.classList.add('card-title', 'mt-0');
-//             if (movie.movie_name.length >= 16) {
-//                 // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
-//                 movie.movie_name = movie.movie_name.substring(0, 16) + '...';
-//             }
-//             titleH6.innerText = movie.movie_name;
+            var addButton = document.createElement('button');
+            addButton.classList.add('btn', 'btn-primary');
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
-//             var addButton = document.createElement('button');
-//             addButton.classList.add('btn', 'btn-primary');
-//             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
+            var watchButton = document.createElement('a');
+            watchButton.href = 'detail.html';
+            watchButton.classList.add('mt-2');
+            watchButton.style.width = '150px';
+            watchButton.style.textAlign = 'center';
+            watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
 
-//             var watchButton = document.createElement('a');
-//             watchButton.href = 'detail.html';
-//             watchButton.classList.add('mt-2');
-//             watchButton.style.width = '150px';
-//             watchButton.style.textAlign = 'center';
-//             watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
+            // Gắn các phần tử con vào phần tử cha
+            imgContainerDiv.appendChild(img);
+            cardDiv.appendChild(imgContainerDiv);
+            cardBodyDiv.appendChild(ratingP);
+            cardBodyDiv.appendChild(titleH6);
+            cardBodyDiv.appendChild(document.createElement('br'));
+            cardBodyDiv.appendChild(addButton);
+            cardBodyDiv.appendChild(watchButton);
+            cardDiv.appendChild(cardBodyDiv);
+            movieDiv.appendChild(cardDiv);
 
-//             // Gắn các phần tử con vào phần tử cha
-//             imgContainerDiv.appendChild(img);
-//             cardDiv.appendChild(imgContainerDiv);
-//             cardBodyDiv.appendChild(ratingP);
-//             cardBodyDiv.appendChild(titleH6);
-//             cardBodyDiv.appendChild(document.createElement('br'));
-//             cardBodyDiv.appendChild(addButton);
-//             cardBodyDiv.appendChild(watchButton);
-//             cardDiv.appendChild(cardBodyDiv);
-//             movieDiv.appendChild(cardDiv);
-
-//             // Thêm movieDiv vào listMostpopularCarousel
-//             listMostpopularCarousel.appendChild(movieDiv);
-//         }
+            // Thêm movieDiv vào listMostpopularCarousel
+            listMostpopularCarousel.appendChild(movieDiv);
+        }
 
 
-//         filmCount++;
-//     });
-// }
+        filmCount++;
+    });
+}
+
+function LoadRecommendHome(data) {
+    var filmCount = 0;
+    
+    var listMostpopular = document.getElementById('listRecommend');
+    var listMostpopularCarousel = document.getElementById('listRecommend-Carousel');
+
+    // console.log(data.data_top);
+    data.forEach((movie, index) => {
+        if (filmCount < 6) {
+            var movieDiv = document.createElement('div');
+            movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
+
+            var cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            var cardId = 'listHighest-' + index;
+            cardDiv.setAttribute('id', cardId);
+
+            var imgContainerDiv = document.createElement('div');
+            imgContainerDiv.classList.add('img-container');
+
+            var img = document.createElement('img');
+            // img.src = movie.image;
+            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
+            img.src = linkFake;
+            img.classList.add('card-img-top');
+            img.alt = 'Movie Image';
+
+            var cardBodyDiv = document.createElement('div');
+            cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
+
+            var ratingP = document.createElement('p');
+            ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
+            if (movie.rating && movie.rating.includes('/')) {
+                ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating.split('/')[0];
+            } else {
+                ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + "8.3";
+            }
+            var titleH6 = document.createElement('h6');
+            titleH6.classList.add('card-title', 'mt-0');
+            // if (movie.movie_name.length >= 16) {
+            //     // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
+            //     movie.movie_name = movie.movie_name.substring(0, 16) + '...';
+            // }
+            titleH6.innerText = movie.movie_name;
+
+            var addButton = document.createElement('button');
+            addButton.classList.add('btn', 'btn-primary');
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
+
+            var watchButton = document.createElement('a');
+            watchButton.href = 'detail.html';
+            watchButton.classList.add('mt-2');
+            watchButton.style.width = '150px';
+            watchButton.style.textAlign = 'center';
+            watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
+
+            // Gắn các phần tử con vào phần tử cha
+            imgContainerDiv.appendChild(img);
+            cardDiv.appendChild(imgContainerDiv);
+            cardBodyDiv.appendChild(ratingP);
+            cardBodyDiv.appendChild(titleH6);
+            cardBodyDiv.appendChild(document.createElement('br'));
+            cardBodyDiv.appendChild(addButton);
+            cardBodyDiv.appendChild(watchButton);
+            cardDiv.appendChild(cardBodyDiv);
+            movieDiv.appendChild(cardDiv);
+
+            // Thêm movieDiv vào listMostpopular
+            listMostpopular.appendChild(movieDiv);
+        } else {
+            var movieDiv = document.createElement('div');
+            movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
+
+            var cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            var cardId = 'listHighest-' + index;
+            cardDiv.setAttribute('id', cardId);
+
+            var imgContainerDiv = document.createElement('div');
+            imgContainerDiv.classList.add('img-container');
+
+            var img = document.createElement('img');
+            // img.src = movie.image;
+            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
+            img.src = linkFake;
+            img.classList.add('card-img-top');
+            img.alt = 'Movie Image';
+
+            var cardBodyDiv = document.createElement('div');
+            cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
+
+            var ratingP = document.createElement('p');
+            ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
+            if (movie.rating && movie.rating.includes('/')) {
+                ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating.split('/')[0];
+            } else {
+                ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + "8.5";
+            }
+            var titleH6 = document.createElement('h6');
+            titleH6.classList.add('card-title', 'mt-0');
+            // if (movie.movie_name.length >= 16) {
+            //     // Nếu chuỗi có độ dài lớn hơn hoặc bằng 200 ký tự
+            //     movie.movie_name = movie.movie_name.substring(0, 16) + '...';
+            // }
+            titleH6.innerText = movie.movie_name;
+
+            var addButton = document.createElement('button');
+            addButton.classList.add('btn', 'btn-primary');
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
+
+            var watchButton = document.createElement('a');
+            watchButton.href = 'detail.html';
+            watchButton.classList.add('mt-2');
+            watchButton.style.width = '150px';
+            watchButton.style.textAlign = 'center';
+            watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
+
+            // Gắn các phần tử con vào phần tử cha
+            imgContainerDiv.appendChild(img);
+            cardDiv.appendChild(imgContainerDiv);
+            cardBodyDiv.appendChild(ratingP);
+            cardBodyDiv.appendChild(titleH6);
+            cardBodyDiv.appendChild(document.createElement('br'));
+            cardBodyDiv.appendChild(addButton);
+            cardBodyDiv.appendChild(watchButton);
+            cardDiv.appendChild(cardBodyDiv);
+            movieDiv.appendChild(cardDiv);
+
+            // Thêm movieDiv vào listMostpopularCarousel
+            listMostpopularCarousel.appendChild(movieDiv);
+        }
+
+
+        filmCount++;
+    });
+}
 
 function toDetail() {
     // Lấy tất cả các phần tử có class "trailer-play"
@@ -586,4 +651,4 @@ function toDetail() {
 
 
 
-export { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail }
+export { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail, HighestRevenueHome, LoadRecommendHome }

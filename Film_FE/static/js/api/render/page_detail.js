@@ -538,7 +538,9 @@ function LikeAndDisLikeEvent() {
 }
 
 function LoadMovieMaybeLike(data) {
+    var ind = 0;
     data.forEach(jsonData => {
+        ind++;
         const movieMaybeLikeDiv = document.createElement('div');
         movieMaybeLikeDiv.classList.add('movie_maybe_like');
 
@@ -547,7 +549,7 @@ function LoadMovieMaybeLike(data) {
         movieLink.classList.add('a-movie-maybe-like');
 
         const movieImage = document.createElement('img');
-        // movieImage.src = '../media/vebinh1.jpg';
+        movieImage.src = '../media/vebinh' + ind + '.jpg';
         movieImage.classList.add('img-movie-maybe-like');
 
         const movieInfoDiv = document.createElement('div');

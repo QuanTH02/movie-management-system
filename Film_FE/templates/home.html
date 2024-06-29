@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Movie Website</title>
+  <title>HYF Movie</title>
+  <link rel="icon" href="../media/title_img.jpg" type="image/jpg">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -57,12 +58,12 @@
             <div class="carousel-item active">
               <video controls width="100%">
                 <source
-                  src="https://imdb-video.media-imdb.com/vi87213849/1434659607842-pgv4ql-1698417533740.mp4?Expires=1717544258&Signature=KyRGwM4vxK5yiXVBibz-9pFdb9vCUH3s9ylF6j6qDLhYlE~4W8I~GKNtOapE~q4SVQ0PjA76tSY0YptUll8lNAAaPlpEQtn3nNjU8AWw70RErnqdDPKhwnB-tQ5Bzw2Ys79GeVFwRS6auMWc0R2DzJYpZjbbklyURhE8064TOcGvLo15wjLeJS-Z0M0Z0r2MuSSeqF8ePGAeizOoWi1RW1icmmCaihcAqU0UbyhWU5qWSXNkVqYiyNRyFKzPds0YCwBfi6LG-DZ449nJOinD4FOg0E1Ag7NeEqcnJYOGq8S~4Z9H0gDWWUScWWnlOQmeP1d~ogdJH-G~Nw7txU~Fhg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
+                  src="https://imdb-video.media-imdb.com/vi880460825/1434659529640-260ouz-1682431947308.mp4?Expires=1719605204&Signature=fdgYPjI17i9DwCvVb8dpjcQ3HFnvPppV3eaRfFVcpo9PRjglsoF67eyXjqlrXZrnSYLMKY8uZJWlqQeORXav~5YpvfuJipTnWNmQ-cu6THUQGZrRY-TOo8JTxOHcI9BKBpz5HjIWsxfuQx1eSpwcJmibbGNJLA50~BvL8OIcZ9Fs9f3tRoTTkxbmYvG1EB0mJYkirVbIWlZbUUKHseXtCiBQPiE3cUN9MXYEFWSGwnlxRId3qeq~8baTjDz1il-L~leopJxnYDExRWd9IKChiAcDGtPgUBMc7Dv04ZptHGVBNJj2tHZTsd5jVcPpSJHpyB8197ZcUZK4QQDhCJGgwA__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA"
                   type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
-            
+
             <div class="carousel-item video-trailer">
               <video controls width="100%">
                 <source
@@ -112,10 +113,50 @@
 
     <h1 class="mt-0">What to watch</h1>
 
+    <!-- Recommend -->
+    <div class="div-rcm">
+      <div>
+        <a href="#" style="color: black;">
+          <h3 class="topic mb-0 mt-4">| Recommend <i class="fas fa-chevron-right"></i></h3>
+        </a>
+      </div>
+
+      <div id="no-login" class="p-3" style="text-align: center;">
+        <a href="login.html">
+          <h4>To recommend movies, you need to log in</h3>
+        </a>
+      </div>
+
+      <div id="div-recommend" class="carousel slide" data-ride="carousel" style="display: none;">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row mt-4" id="listRecommend">
+              <!--  -->
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="row mt-4" id="listRecommend-Carousel">
+              <!--  -->
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#div-recommend" role="button" data-slide="prev" style="width: 30px">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#div-recommend" role="button" data-slide="next" style="width: 30px">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+    </div>
+
+
     <!-- Most popular -->
     <div>
       <a href="#" style="color: black;">
-        <h3 class="topic mb-0 mt-4">| Recommend <i class="fas fa-chevron-right"></i></h3>
+        <h3 class="topic mb-0 mt-4">| Most Popular <i class="fas fa-chevron-right"></i></h3>
       </a>
     </div>
 
@@ -181,7 +222,7 @@
     <!-- Most favourites -->
     <div>
       <a href="#" style="color: black;">
-        <h3 class="topic mb-0 mt-4">| Most favourites <i class="fas fa-chevron-right"></i></h3>
+        <h3 class="topic mb-0 mt-4">| Most Favourites <i class="fas fa-chevron-right"></i></h3>
       </a>
     </div>
 
@@ -214,7 +255,7 @@
     <!-- Highest revenue -->
     <div>
       <a href="#" style="color: black;">
-        <h3 class="topic mb-0 mt-4">| Highest revenue <i class="fas fa-chevron-right"></i></h3>
+        <h3 class="topic mb-0 mt-4">| Highest Revenue <i class="fas fa-chevron-right"></i></h3>
       </a>
     </div>
 
@@ -245,23 +286,21 @@
     </div>
 
     <!-- Latest -->
-    <div>
+    <!-- <div>
       <a href="#" style="color: black;">
         <h3 class="topic mb-0 mt-4">| Latest <i class="fas fa-chevron-right"></i></h3>
       </a>
-    </div>
+    </div> -->
 
     <!-- Second div -->
-    <div id="carouselLatest" class="carousel slide" data-ride="carousel">
+    <!-- <div id="carouselLatest" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="row mt-4" id="listLatest">
-            <!--  -->
           </div>
         </div>
         <div class="carousel-item">
           <div class="row mt-4" id="listLatest-Carousel">
-            <!--  -->
           </div>
         </div>
       </div>
@@ -273,412 +312,11 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>
-    </div>
+    </div> -->
 
   </div>
 
   <footer id="includedContentFooter"></footer>
-
-
-  <!-- SCRIPT -->
-  <script>
-
-    // #################################################################
-    // #################################################################
-    // #################################################################
-
-    // List Highest Revenue
-    // #################################################################
-    // #################################################################
-    // #################################################################
-    // Tạo một đối tượng chứa thông tin phim
-    var moviesHighestRevenue = [
-    {
-        image: "../media/film11.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film10.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film2.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film7.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film8.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      // ... Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listHighest = document.getElementById('listHighest');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesHighestRevenue.forEach(function (movie, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'listHighest-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movie.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movie.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopular
-      listHighest.appendChild(movieDiv);
-    });
-
-    // ListMostPopular-Carousel
-    var moviesHighestRevenueDataCarousel = [
-      {
-        image: "../media/vebinh6.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh5.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh4.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh3.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh2.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      }
-      // Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listHighestCarousel = document.getElementById('listHighest-Carousel');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesHighestRevenueDataCarousel.forEach(function (movieData, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'listHighest-Carousel-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movieData.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movieData.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movieData.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopularCarousel
-      listHighestCarousel.appendChild(movieDiv);
-    });
-
-    // #################################################################
-    // #################################################################
-    // #################################################################
-    // List Latest
-    // #################################################################
-    // #################################################################
-    // #################################################################
-    // Tạo một đối tượng chứa thông tin phim
-    var moviesLatest = [
-      {
-        image: "../media/film4.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film5.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film6.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film7.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film11.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/film12.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      // ... Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listLatest = document.getElementById('listLatest');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesLatest.forEach(function (movie, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'listLatest-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movie.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movie.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movie.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopular
-      listLatest.appendChild(movieDiv);
-    });
-
-    // ListMostPopular-Carousel
-    var moviesLatestDataCarousel = [
-      {
-        image: "../media/vebinh6.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh5.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh4.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh3.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh2.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      },
-      {
-        image: "../media/vebinh1.jpg",
-        rating: 4.9,
-        title: "Ve Binh Giai Ngan Ha"
-      }
-      // Thêm thông tin của các phim khác tại đây
-    ];
-
-    // Lấy phần tử cha
-    var listLatestCarousel = document.getElementById('listLatest-Carousel');
-
-    // Lặp qua mảng phim và tạo các phần tử HTML tương ứng
-    moviesLatestDataCarousel.forEach(function (movieData, index) {
-      // Tạo các phần tử HTML
-      var movieDiv = document.createElement('div');
-      movieDiv.classList.add('col-md-2', 'mb-4', 'mr-0', 'card-to-detail');
-
-      var cardDiv = document.createElement('div');
-      cardDiv.classList.add('card');
-      var cardId = 'listLatest-Carousel-' + index;
-      cardDiv.setAttribute('id', cardId);
-
-      var imgContainerDiv = document.createElement('div');
-      imgContainerDiv.classList.add('img-container');
-
-      var img = document.createElement('img');
-      img.src = movieData.image;
-      img.classList.add('card-img-top');
-      img.alt = 'Movie Image';
-
-      var cardBodyDiv = document.createElement('div');
-      cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center');
-
-      var ratingP = document.createElement('p');
-      ratingP.classList.add('card-text', 'mr-auto', 'mb-2');
-      ratingP.innerHTML = '<i class="fas fa-star" style="color: yellow;"></i> ' + movieData.rating;
-
-      var titleH6 = document.createElement('h6');
-      titleH6.classList.add('card-title', 'mt-0');
-      titleH6.innerText = movieData.title;
-
-      var addButton = document.createElement('button');
-      addButton.classList.add('btn', 'btn-primary');
-      addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
-
-      var watchButton = document.createElement('a');
-      watchButton.href = 'detail.html';
-      watchButton.classList.add('mt-2');
-      watchButton.style.width = '150px';
-      watchButton.style.textAlign = 'center';
-      watchButton.innerHTML = '<button class="btn btn-success p-2"><i class="fa fa-play mr-1"></i> Watch Movie</button>';
-
-      // Gắn các phần tử con vào phần tử cha
-      imgContainerDiv.appendChild(img);
-      cardDiv.appendChild(imgContainerDiv);
-      cardBodyDiv.appendChild(ratingP);
-      cardBodyDiv.appendChild(titleH6);
-      cardBodyDiv.appendChild(document.createElement('br'));
-      cardBodyDiv.appendChild(addButton);
-      cardBodyDiv.appendChild(watchButton);
-      cardDiv.appendChild(cardBodyDiv);
-      movieDiv.appendChild(cardDiv);
-
-      // Thêm movieDiv vào listMostpopularCarousel
-      listLatestCarousel.appendChild(movieDiv);
-    });
-
-    // #################################################################
-    // #################################################################
-    // #################################################################
-
-  </script>
 
 </body>
 

@@ -1,11 +1,12 @@
 import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab } from "./api_func.js"
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
-import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail } from "./render/page_home.js";
+import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail, HighestRevenueHome, LoadRecommendHome } from "./render/page_home.js";
 import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg } from "./render/page_detail.js";
 import { LoadDirectorAll, LoadWriterAll, LoadCastAll, LoadProducedAll, LoadCinematographyAll, LoadEditingAll, LoadSpecialEffectsAll, LoadMusicAll } from "./render/page_cast_and_crew.js";
 import { LoadAwardAll } from "./render/page_award.js";
 import { LoadFilmNav } from "./render/page_nav.js";
 import { LoadProfile } from "./render/page_profile.js";
+import { LoadResultSearch } from "./render/page_search.js";
 
 $(function () {
     var currentAccount = false;
@@ -102,34 +103,28 @@ $(function () {
         (async () => {
             try {
                 const data = await apiAllMovie();
+                const data_top_revenue = await apiBoxOfficeMovie(5);
                 LoadFilmHome(data);
                 LoadFilmNav(data);
                 MostPopularHome(data);
                 MostFavouritesHome(data);
+                HighestRevenueHome(data_top_revenue);
                 toDetail();
 
-                const dataRecommend = await apiMaybeYouLikeMovieCollab(currentAccount);
-                console.log(dataRecommend);
+                if (currentAccount != null) {
+                    const dataRecommend = await apiMaybeYouLikeMovieCollab(currentAccount);
+                    LoadRecommendHome(dataRecommend);
+                    // console.log(dataRecommend);
+                } else {
+                    $("#no-login").css("display", "block");
+                    $("#div-recommend").css("display", "none");
+                }
+
             } catch (error) {
                 console.error('Error:', error);
             }
         })();
     }
-
-
-    // if (document.getElementById('listRightVideo')) {
-    //     fetch(`http://127.0.0.1:8000/api/ticketroom/`)
-    //         .then(response => {
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             HighestRevenueHome(data);
-    //         })
-    //         .catch(error => {
-    //             // Xử lý lỗi nếu có
-    //             console.error('Fetch error:', error);
-    //         });
-    // }
 
     // ##############################################################################################################
     // PAGE PROFILE
@@ -185,7 +180,7 @@ $(function () {
 
         (async () => {
             try {
-                const data = await apiDetailMovie(movieName, currentAccount);
+                const data = await apiDetailMovie(movieName);
                 let linkTrailer = data.data[0].link_trailer;
                 let linkImg = data.data[0].link_img;
 
@@ -452,17 +447,17 @@ $(function () {
         (async () => {
             try {
                 const data = await apiMaybeYouLikeMovie(movieName);
-                console.log(data);
+                // console.log(data);
                 LoadMovieMaybeLike(data);
 
                 $(".a-movie-maybe-like").each(async function () {
                     let aTag = $(this);
                     let movieNameTag = aTag.find('h5').text();
                     try {
-                        let dataDetailMovie = await apiDetailMovie(movieNameTag, currentAccount);
+                        let dataDetailMovie = await apiDetailMovie(movieNameTag);
                         let srcImg = await apiImgMovie(dataDetailMovie.data[0].link_img);
                         let imgTag = $(aTag.find('img'));
-                        console.log(imgTag);
+                        // console.log(imgTag);
                         imgTag.attr('src', srcImg);
                     } catch (error) {
                         console.error('Error:', error);
@@ -692,6 +687,24 @@ $(function () {
         const data = apiAwardMovie(movieName);
 
         LoadAwardAll(data);
+    }
+
+    // ##############################################################################################################
+    // PAGE SEARCH
+    // ##############################################################################################################
+    // ##############################################################################################################
+    // Load Result
+    // ##############################################################################################################
+
+    if (document.querySelector('#result')) {
+        (async () => {
+            try {
+                const data = await apiAllMovie();
+                LoadResultSearch(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
     }
 
 });
