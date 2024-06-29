@@ -20,7 +20,7 @@ time.sleep(1.5)
 str_count = "SELECT COUNT(*) FROM `moviedata`.`movieinformation`;"
 mycursor.execute(str_count)
 count = mycursor.fetchone()[0]
-movie_id = count
+movie_id = count + 6
 
 str_count = "SELECT COUNT(*) FROM `moviedata`.`writers`;"
 mycursor.execute(str_count)
@@ -166,7 +166,7 @@ rating_id = count + 1
 
 link = []
 
-for i in range(0, 10):
+for i in range(0, 22):
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(1)
     # btn_link_element = driver.find_element(By.XPATH, "//*[@id=\"__next\"]/main/div[2]/div[2]/section/section/div/section/section/div[2]/div/section/div[2]/div[2]/div[2]/div/span/button")
@@ -184,7 +184,7 @@ for i in range(0, 10):
         print("Timeout")
 
 
-for i in range(51, 301):
+for i in range(824, 1050):
     element_a_to_film = '//*[@id="__next"]/main/div[2]/div[3]/section/section/div/section/section/div[2]/div/section/div[2]/div[2]/ul/li[' + str(i) + "]/div/div/div/div[1]/div[2]/div[1]/a"
     
     link_film = driver.find_elements(By.XPATH, element_a_to_film)[0].get_attribute(
@@ -429,7 +429,11 @@ for i in link:
         By.XPATH,
         '//*[@id="__next"]/main/div/section[1]/section/div[3]/section/section/div[2]/div[1]/ul/li[1]/a',
     )
-    year_manufacture = year_manufacture_elements[0].text
+
+    if year_manufacture_elements:
+        year_manufacture = year_manufacture_elements[0].text
+    else:
+        continue
     # print("Sản xuất năm: " + year_manufacture)
 
     xpath_list = [
@@ -462,7 +466,9 @@ for i in link:
         By.XPATH,
         '//*[@id="__next"]/main/div/section[1]/section/div[3]/section/section/div[3]/div[2]/div[1]/section/p',
     )
-    describe = describe_elements[0].text
+
+    if describe_elements:
+        describe = describe_elements[0].text
     # print(describe_elements[0].text)
 
     # storyline = []
