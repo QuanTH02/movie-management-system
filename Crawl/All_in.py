@@ -166,7 +166,7 @@ rating_id = count + 1
 
 link = []
 
-for i in range(0, 4):
+for i in range(0, 10):
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(1)
     # btn_link_element = driver.find_element(By.XPATH, "//*[@id=\"__next\"]/main/div[2]/div[2]/section/section/div/section/section/div[2]/div/section/div[2]/div[2]/div[2]/div/span/button")
@@ -184,7 +184,7 @@ for i in range(0, 4):
         print("Timeout")
 
 
-for i in range(51, 201):
+for i in range(51, 301):
     element_a_to_film = '//*[@id="__next"]/main/div[2]/div[3]/section/section/div/section/section/div[2]/div/section/div[2]/div[2]/ul/li[' + str(i) + "]/div/div/div/div[1]/div[2]/div[1]/a"
     
     link_film = driver.find_elements(By.XPATH, element_a_to_film)[0].get_attribute(
