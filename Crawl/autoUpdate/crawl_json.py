@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import mysql.connector
-import time
+import json
 
 def search_link(str, str1):
     pattern = re.escape(str1) + r'[^"]*'
@@ -76,59 +76,58 @@ def return_all_link_img(link):
         return ""
 
 def main():
-    
-    str_select = "SELECT * FROM `movie`.`movieinformation`;"
-    mycursor.execute(str_select)
-    all_movie = mycursor.fetchall()
+    with open('movies.json', 'r', encoding='utf-8') as json_file:
+        all_movie = json.load(json_file)
 
     link_img_id = 1
-    link_trailler_id = 1
-    for movie in all_movie:
-        movie_id = movie[0]
-        link_img_main = movie[6]
-        link_trailer_main = movie[7]
+    link_trailer_id = 1
 
-        new_link_img = main_link_img(link_img_main)
-        new_link_trailer = main_link_trailer(link_trailer_main)
+    with open('update.sql', 'w', encoding='utf-8') as f:
+        f.write(f"DELETE FROM `moviedata`.`movie_img`;\n")
+        f.write(f"DELETE FROM `moviedata`.`link_img`;\n")
+        f.write(f"DELETE FROM `moviedata`.`movie_trailler`;\n")
+        f.write(f"DELETE FROM `moviedata`.`link_trailler`;\n")
 
-        all_link_img = return_all_link_img(link_img_main)
+        for movie in all_movie:
+            movie_id = movie["movie_id"]
+            link_img_main = movie["link_img"]
+            link_trailer_main = movie["link_trailer"]
 
-        str_insert_to_link_img = "INSERT INTO `movie`.`link_img` (`link_img_id`, `link_img`) VALUES (%s, %s);"
-        val = (link_img_id, new_link_img)
-        mycursor.execute(str_insert_to_link_img, val)
-        conn.commit()
+            new_link_img = main_link_img(link_img_main)
+            new_link_trailer = main_link_trailer(link_trailer_main)
 
-        str_insert_to_movie_img = "INSERT INTO `movie`.`movie_img` (`movie_id`, `link_img_id`) VALUES (%s, %s);"
-        val = (movie_id, link_img_id)
-        mycursor.execute(str_insert_to_movie_img, val)
-        conn.commit()
+            str_update_main_img = f"UPDATE `moviedata`.`movieinformation` SET `main_img` = '{new_link_img}' WHERE `movie_id` = {movie_id};\n"
+            f.write(str_update_main_img)
 
-        link_img_id += 1
+            str_update_main_trailer = f"UPDATE `moviedata`.`movieinformation` SET `main_trailer` = '{new_link_trailer}' WHERE `movie_id` = {movie_id};\n"
+            f.write(str_update_main_trailer)
 
-        for link_img_for in all_link_img:
-            str_insert_to_link_img = "INSERT INTO `movie`.`link_img` (`link_img_id`, `link_img`) VALUES (%s, %s);"
-            val = (link_img_id, link_img_for)
-            mycursor.execute(str_insert_to_link_img, val)
-            conn.commit()
+            all_link_img = return_all_link_img(link_img_main)
 
-            str_insert_to_movie_img = "INSERT INTO `movie`.`movie_img` (`movie_id`, `link_img_id`) VALUES (%s, %s);"
-            val = (movie_id, link_img_id)
-            mycursor.execute(str_insert_to_movie_img, val)
-            conn.commit()
+            str_insert_to_link_img = f"INSERT INTO `moviedata`.`link_img` (`link_img_id`, `link_img`) VALUES ({link_img_id}, '{new_link_img}');\n"
+            f.write(str_insert_to_link_img)
+
+            str_insert_to_movie_img = f"INSERT INTO `moviedata`.`movie_img` (`movie_id`, `link_img_id`) VALUES ({movie_id}, {link_img_id});\n"
+            f.write(str_insert_to_movie_img)
 
             link_img_id += 1
 
-        str_insert_to_link_trailer = "INSERT INTO `movie`.`link_trailler` (`link_trailler_id`, `link_trailler`) VALUES (%s, %s);"
-        val = (link_trailler_id, new_link_trailer)
-        mycursor.execute(str_insert_to_link_trailer, val)
-        conn.commit()
+            for link_img_for in all_link_img:
+                str_insert_to_link_img = f"INSERT INTO `moviedata`.`link_img` (`link_img_id`, `link_img`) VALUES ({link_img_id}, '{link_img_for}');\n"
+                f.write(str_insert_to_link_img)
 
-        str_insert_to_movie_trailer = "INSERT INTO `movie`.`movie_trailler` (`movie_id`, `link_trailler_id`) VALUES (%s, %s);"
-        val = (movie_id, link_trailler_id)
-        mycursor.execute(str_insert_to_movie_trailer, val)
-        conn.commit()
+                str_insert_to_movie_img = f"INSERT INTO `moviedata`.`movie_img` (`movie_id`, `link_img_id`) VALUES ({movie_id}, {link_img_id});\n"
+                f.write(str_insert_to_movie_img)
 
-        link_trailler_id += 1
+                link_img_id += 1
+
+            str_insert_to_link_trailer = f"INSERT INTO `moviedata`.`link_trailler` (`link_trailler_id`, `link_trailler`) VALUES ({link_trailer_id}, '{new_link_trailer}');\n"
+            f.write(str_insert_to_link_trailer)
+
+            str_insert_to_movie_trailer = f"INSERT INTO `moviedata`.`movie_trailler` (`movie_id`, `link_trailler_id`) VALUES ({movie_id}, {link_trailer_id});\n"
+            f.write(str_insert_to_movie_trailer)
+
+            link_trailer_id += 1
 
 
 if __name__ == "__main__":
