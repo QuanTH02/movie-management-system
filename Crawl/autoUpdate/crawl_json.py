@@ -75,13 +75,13 @@ def return_all_link_img(link):
         return ""
 
 def main():
-    with open('movies.json', 'r', encoding='utf-8') as json_file:
+    with open('./Crawl/autoUpdate/movies.json', 'r', encoding='utf-8') as json_file:
         all_movie = json.load(json_file)
 
     link_img_id = 1
     link_trailer_id = 1
 
-    with open('update.sql', 'w', encoding='utf-8') as f:
+    with open('./Crawl/autoUpdate/update.sql', 'w', encoding='utf-8') as f:
         f.write(f"DELETE FROM `moviedata`.`movie_img`;\n")
         f.write(f"DELETE FROM `moviedata`.`link_img`;\n")
         f.write(f"DELETE FROM `moviedata`.`movie_trailler`;\n")
