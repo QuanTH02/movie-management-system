@@ -42,7 +42,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Crawl/autoUpdate/update.sql
+          git add .
           git commit -m 'Update update.sql file'
           git push https://x-access-token:${{ secrets.GH_UPDATE }}@github.com/QuanTH02/movie-management-system.git main
         continue-on-error: true
