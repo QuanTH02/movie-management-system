@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import mysql.connector
 import json
 
 def search_link(str, str1):
@@ -131,9 +130,6 @@ def main():
 
 
 if __name__ == "__main__":
-    
-    conn = mysql.connector.connect(host = "localhost", password = "123456", user = "root")
-    mycursor = conn.cursor()
     main()
     # mycursor.execute("DELETE FROM `movie`.`movie_img` WHERE link_img_id > 0;")
     # conn.commit()
