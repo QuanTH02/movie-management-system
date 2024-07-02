@@ -18,10 +18,5 @@
         "movie_id": 4,
         "link_img": "https://www.imdb.com/title/tt1684562/mediaviewer/rm1083211265/?ref_=tt_ov_i",
         "link_trailer": "https://www.imdb.com/video/vi1117505049/?playlistId=tt1684562&ref_=tt_pr_ov_vi"
-    },
-    {
-        "movie_id": 5,
-        "link_img": "https://www.imdb.com/title/tt13964390/mediaviewer/rm2091414273/?ref_=tt_ov_i",
-        "link_trailer": "https://www.imdb.com/video/vi368166425/?playlistId=tt13964390&ref_=tt_pr_ov_vi"
     }
 ]
