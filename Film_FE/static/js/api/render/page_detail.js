@@ -549,7 +549,7 @@ function LoadMovieMaybeLike(data) {
         movieLink.classList.add('a-movie-maybe-like');
 
         const movieImage = document.createElement('img');
-        movieImage.src = '../media/vebinh' + ind + '.jpg';
+        movieImage.src = jsonData.main_img;
         movieImage.classList.add('img-movie-maybe-like');
 
         const movieInfoDiv = document.createElement('div');
@@ -590,15 +590,4 @@ function LoadMovieMaybeLike(data) {
     });
 }
 
-function LoadTrailer(data) {
-    var video = document.getElementById("link-trailer-id");
-    video.src = data[0].link_trailer;
-    video.type = "video/mp4";
-}
-
-function LoadImg(data) {
-    var img = document.getElementById("img_movie");
-    img.src = data[0].link_img;
-}
-
-export { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg }
+export { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike}

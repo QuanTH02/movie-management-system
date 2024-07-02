@@ -1,49 +1,45 @@
 function LoadResultSearch(data) {
-    var filmFilter = document.querySelector('select[name="filmFilter"]');
-    document.getElementById('search-submit').addEventListener('click', function () {
-        // Lấy giá trị từ ô tìm kiếm
-        // console.log(this.value);
-        var searchTerm = this.value;
-        document.getElementById('h-search-content').innerHTML = "Search \"" + searchTerm +"\"";
+    var filmFilter = localStorage.getItem('filmFilter');
+    var searchTerm = localStorage.getItem('SearchResult');
+    document.getElementById('h-search-content').innerHTML = "Search \"" + searchTerm + "\"";
 
-        if (searchTerm.toLowerCase()) {
-            searchTerm = searchTerm.toLowerCase();
-        }
+    if (searchTerm.toLowerCase()) {
+        searchTerm = searchTerm.toLowerCase();
+    }
 
-        // console.log(filmFilter.value);
+    if (filmFilter == 0 || filmFilter == 1) {
+        var filteredMovies = data.filter(function (movie) {
+            return movie.movie_name.toLowerCase().includes(searchTerm);
+        });
+    } else if (filmFilter == 2) {
+        var filteredMovies = data.filter(function (movie) {
+            return movie.year_manufacture.toLowerCase().includes(searchTerm);
+        });
+    } else {
+        var filteredMovies = data.filter(function (movie) {
+            return String(movie.rating).toLowerCase().includes(searchTerm);
+        });
+    }
 
-        if (filmFilter.value == 0 || filmFilter.value == 1) {
-            var filteredMovies = data.filter(function (movie) {
-                return movie.movie_name.toLowerCase().includes(searchTerm);
-            });
-        } else if (filmFilter.value == 2) {
-            var filteredMovies = data.filter(function (movie) {
-                return movie.year_manufacture.toLowerCase().includes(searchTerm);
-            });
-        } else {
-            var filteredMovies = data.filter(function (movie) {
-                return String(movie.rating).toLowerCase().includes(searchTerm);
-            });
-        }
+    // Hiển thị kết quả tìm kiếm
+    var searchResultsElement = document.getElementById('result');
+    searchResultsElement.innerHTML = ''; // Xóa nội dung cũ
 
-        // Hiển thị kết quả tìm kiếm
-        var searchResultsElement = document.getElementById('result');
-        searchResultsElement.innerHTML = ''; // Xóa nội dung cũ
+    var stt = 0;
+    filteredMovies.forEach(function (movie) {
 
-        var stt = 0;
-        filteredMovies.forEach(function (movie) {
-            
-            var pName = movie.movie_name;
-            var pYear = movie.year_manufacture;
-            var pRating = movie.rating;
-            var pTime = movie.time;
-            var pDescribe = movie.describe_movie;
+        var pName = movie.movie_name;
+        var pYear = movie.year_manufacture;
+        var pRating = movie.rating;
+        var pTime = movie.time;
+        var pDescribe = movie.describe_movie;
+        var pImg = movie.main_img;
 
-            var divResultElement = document.createElement('div');
-            divResultElement.classList.add('search-result');
-            divResultElement.innerHTML = `
+        var divResultElement = document.createElement('div');
+        divResultElement.classList.add('search-result');
+        divResultElement.innerHTML = `
                         <a href="detail.html" class="a-movie-maybe-like">
-                            <img src="../media/vebinh1.jpg" class="img-movie-maybe-like">
+                            <img src=${pImg} class="img-movie-maybe-like">
                             <div class="div-search-result">
                                 <li>
                                     <h5>${pName}</h5>
@@ -68,18 +64,21 @@ function LoadResultSearch(data) {
                             </div>
                         </a>
             `;
-            if (stt < 5) {
-                searchResultsElement.appendChild(divResultElement);
-            }
-            stt++;
-        });
+        if (stt < 50) {
+            searchResultsElement.appendChild(divResultElement);
+        }
+        stt++;
+    });
 
-        document.getElementsByClassName("search-result").forEach(function (element) {
-            element.addEventListener('click', function () {
-                var movieName = element.querySelector('h5').textContent;
-                localStorage.setItem('movie_name', movieName);
-            });
-        });
+    document.addEventListener('click', function (event) {
+        // Kiểm tra nếu phần tử được nhấp có class là 'search-result'
+        if (event.target.closest('.search-result')) {
+            var element = event.target.closest('.search-result');
+            var movieName = element.querySelector('h5').textContent;
+            localStorage.setItem('movie_name', movieName);
+            localStorage.removeItem('SearchResult');
+            localStorage.removeItem('filmFilter');
+        }
     });
 }
 

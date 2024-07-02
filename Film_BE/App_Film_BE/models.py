@@ -8,6 +8,39 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class LinkImg(models.Model):
+    link_img_id = models.IntegerField(primary_key=True)
+    link_img = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'link_img'
+
+
+class MovieImg(models.Model):
+    movie = models.ForeignKey('Movieinformation', models.DO_NOTHING, blank=True, null=True)
+    link_img = models.ForeignKey(LinkImg, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'movie_img'
+
+class LinkTrailer(models.Model):
+    link_trailler_id = models.IntegerField(primary_key=True)
+    link_trailler = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'link_trailler'
+
+class MovieTrailer(models.Model):
+    movie = models.ForeignKey('Movieinformation', models.DO_NOTHING)
+    link_trailler = models.ForeignKey("LinkTrailer", models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'movie_trailler'
+
 class AspectRatio(models.Model):
     aspect_ratio_id = models.IntegerField(primary_key=True)
     movie = models.ForeignKey('Movieinformation', models.DO_NOTHING, blank=True, null=True)
@@ -276,6 +309,8 @@ class Movieinformation(models.Model):
     storyline = models.TextField(blank=True, null=True)
     rating = models.CharField(max_length=45, blank=True, null=True)
     total_vote = models.CharField(max_length=45, blank=True, null=True)
+    main_img = models.TextField(blank=True, null=True)
+    main_trailer = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -424,3 +459,11 @@ class FollowFilmUser(models.Model):
 
     class Meta:
         db_table = 'follow_film_user'
+
+class LikeMovie(models.Model):
+    movie = models.ForeignKey('Movieinformation', models.DO_NOTHING)
+    user_name = models.TextField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'like_movie'

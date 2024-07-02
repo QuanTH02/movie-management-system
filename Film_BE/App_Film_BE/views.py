@@ -52,6 +52,11 @@ from .models import (
     RatingFilm,
     SoundMix,
     TicketRoom,
+    LinkTrailer,
+    MovieTrailer,
+    LinkImg,
+    MovieImg,
+    LikeMovie,
 )
 from .serializers import (
     # User
@@ -89,7 +94,8 @@ from .serializers import (
     SoundMixSerializer,
     TicketRoomSerializer,
     LinkTrailerSerializer,
-    LinkImgSerializer
+    LinkImgSerializer,
+    LikeMovieSerializer,
 )
 
 # User
@@ -226,7 +232,6 @@ class FilmListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Movieinformation.objects.all()
-        # members = User.objects.all()
 
         for movie_info in queryset:
             if movie_info.total_vote:
@@ -235,7 +240,13 @@ class FilmListView(generics.ListAPIView):
             if movie_info.rating:
                 movie_info.rating = self.extract_rating(movie_info.rating)
 
+            movie_imgs = MovieImg.objects.filter(movie=movie_info.movie_id)
+            link_img_ids = movie_imgs.values_list("link_img_id", flat=True)
+            link_imgs = LinkImg.objects.filter(link_img_id__in=link_img_ids)
+
+            # print(movie_info.list_img)
         return queryset
+
     
     def convert_vote_to_number(self, vote_str):
         if vote_str and isinstance(vote_str, str):
@@ -1269,57 +1280,67 @@ class RecommendContentBasedView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
-        movie_id = self.kwargs['movie_id']
+        movie_id = self.kwargs.get('movie_id')
         
         try:
             movie_id = int(movie_id)
-            recommended_ids = recommend_content_based_by_movie_id(movie_id)
-            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            movie_dict = {movie.movie_id: movie for movie in queryset}
-            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset
-        except ValueError:
+            return self.get_recommend_content_based_by_movie_id(movie_id)
+        except (ValueError, TypeError):
             return self.get_recommend_content_based_by_movie_name(movie_id)
         
+    def get_recommend_content_based_by_movie_id(self, movie_id):
+        try:
+            recommended_ids = recommend_content_based_by_movie_id(movie_id)
+            return self.get_sorted_queryset(recommended_ids)
+        except Exception as e:
+            raise generics.NotFound(str(e))
+
     def get_recommend_content_based_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            recommended_ids = recommend_content_based_by_movie_id(movie_info.movie_id)
-            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            movie_dict = {movie.movie_id: movie for movie in queryset}
-            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset
+            return self.get_recommend_content_based_by_movie_id(movie_info.movie_id)
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
+    
+    def get_sorted_queryset(self, recommended_ids):
+        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+        movie_dict = {movie.movie_id: movie for movie in queryset}
+        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
+        return sorted_queryset
+
 
 class RecommendCollaborativeView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        user_id = self.kwargs.get('user_id')
         
         try:
             user_id = int(user_id)
-            recommended_ids = recommend_collaborative_by_user_id(user_id)
-            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            movie_dict = {movie.movie_id: movie for movie in queryset}
-            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset[:12]
-
-        except ValueError:
+            return self.get_recommend_collaborative_by_user_id(user_id)
+        except (ValueError, TypeError):
             return self.get_recommend_collaborative_by_user_name(user_id)
+        
+    def get_recommend_collaborative_by_user_id(self, user_id):
+        try:
+            recommended_ids = recommend_collaborative_by_user_id(user_id)
+            return self.get_sorted_queryset(recommended_ids)[:12]
+        except Exception as e:
+            raise NotFound(str(e))
         
     def get_recommend_collaborative_by_user_name(self, user_name):
         try:
             user = User.objects.get(username=user_name)
-            user_id = user.id
-            recommended_ids = recommend_collaborative_by_user_id(user_id)
-            queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
-            movie_dict = {movie.movie_id: movie for movie in queryset}
-            sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids]
-            return sorted_queryset[:12]
-        except Movieinformation.DoesNotExist:
-            raise NotFound("Movie not found.")
+            return self.get_recommend_collaborative_by_user_id(user.id)
+        except User.DoesNotExist:
+            raise NotFound("User not found.")
+
+    def get_sorted_queryset(self, recommended_ids):
+        queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
+        movie_dict = {movie.movie_id: movie for movie in queryset}
+        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
+        return sorted_queryset
+
         
 
 # Load trailer video
@@ -1339,9 +1360,92 @@ class ImgMovieView(generics.ListAPIView):
     serializer_class = LinkImgSerializer
 
     def get_queryset(self):
-        link_page_img = self.kwargs['link_page_img']
+        movie_identifier = self.kwargs["movie_id"]
 
-        link_img = main_link_img(link_page_img)
+        try:
+            movie_id = int(movie_identifier)
+            return self.get_link_img_by_movie_id(movie_id)
+        except ValueError:
+            return self.get_link_img_by_movie_name(movie_identifier)
 
-        # Trả về một danh sách với một phần tử chứa link_img
-        return [{'link_img': link_img}]
+    def get_link_img_by_movie_id(self, movie_id):
+        movie_imgs = MovieImg.objects.filter(movie=movie_id)
+        link_img_ids = movie_imgs.values_list("link_img_id", flat=True)
+        return LinkImg.objects.filter(link_img_id__in=link_img_ids)
+
+    def get_link_img_by_movie_name(self, movie_name):
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+            movie_imgs = MovieImg.objects.filter(movie=movie_info.movie_id)
+            link_img_ids = movie_imgs.values_list("link_img_id", flat=True)
+            return LinkImg.objects.filter(link_img_id__in=link_img_ids)
+        except Movieinformation.DoesNotExist:
+            raise NotFound("Movie not found.")
+
+class TrailerMovieView(generics.ListAPIView):
+    serializer_class = LinkTrailerSerializer
+
+    def get_queryset(self):
+        movie_identifier = self.kwargs["movie_id"]
+
+        try:
+            movie_id = int(movie_identifier)
+            return self.get_link_trailer_by_movie_id(movie_id)
+        except ValueError:
+            return self.get_link_trailer_by_movie_name(movie_identifier)
+
+    def get_link_trailer_by_movie_id(self, movie_id):
+        movie_trailers = MovieTrailer.objects.filter(movie=movie_id)
+        link_trailer_ids = movie_trailers.values_list("link_trailler_id", flat=True)
+        return LinkTrailer.objects.filter(link_trailler_id__in=link_trailer_ids)
+
+    def get_link_trailer_by_movie_name(self, movie_name):
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+            movie_trailers = MovieTrailer.objects.filter(movie=movie_info.movie_id)
+            link_trailer_ids = movie_trailers.values_list("link_trailler_id", flat=True)
+            return LinkTrailer.objects.filter(link_trailler_id__in=link_trailer_ids)
+        except Movieinformation.DoesNotExist:
+            raise NotFound("Movie not found.")
+        
+class LikeMovieView(generics.ListAPIView):
+    serializer_class = FilmSerializer
+    def get_queryset(self):
+        user_name = self.request.query_params.get('userName')
+        list_like_movie_ids = LikeMovie.objects.filter(user_name=user_name)
+        list_movie_ids = list_like_movie_ids.values_list('movie_id', flat=True)
+        return Movieinformation.objects.filter(movie_id__in=list_movie_ids)
+    
+    def post(self, request):
+        user_name = request.data.get('userName')
+        movie_name = request.data.get('movieName')
+
+        if not user_name or not movie_name:
+            return Response(
+                {"message": "User name and movie name are required."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            user = User.objects.get(username=user_name)
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+        except Movieinformation.DoesNotExist:
+            return Response(
+                {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+            
+        if LikeMovie.objects.filter(user_name=user_name, movie_id=movie_info.movie_id).exists():
+            return Response(
+                {"message": "User has already liked this movie."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        else:
+            LikeMovie.objects.create(user_name=user_name, movie_id=movie_info.movie_id)
+            return Response({"message": "Like movie successfully."}, status=status.HTTP_201_CREATED)
+            

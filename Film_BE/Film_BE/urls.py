@@ -58,6 +58,7 @@ from App_Film_BE.views import (
     RecommendCollaborativeView,
     TrailerMovieView,
     ImgMovieView,
+    LikeMovieView,
 )
 
 urlpatterns = [
@@ -108,10 +109,11 @@ urlpatterns = [
     path('api/recommend/contentbased/<str:movie_id>/', RecommendContentBasedView.as_view(), name='recommend-contentbased-movies'),
     path('api/recommend/collaborative/<str:user_id>/', RecommendCollaborativeView.as_view(), name='recommend-collaborative-movies'),
 
-    # Trailer
-    path('api/link_trailer/<path:link_page_trailer>/', TrailerMovieView.as_view(), name='link_trailer_movie'),
+    # Trailer and Img
+    path('api/movie/<str:movie_id>/linktrailer/', TrailerMovieView.as_view(), name='link_trailer_movie'),
+    path('api/movie/<str:movie_id>/linkimg/', ImgMovieView.as_view(), name='link_img_movie'),
 
-    # Img
-    path('api/link_img/<path:link_page_img>/', ImgMovieView.as_view(), name='link_img_movie'),
+    # Like movie
+    path('api/likemovie/', LikeMovieView.as_view(), name='like_movie'),
 ]
 

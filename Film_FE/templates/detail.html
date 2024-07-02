@@ -34,7 +34,8 @@
 <body>
     <script>
         $(function () {
-            $("#includedContentNav").load("nav.html");
+            $("#includedContentNav").load("nav.html", function () {
+            });
             $("#includedContentFooter").load("footer.html");
         });
     </script>
@@ -74,7 +75,7 @@
                     <div class="col-4"></div>
                     <div class="col-4" style="text-align: right;">
                         <h6 class="mb-0 pb-0">IMDb RATING</h6>
-                        <a href="#" class="imdb-rating">
+                        <a href="rating.html" class="imdb-rating">
                             <div class="mr-0 pr-1 div-imdb-rating"
                                 style="display: flex; align-items: center; justify-content: flex-end;">
                                 <i class="fas fa-star pr-2"
@@ -90,8 +91,17 @@
 
                 <!-- Image and trailer -->
                 <div class="row" id="row-img-trailer">
-                    <div class="col-3 pr-0 d-flex justify-content-center align-items-center">
-                        <img id="img_movie" alt="Image" style="width: 100%; ">
+                    <div class="col-3 pr-0 d-flex justify-content-center align-items-center position-relative">
+                        <div class="ribbon-icon" id="add_to_list_detail">
+                            <svg class="ipc-watchlist-ribbon__bg" width="24px" height="34px" viewBox="0 0 24 34" xmlns="http://www.w3.org/2000/svg" role="presentation">
+                                <polygon class="ipc-watchlist-ribbon__bg-ribbon" fill="transparent" points="24 0 0 0 0 32 12.2436611 26.2926049 24 31.7728343"></polygon>
+                                <polygon class="ipc-watchlist-ribbon__bg-hover" points="24 0 0 0 0 32 12.2436611 26.2926049 24 31.7728343"></polygon>
+                                <polygon class="ipc-watchlist-ribbon__bg-shadow" points="24 31.7728343 24 33.7728343 12.2436611 28.2926049 0 34 0 32 12.2436611 26.2926049"></polygon>
+                                <!-- Đây là biểu tượng dấu cộng -->
+                                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="24" fill="#888888">+</text>
+                            </svg>
+                        </div>
+                        <img id="img_movie" alt="Image" style="width: 100%;">
                     </div>
                     <div class="col-7 pl-1 pr-0 video-trailer d-flex justify-content-center align-items-center">
                         <video id="link-trailer-id" controls width="100%">
@@ -101,19 +111,19 @@
                         </video>
                     </div>
                     <div class="col-2 pl-1">
-                        <div class="right-trailer-center">
+                        <button id="movie_all_trailer" class="right-trailer-center">
                             <div>
                                 <i class="fa-solid fa-play mb-2"></i>
                                 <p class="mb-0">Video</p>
                             </div>
-                        </div>
+                        </button>
 
-                        <div class="right-trailer-center">
+                        <a id="movie_all_img" class="right-trailer-center" href="img.html" style="text-decoration: none;">
                             <div>
                                 <i class="fa-solid fa-image mb-2"></i>
                                 <p class="mb-0">Image</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 

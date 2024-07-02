@@ -1,8 +1,10 @@
 function LoadFilmHome(data) {
     var filmCount = 0;
     var videoList = document.getElementById('listRightVideo');
+    // console.log(data)
 
-    data.forEach(videos => {
+    var divCarousel = document.getElementById("all_video_home");
+    data.forEach((videos, index) => {
         if (filmCount < 3) {
             var listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'pt-0', 'pb-0', 'mb-1', 'trailer-play');
@@ -16,11 +18,11 @@ function LoadFilmHome(data) {
             imgDiv.classList.add('col-md-2', 'img-small');
 
             var img = document.createElement('img');
-            // img.src = videos.link_img;
-            // img.src = videos.link_img;
+            // img.src = videos.main_img;
+            // img.src = videos.main_img;
 
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = videos.main_img;
+            img.src = linkImg;
 
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
@@ -61,10 +63,29 @@ function LoadFilmHome(data) {
             videoList.appendChild(listItem);
 
 
+            // Video
+            const div = document.createElement('div');
+            div.className = 'carousel-item' + (index === 0 ? ' active' : ' video-trailer');
+
+            const videoElement = document.createElement('video');
+            videoElement.controls = true;
+            videoElement.style.width = "100%";
+
+            const source = document.createElement('source');
+            source.src = videos.main_trailer;
+            source.type = "video/mp4";
+
+            videoElement.appendChild(source);
+            div.appendChild(videoElement);
+            divCarousel.appendChild(div);
+
+
+
             filmCount++;
         }
-    });
 
+    });
+    console.log(divCarousel);
 }
 
 function MostFavouritesHome(data) {
@@ -94,8 +115,8 @@ function MostFavouritesHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -115,7 +136,7 @@ function MostFavouritesHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -152,8 +173,8 @@ function MostFavouritesHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -173,7 +194,7 @@ function MostFavouritesHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -232,8 +253,8 @@ function MostPopularHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -253,7 +274,7 @@ function MostPopularHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -290,8 +311,8 @@ function MostPopularHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -311,7 +332,7 @@ function MostPopularHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -345,9 +366,9 @@ function MostPopularHome(data) {
 function HighestRevenueHome(data) {
     $("#no-login").css("display", "none");
     $("#div-recommend").css("display", "block");
-    
+
     var filmCount = 0;
-    
+
     var listMostpopular = document.getElementById('listHighest');
     var listMostpopularCarousel = document.getElementById('listHighest-Carousel');
 
@@ -368,8 +389,8 @@ function HighestRevenueHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -389,7 +410,7 @@ function HighestRevenueHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -426,8 +447,8 @@ function HighestRevenueHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -447,7 +468,7 @@ function HighestRevenueHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -478,8 +499,9 @@ function HighestRevenueHome(data) {
 }
 
 function LoadRecommendHome(data) {
+    // console.log(data);
     var filmCount = 0;
-    
+
     var listMostpopular = document.getElementById('listRecommend');
     var listMostpopularCarousel = document.getElementById('listRecommend-Carousel');
 
@@ -499,8 +521,8 @@ function LoadRecommendHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -523,7 +545,7 @@ function LoadRecommendHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -560,8 +582,8 @@ function LoadRecommendHome(data) {
 
             var img = document.createElement('img');
             // img.src = movie.image;
-            var linkFake = '../media/film' + (filmCount + 1) + '.jpg';
-            img.src = linkFake;
+            var linkImg = movie.main_img;
+            img.src = linkImg;
             img.classList.add('card-img-top');
             img.alt = 'Movie Image';
 
@@ -584,7 +606,7 @@ function LoadRecommendHome(data) {
             titleH6.innerText = movie.movie_name;
 
             var addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-primary');
+            addButton.classList.add('btn', 'btn-primary', 'add_to_list');
             addButton.innerHTML = '<i class="fas fa-plus"></i> Add to List';
 
             var watchButton = document.createElement('a');
@@ -615,33 +637,26 @@ function LoadRecommendHome(data) {
 }
 
 function toDetail() {
-    // Lấy tất cả các phần tử có class "trailer-play"
     var toDetailRightElements = document.getElementsByClassName("trailer-play");
 
-    // Lặp qua từng phần tử và gắn sự kiện
     for (var i = 0; i < toDetailRightElements.length; i++) {
         toDetailRightElements[i].addEventListener("click", function () {
-            // Trong sự kiện, this là phần tử được click
             var cardTitleElement = this.querySelector('.card-title');
 
-            // Kiểm tra xem cardTitleElement có tồn tại không trước khi lưu vào localStorage
             if (cardTitleElement) {
-                var movieName = cardTitleElement.textContent; // hoặc innerText
+                var movieName = cardTitleElement.textContent;
                 localStorage.setItem("movie_name", movieName);
             }
         });
     }
 
-    // Tương tự, gắn sự kiện cho các phần tử có class "card-to-detail"
     var toDetailCardElements = document.getElementsByClassName("card-to-detail");
     for (var j = 0; j < toDetailCardElements.length; j++) {
         toDetailCardElements[j].addEventListener("click", function () {
-            // Tương tự như trên, lấy giá trị cần lưu vào localStorage
             var cardTitleElement = this.querySelector('.card-title');
 
-            // Kiểm tra xem cardTitleElement có tồn tại không trước khi lưu vào localStorage
             if (cardTitleElement) {
-                var movieName = cardTitleElement.textContent; // hoặc innerText
+                var movieName = cardTitleElement.textContent;
                 localStorage.setItem("movie_name", movieName);
             }
         });

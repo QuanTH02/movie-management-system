@@ -32,6 +32,11 @@ from .models import (
     SoundMix,   
     TicketRoom,
     FollowFilmUser,
+    LinkTrailer,
+    MovieTrailer,
+    LinkImg,
+    MovieImg,
+    LikeMovie
 )
 
 
@@ -245,8 +250,17 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined']
 
 # Trailer
-class LinkTrailerSerializer(serializers.Serializer):
-    link_trailer = serializers.CharField()
+class LinkTrailerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LinkTrailer
+        fields = "__all__"
 
-class LinkImgSerializer(serializers.Serializer):
-    link_img = serializers.CharField()
+class LinkImgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LinkImg
+        fields = "__all__"
+
+class LikeMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikeMovie
+        fields = "__all__"
