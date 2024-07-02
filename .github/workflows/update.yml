@@ -1,9 +1,12 @@
 name: Update data and Update model
 
-on:
-  schedule:
-    - cron: '0 0 * * *' # This cron expression runs the job daily
-  workflow_dispatch:
+on: 
+  push:
+    branches:
+      - main
+  # schedule:
+  #   - cron: '0 0 * * *' # This cron expression runs the job daily
+  # workflow_dispatch:
 
 jobs:
   crawl:
@@ -25,63 +28,21 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run update
-        run: python ./main/main_update.py
+        run: python ./Crawl/autoUpdate/crawl_json.py
 
       - name: Upload output
         uses: actions/upload-artifact@v4
         with:
-          name: movies_data.csv
-          path: merge_data/movies_data.csv
+          name: update.sql
+          path: ./Crawl/autoUpdate/update.sql
 
-      - name: Commit and push the movies_data.csv file
+      - name: Commit and push the update.sql file
         env: 
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add merge_data/movies_data.csv
-          git commit -m 'Update movies_data.csv files in merge_data directory'
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/QuanTH02/2023.2-Data-Science.git main
-        continue-on-error: true
-      
-  update_model:
-    runs-on: ubuntu-latest
-    needs: crawl
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.6
-        with:
-          ref: main
-
-      - name: Setup Python
-        uses: actions/setup-python@v5.1.0
-        with:
-          python-version: 3.11
-          
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip 
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: movies_data.csv
-          path: merge_data/
-
-      - name: Update model
-        run: |
-          python update_model.py
-          cp ./merge_data/final_merged.csv ./app/static/
-      
-      - name: Commit and push the .pkl file
-        env: 
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add model_efa/*.pkl
-          git add merge_data/final_merged.csv
-          git commit -m 'Update .pkl files in model_efa directory'
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/QuanTH02/2023.2-Data-Science.git main
+          git add Crawl/autoUpdate/update.sql
+          git commit -m 'Update update.sql file'
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/QuanTH02/movie-management-system.git main
         continue-on-error: true
