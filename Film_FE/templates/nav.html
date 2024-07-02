@@ -8,12 +8,14 @@
     border-radius: 10px;
   }
 
-  .result li:hover {
+  /* .result li:hover {
     opacity: 0.8;
-  }
+  } */
 
   .result li a:hover {
     text-decoration: none;
+    color: rgb(190, 190, 190);
+    cursor: pointer;
   }
 
   .result li p {
@@ -37,6 +39,12 @@
     background-color: rgb(21, 21, 21);
     color: black;
   }
+
+  #filmFilter {
+    padding: 7px; 
+    border-radius: 3px;
+  }
+
 </style>
 
 
@@ -51,7 +59,7 @@
   <div class="collapse navbar-collapse" id="navbarNav">
 
     <form class="search-box form-inline ml-auto" id="searchForm">
-      <select name="filmFilter" class="d-inline-block mr-2">
+      <select id="filmFilter" name="filmFilter" class="d-inline-block mr-2">
         <option value="0" selected="selected">Filter</option>
         <option value="1">Movie Name</option>
         <option value="2">Year</option>
@@ -135,4 +143,5 @@
   navLogin.addEventListener("click", function () {
     window.location.href = "login.html";
   });
+
 </script>

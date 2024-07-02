@@ -147,43 +147,6 @@ async function apiDetailMovie(movieName) {
     }
 }
 
-
-// ##############################################################################################################
-// Api Return Link Trailer Movie
-// ##############################################################################################################
-async function apiTrailerMovie(linkTrailer) {
-    try {
-        const response = await fetch(`http://127.0.0.1:8000/api/link_trailer/${encodeURIComponent(linkTrailer)}/`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch trailer data');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
-    }
-}
-
-
-// ##############################################################################################################
-// Api Return Link Image Movie
-// ##############################################################################################################
-async function apiImgMovie(linkImg) {
-    try {
-        const response = await fetch(`http://127.0.0.1:8000/api/link_img/${encodeURIComponent(linkImg)}/`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch image data');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
-    }
-}
-
-
 // ##############################################################################################################
 // Api Return All Genres Movie
 // ##############################################################################################################
@@ -594,4 +557,102 @@ async function apiSubmitReviewMovie(movieName, currentAccount, starReview, title
     }
 }
 
-export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab }
+// ##############################################################################################################
+// Api Return All Img on Movie
+// ##############################################################################################################
+async function apiImgMovie(movieName) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/linkimg/`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch award information');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
+// ##############################################################################################################
+// Api Return All Trailer on Movie
+// ##############################################################################################################
+async function apiTrailerMovie(movieName) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/linktrailer/`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch award information');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
+// ##############################################################################################################
+// Api Add To List
+// ##############################################################################################################
+async function apiAddToList(movieName, userName) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/likemovie/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userName: userName,
+                movieName: movieName,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed add to list');
+        }
+
+        alert('Movie has been added to your list!');
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('Failed add to list!');
+        return null;
+    }
+}
+
+async function apiGetMovieLikes(userName) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/likemovie/?userName=${userName}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch movie likes');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+}
+
+async function apiRatingMovie(movieName) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/ratingfilm/`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch music information');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
+
+export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie }

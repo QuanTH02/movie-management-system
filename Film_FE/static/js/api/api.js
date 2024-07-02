@@ -1,14 +1,25 @@
-import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab } from "./api_func.js"
+import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie } from "./api_func.js"
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail, HighestRevenueHome, LoadRecommendHome } from "./render/page_home.js";
-import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike, LoadTrailer, LoadImg } from "./render/page_detail.js";
+import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike } from "./render/page_detail.js";
 import { LoadDirectorAll, LoadWriterAll, LoadCastAll, LoadProducedAll, LoadCinematographyAll, LoadEditingAll, LoadSpecialEffectsAll, LoadMusicAll } from "./render/page_cast_and_crew.js";
 import { LoadAwardAll } from "./render/page_award.js";
 import { LoadFilmNav } from "./render/page_nav.js";
-import { LoadProfile } from "./render/page_profile.js";
+import { LoadProfile, LoadMovieLike } from "./render/page_profile.js";
 import { LoadResultSearch } from "./render/page_search.js";
+import { LoadImg } from "./render/page_img.js";
+import { LoadGraphRating } from "./render/page_rating.js";
 
 $(function () {
+    (async () => {
+        try {
+            const data = await apiAllMovie();
+            LoadFilmNav(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    })();
+
     var currentAccount = false;
     if (document.getElementById("btn-sign-in")) {
         // ##############################################################################################################
@@ -32,7 +43,7 @@ $(function () {
                 }
             } catch (error) {
                 console.error('Error:', error);
-                // Xử lý lỗi khi gọi apiLogin()
+                alert("Login failed, please try again!");
             }
         });
 
@@ -62,10 +73,11 @@ $(function () {
                     alert(data.message);
                 } catch (error) {
                     console.error('Error:', error);
-                    // Xử lý lỗi khi gọi apiRegister()
+                    alert("Registration failed, please try again!");
                 }
             }
         });
+
     }
 
     // ##############################################################################################################
@@ -105,7 +117,7 @@ $(function () {
                 const data = await apiAllMovie();
                 const data_top_revenue = await apiBoxOfficeMovie(5);
                 LoadFilmHome(data);
-                LoadFilmNav(data);
+                // LoadFilmNav(data);
                 MostPopularHome(data);
                 MostFavouritesHome(data);
                 HighestRevenueHome(data_top_revenue);
@@ -120,6 +132,25 @@ $(function () {
                     $("#div-recommend").css("display", "none");
                 }
 
+                const addToListButtons = document.querySelectorAll('.add_to_list');
+
+                addToListButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const movieTitle = this.parentElement.querySelector('h6').innerText;
+                        console.log(movieTitle);
+                        apiAddToList(movieTitle, currentAccount);
+                    });
+                });
+
+                const trailerButtons = document.getElementsByClassName("trailer-play");
+
+                Array.from(trailerButtons).forEach(button => {
+                    button.addEventListener('click', function () {
+                        const movieTitle = this.querySelector('h5').innerText;
+                        localStorage.setItem("movie_name", movieTitle);
+                        window.location.href = "detail.html";
+                    });
+                });
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -138,6 +169,9 @@ $(function () {
             try {
                 const data = await apiAllAccount(currentAccount);
                 LoadProfile(data);
+                const movieLike = await apiGetMovieLikes(currentAccount);
+                // console.log(movieLike);
+                LoadMovieLike(movieLike);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -168,6 +202,8 @@ $(function () {
     }
 
 
+
+
     // ##############################################################################################################
     // PAGE DETAIL
     // ##############################################################################################################
@@ -181,25 +217,23 @@ $(function () {
         (async () => {
             try {
                 const data = await apiDetailMovie(movieName);
-                let linkTrailer = data.data[0].link_trailer;
-                let linkImg = data.data[0].link_img;
-
                 LoadDetail(data, movieName);
+                var video = document.getElementById("link-trailer-id");
+                video.src = data.data[0].main_trailer;
+                video.type = "video/mp4";
 
-                const dataTrailer = await apiTrailerMovie(linkTrailer);
-                LoadTrailer(dataTrailer);
+                var img = document.getElementById("img_movie");
+                img.src = data.data[0].main_img;
 
-                const dataImg = await apiImgMovie(linkImg);
-                LoadImg(dataImg);
+                document.getElementById("add_to_list_detail").addEventListener("click", function () {
+                    apiAddToList(movieName, currentAccount);
+                });
             } catch (error) {
                 console.error('Error:', error);
                 // Xử lý lỗi khi gọi các hàm API
             }
         })();
     }
-
-
-
 
     // ##############################################################################################################
     // Load Genres
@@ -455,9 +489,8 @@ $(function () {
                     let movieNameTag = aTag.find('h5').text();
                     try {
                         let dataDetailMovie = await apiDetailMovie(movieNameTag);
-                        let srcImg = await apiImgMovie(dataDetailMovie.data[0].link_img);
+                        let srcImg = dataDetailMovie.main_img;
                         let imgTag = $(aTag.find('img'));
-                        // console.log(imgTag);
                         imgTag.attr('src', srcImg);
                     } catch (error) {
                         console.error('Error:', error);
@@ -486,10 +519,15 @@ $(function () {
     // Load Director
     // ##############################################################################################################
     if (document.getElementById('page_cast_and_crew')) {
+        var imgTitle = document.querySelector('.img-title-all');
+
         (async () => {
             try {
                 var movieName = localStorage.getItem('movie_name');
                 const data = await apiDirectorMovie(movieName);
+                const dataDetail = await apiDetailMovie(movieName);
+                imgTitle.src = dataDetail.data[0].main_img;
+                // console.log(data);
                 LoadDirectorAll(data, movieName);
             } catch (error) {
                 console.error('Error:', error);
@@ -624,12 +662,17 @@ $(function () {
     // ##############################################################################################################
 
     if (document.querySelector('.total-review')) {
+        var imgTitle = document.querySelector('.img-title-all');
         (async () => {
             try {
                 var movieName = localStorage.getItem('movie_name');
                 var totalReviewElement = document.querySelector('.total-review');
 
-                const data = await apiUserReviewMovie(movieName); // Chờ đợi dữ liệu từ API trước khi tiếp tục
+                const data = await apiUserReviewMovie(movieName);
+                const dataDetail = await apiDetailMovie(movieName);
+                
+                imgTitle.src = dataDetail.data[0].main_img;
+
                 LoadReviewElement(data, totalReviewElement, movieName);
                 LikeAndDisLikeEventPageReview();
             } catch (error) {
@@ -643,6 +686,20 @@ $(function () {
     // Submit Review 
     // ##############################################################################################################
     if (document.getElementById('submit-review')) {
+        var movieName = localStorage.getItem('movie_name');
+        var imgTitle1 = document.querySelector('.img-title-review');
+        var titelMovieReview = document.querySelector('.movie-name-popup');
+        titelMovieReview.innerHTML = movieName;
+        (async () => {
+            try {
+                const dataDetail = await apiDetailMovie(movieName);
+                imgTitle1.src = dataDetail.data[0].main_img;
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
+
         document.getElementById('submit-review').addEventListener('click', async function (event) {
             event.preventDefault(); // Prevent the default submit behavior
 
@@ -684,9 +741,14 @@ $(function () {
         var movieName = localStorage.getItem('movie_name');
         document.querySelector('#name-movie-award').textContent = movieName;
 
-        const data = apiAwardMovie(movieName);
-
-        LoadAwardAll(data);
+        (async () => {
+            try {
+                const data = await apiAwardMovie(movieName);
+                LoadAwardAll(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
     }
 
     // ##############################################################################################################
@@ -701,6 +763,61 @@ $(function () {
             try {
                 const data = await apiAllMovie();
                 LoadResultSearch(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
+    }
+
+    // ##############################################################################################################
+    // PAGE IMAGE
+    // ##############################################################################################################
+    // ##############################################################################################################
+    // Load Img
+    // ##############################################################################################################
+
+    if (document.querySelector('#imageContainer')) {
+        var movieName = localStorage.getItem('movie_name');
+        document.querySelector('#name-movie-img').textContent = movieName;
+
+        (async () => {
+            try {
+                const data = await apiImgMovie(movieName);
+                LoadImg(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
+    }
+
+    if (document.querySelector('#page_award')) {
+        var movieName = localStorage.getItem('movie_name');
+        var imgTitle = document.querySelector('.img-title-all');
+
+        (async () => {
+            try {
+                const data = await apiDetailMovie(movieName);
+                imgTitle.src = data.data[0].main_img;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        })();
+    }
+
+    if (document.querySelector('#page_rating')) {
+        var movieName = localStorage.getItem('movie_name');
+        var imgTitle = document.querySelector('.img-title-all');
+        var movieNameRating  = document.querySelector('#name-movie-rating');
+        movieNameRating.innerHTML = movieName;
+
+        (async () => {
+            try {
+                const dataDetail = await apiDetailMovie(movieName);
+                imgTitle.src = dataDetail.data[0].main_img;
+
+                const data = await apiRatingMovie(movieName);
+                LoadGraphRating(data, dataDetail);
+
             } catch (error) {
                 console.error('Error:', error);
             }

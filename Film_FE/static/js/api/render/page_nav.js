@@ -9,7 +9,7 @@ function LoadFilmNav(data) {
             searchTerm = searchTerm.toLowerCase();
         }
 
-        console.log(filmFilter.value);
+        // console.log(filmFilter.value);
 
         if (filmFilter.value == 0 || filmFilter.value == 1) {
             var filteredMovies = data.filter(function (movie) {
@@ -84,6 +84,14 @@ function LoadFilmNav(data) {
                 }
             }
         });
+    });
+
+    document.getElementById('search-submit').addEventListener('click', function () {
+        var searchTerm = document.getElementById('searchInput').value;
+        localStorage.setItem('SearchResult', searchTerm);
+
+        var filmFilter = document.querySelector('select[name="filmFilter"]');
+        localStorage.setItem('filmFilter', filmFilter.value);
     });
 }
 

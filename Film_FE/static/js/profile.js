@@ -41,4 +41,31 @@ $(document).ready(function () {
     //     document.getElementById("editButton").style.display = "inline-block";
     // });
 
+    document.getElementById("list_film").addEventListener("click", function () {
+        var element = document.getElementById("h3_list_film");
+
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+
+    document.getElementById("profile").addEventListener("click", function () {
+        var element = document.getElementById("h3_profile");
+
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+
+    document.getElementById("btn-log-out").addEventListener("click", function () {
+        localStorage.removeItem('currentAccount');
+        window.location.href = "login.html";
+    });
+
 });

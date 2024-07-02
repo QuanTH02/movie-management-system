@@ -635,3 +635,36 @@ a {
     /* Ẩn phần chuỗi bị tràn */
     text-overflow: ellipsis;
 }
+
+.all_img {
+    width: 32%;
+    margin: 3px;
+}
+
+#movie_like_col_1 h5, #movie_like_col_2 h5 {
+    max-width: 200px;
+    white-space: nowrap;
+    /* Ngăn ngừa chuỗi từ việc xuống dòng */
+    overflow: hidden;
+    /* Ẩn phần chuỗi bị tràn */
+    text-overflow: ellipsis;
+}
+
+.ribbon-icon {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    z-index: 1;
+}
+
+.ribbon-icon svg {
+    width: 36px; 
+    height: 48px;
+    fill: #ffffff; 
+    transition: fill 0.3s ease; 
+}
+
+.ribbon-icon svg:hover {
+    fill: #000000; /* Màu sắc khi hover vào */
+    cursor: pointer;
+}

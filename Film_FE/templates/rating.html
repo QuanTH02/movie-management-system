@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYF Movie</title>
+    <link rel="icon" href="../media/title_img.jpg" type="image/jpg">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/home.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../static/js/home.js"></script>
+    <script type="module" src="../static/js/api/api.js"></script>
+    <style>
+        /* Add your custom styles here */
+
+        /* Fix for the container */
+        body {
+            padding-top: 65px;
+            /* Adjust based on your navbar height */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <script>
+        $(function () {
+            $("#includedContentNav").load("nav.html");
+            $("#includedContentFooter").load("footer.html");
+        });
+    </script>
+
+    <nav id="includedContentNav"></nav>
+
+    <!-- Rating -->
+    <div class="div-container" style="width: 60%;" id="page_rating">
+        <div class="bg-rating">
+            <div class="rating-intro p-3">
+                <img alt="" class="d-inline-block mb-5 img-title-all" style="width: 72px; height: 102px;">
+                <div class="d-inline-block ml-3 mb-4" style="vertical-align: middle;">
+                    <a href="detail.html" style="color: rgb(92, 0, 252);">
+                        <h5 id="name-movie-rating">Ve binh giai ngan ha</h5>
+                    </a>
+                    <h3>Rating</h3>
+                </div>
+                <hr class="mt-0">
+                <div class="rating" id="div-movie-rating-all">
+                    <div class="total_rating_div">
+                        <div class="col-4">
+                            <h6 class="mb-2 pb-0 ml-3">RATING</h6>
+                            <div class="imdb-rating">
+                                <div
+                                    style="display: flex; align-items: center;">
+                                    <i class="fas fa-star pr-2"
+                                        style="color: yellow; display: inline-block; font-size: 24px;"></i>
+                                    <div style="display: inline-block;">
+                                        <h4 class="m-0" id="p-movie-rating-rating">10/10</h4>
+                                        <p class="m-0" id="p-movie-vote-rating">100k</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="graph">
+                        <div class="div-chart" id="div-chart-rating">
+                            <canvas class="canvas-chart canvas-chart-all" id="bar-chart-all-rating"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="includedContentFooter"></footer>
+
+</body>
+
+<script>
+    let currentChartCount;
+</script>
+
+</html>

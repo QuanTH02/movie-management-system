@@ -63,33 +63,31 @@ $(document).ready(function () {
         }
     });
 
-    
+
 
     // SEARCH
     // Lấy phần tử biểu mẫu và ô input bằng ID
-    var searchForm = document.getElementById("searchForm");
-    var searchInput = document.getElementById("searchInput");
+    // var searchForm = document.getElementById("searchForm");
+    // var searchInput = document.getElementById("searchInput");
 
-    // Đặt sự kiện submit cho biểu mẫu
-    if (searchForm) {
-        searchForm.addEventListener("submit", function (event) {
-            // Ngăn sự kiện submit mặc định của biểu mẫu
-            event.preventDefault();
+    // // Đặt sự kiện submit cho biểu mẫu
+    // if (searchForm) {
+    //     searchForm.addEventListener("submit", function (event) {
+    //         // Ngăn sự kiện submit mặc định của biểu mẫu
+    //         event.preventDefault();
 
-            // Lấy giá trị từ ô input
-            var searchText = searchInput.value.trim().toLowerCase();
+    //         // Lấy giá trị từ ô input
+    //         var searchText = searchInput.value.trim().toLowerCase();
 
-            localStorage.setItem("movie_name", searchText);
-            window.location.href = "detail.html";
-        });
-    }
+    //         localStorage.setItem("movie_name", searchText);
+    //         window.location.href = "detail.html";
+    //     });
+    // }
 
 
     // $(".log-out").on("click", function () {
     //     window.location.href = "home.html";
     // });
 
-
     
-
 });
