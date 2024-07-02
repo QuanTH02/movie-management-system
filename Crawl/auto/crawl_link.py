@@ -68,8 +68,6 @@ def return_all_link_img(link):
                 if src:
                     arr.append(src)
 
-            print(arr)
-            # print(len(arr))
             return arr
             
         else:
