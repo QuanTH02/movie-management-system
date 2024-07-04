@@ -1,12 +1,12 @@
 name: Update data and Update model
 
 on: 
-  push:
-    branches:
-      - main
-  # schedule:
-  #   - cron: '0 0 * * *' # This cron expression runs the job daily
-  # workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  schedule:
+    - cron: '0 0 * * *' # This cron expression runs the job daily
+  workflow_dispatch:
 
 jobs:
   crawl:
