@@ -1,6 +1,9 @@
 name: Update data and Update model
 
 on: 
+  # push:
+  #   branches:
+  #     - main
   schedule:
     - cron: '0 0 * * *' # This cron expression runs the job daily
   workflow_dispatch:
@@ -33,13 +36,22 @@ jobs:
           name: update.sql
           path: ./Crawl/autoUpdate/update.sql
 
-      - name: Commit and push the update.sql file
+      - name: Run train
+        run: python ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/auto_train.py
+
+      - name: Upload output train
+        uses: actions/upload-artifact@v4
+        with:
+          name: collaborative_filtering_model.joblib
+          path: ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib
+
+      - name: Commit and push the two file
         env: 
           GH_UPDATE: ${{ secrets.GH_UPDATE }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
-          git commit -m 'Update update.sql file'
+          git commit -m 'Update data'
           git push https://x-access-token:${{ secrets.GH_UPDATE }}@github.com/QuanTH02/movie-management-system.git main
         continue-on-error: true
