@@ -12,6 +12,7 @@ from .Reconmmendation.Collaborative.load_model import *
 from .Reconmmendation.Content_Based.load_model import *
 from .Func.link_trailer import *
 from rest_framework import status
+import csv
 from .models import (
     Movieinformation,
     Awards,
@@ -218,6 +219,10 @@ class ReviewView(generics.CreateAPIView):
             date_review=date_review,
             content_review=content_review,
         )
+
+        with open("App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([name_review, movie_id, star_review])
 
 
         return Response(
@@ -1446,6 +1451,10 @@ class LikeMovieView(generics.ListAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         else:
+            with open("App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([user_name, movie_info.movie_id, 10])
+
             LikeMovie.objects.create(user_name=user_name, movie_id=movie_info.movie_id)
             return Response({"message": "Like movie successfully."}, status=status.HTTP_201_CREATED)
             
