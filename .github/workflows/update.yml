@@ -36,16 +36,16 @@ jobs:
           name: update.sql
           path: ./Crawl/autoUpdate/update.sql
 
-      - name: Run train
-        run: python ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/auto_train.py
+      # - name: Run train
+      #   run: python ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/auto_train.py
 
-      - name: Upload output train
-        uses: actions/upload-artifact@v4
-        with:
-          name: collaborative_filtering_model.joblib
-          path: ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib
+      # - name: Upload output train
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: collaborative_filtering_model.joblib
+      #     path: ./Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib
 
-      - name: Commit and push the two file
+      - name: Commit and push file
         env: 
           GH_UPDATE: ${{ secrets.GH_UPDATE }}
         run: |
