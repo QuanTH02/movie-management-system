@@ -141,7 +141,7 @@ class CF(object):
 
 def train_collab():
     r_cols = ['user_name', 'movie_id', 'rating']
-    ratings = pd.read_csv('./Film_BE/App_Film_BE/Reconmmendation/Collaborative/output.csv', names=r_cols, encoding='latin-1', skiprows=1)
+    ratings = pd.read_csv('./App_Film_BE/Reconmmendation/Collaborative/output.csv', names=r_cols, encoding='latin-1', skiprows=1)
 
     ratings['movie_id'] = ratings['movie_id'].astype(int)
 
@@ -152,7 +152,7 @@ def train_collab():
     rs = CF(Y_data, k=2, uuCF=1)
     rs.fit()
 
-    model_file = "./Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib"
+    model_file = "./App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib"
     dump(rs, model_file)
 
 if __name__ == '__main__':

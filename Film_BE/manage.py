@@ -9,6 +9,14 @@ from App_Film_BE.Reconmmendation.Collaborative.load_model import *
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Film_BE.settings')
+
+    try:
+        import subprocess
+        subprocess.run(['python', './App_Film_BE/Reconmmendation/Collaborative/auto_train.py'], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f'Error occurred while running auto_train.py: {e}')
+        sys.exit(1)
+        
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
