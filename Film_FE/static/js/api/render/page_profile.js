@@ -49,6 +49,10 @@ function LoadMovieLike(data) {
 
 
     data.forEach((movie, index) => {
+        var container = document.createElement("div");
+        container.className = "div-element-movie-like";
+        container.style.display = "flex";
+
         var link = document.createElement("a");
         link.href = "detail.html";
 
@@ -91,10 +95,38 @@ function LoadMovieLike(data) {
         link.appendChild(img);
         link.appendChild(div);
 
+        var deleteButton = document.createElement("button");
+        deleteButton.className = "delete-movie mt-2";
+        deleteButton.style.borderRadius = "50%";
+        deleteButton.style.position = "absolute";
+        deleteButton.style.right = "25px";
+        deleteButton.style.display = "none";
+
+        var closeIcon = document.createElement("i");
+        closeIcon.className = "fa fa-close";
+        closeIcon.style.fontSize = "16px";
+
+        deleteButton.appendChild(closeIcon);
+
+        container.appendChild(link);
+        container.appendChild(deleteButton);
+
         // console.log(index);
 
-        if (index <= colLeft) divLeftElement.appendChild(link);
-        else divRightElement.appendChild(link);
+        if (index % 2 == 0) divLeftElement.appendChild(container);
+        else divRightElement.appendChild(container);
+
+        container.addEventListener("mouseover", function() {
+            deleteButton.style.display = "block";
+        });
+
+        container.addEventListener("mouseout", function() {
+            deleteButton.style.display = "none";
+        });
+
+        link.addEventListener("click", function() {
+            localStorage.setItem("movie_name", movie.movie_name);
+        });
     });
 }
 

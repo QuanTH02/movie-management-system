@@ -339,6 +339,8 @@ function LoadReview(data) {
             newUserReviewDiv.appendChild(reviewStatsDiv);
 
             dMovieReview.appendChild(newUserReviewDiv);
+
+
         }
         stt++;
     });

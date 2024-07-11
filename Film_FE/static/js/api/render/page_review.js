@@ -1,4 +1,4 @@
-function LoadReviewElement(data, totalReviewElement, movie_name) {
+function LoadReviewElement(data, totalReviewElement, movie_name, currentAccount) {
     var movieName = document.getElementById('movie_name');
     movieName.textContent = movie_name;
 
@@ -52,8 +52,36 @@ function LoadReviewElement(data, totalReviewElement, movie_name) {
         voteRateElement.appendChild(voteRateValue);
         voteRateElement.appendChild(voteRateSeparator);
 
+
+
         rateElement.appendChild(starIcon);
         rateElement.appendChild(voteRateElement);
+
+        if (currentAccount == jsonData.name_review) {
+            var divEditAndDeleteReview = document.createElement("div");
+            divEditAndDeleteReview.classList.add("divEditAndDeleteReview");
+
+            var btnEditReview = document.createElement("button");
+            btnEditReview.classList.add("btnEditReview");
+
+            var iEditReview = document.createElement("i");
+            iEditReview.classList.add("fas", "fa-pen-alt");
+            iEditReview.style.fontSize = "16px";
+
+            var btnDeleteReview = document.createElement("button");
+            btnDeleteReview.classList.add("btnDeleteReview");
+
+            var iDeleteReview = document.createElement("i");
+            iDeleteReview.classList.add("fas", "fa-trash-o");
+            iDeleteReview.style.fontSize = "16px";
+
+            btnEditReview.appendChild(iEditReview);
+            btnDeleteReview.appendChild(iDeleteReview);
+
+            divEditAndDeleteReview.appendChild(btnEditReview);
+            divEditAndDeleteReview.appendChild(btnDeleteReview);
+            rateElement.appendChild(divEditAndDeleteReview);
+        }
 
         // Tạo phần tử title review
         var titleReviewElement = document.createElement("div");

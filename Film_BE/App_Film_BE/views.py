@@ -1458,3 +1458,40 @@ class LikeMovieView(generics.ListAPIView):
             LikeMovie.objects.create(user_name=user_name, movie_id=movie_info.movie_id)
             return Response({"message": "Like movie successfully."}, status=status.HTTP_201_CREATED)
             
+    def delete(self, request):
+        user_name = request.data.get('userName')
+        movie_name = request.data.get('movieName')
+
+        if not user_name or not movie_name:
+            return Response(
+                {"message": "User name and movie name are required."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+        try:
+            user = User.objects.get(username=user_name)
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+        
+
+        try:
+            movie_info = Movieinformation.objects.get(movie_name=movie_name)
+        except Movieinformation.DoesNotExist:
+            return Response(
+                {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+        
+
+        try:
+            like_instance = LikeMovie.objects.get(user_name=user_name, movie_id=movie_info.movie_id)
+        except LikeMovie.DoesNotExist:
+            return Response(
+                {"message": "User has not liked this movie."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+                
+        like_instance.delete()
+        return Response({"message": "Unlike movie successfully."}, status=status.HTTP_204_NO_CONTENT)

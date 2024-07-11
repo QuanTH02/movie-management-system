@@ -1,4 +1,4 @@
-import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie } from "./api_func.js"
+import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike } from "./api_func.js"
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail, HighestRevenueHome, LoadRecommendHome } from "./render/page_home.js";
 import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike } from "./render/page_detail.js";
@@ -137,7 +137,7 @@ $(function () {
                 addToListButtons.forEach(button => {
                     button.addEventListener('click', function () {
                         const movieTitle = this.parentElement.querySelector('h6').innerText;
-                        console.log(movieTitle);
+                        // console.log(movieTitle);
                         apiAddToList(movieTitle, currentAccount);
                     });
                 });
@@ -172,6 +172,32 @@ $(function () {
                 const movieLike = await apiGetMovieLikes(currentAccount);
                 // console.log(movieLike);
                 LoadMovieLike(movieLike);
+
+                Array.from(document.getElementsByClassName("div-element-movie-like")).forEach(movielike => {
+                    const deleteButton = movielike.querySelector(".delete-movie");
+                    deleteButton.addEventListener("click", function () {
+                        const movieTitle = movielike.querySelector('h5').innerText;
+                        document.getElementById('deletePopup').style.display = 'block';
+
+                        document.getElementById('yesBtn').addEventListener('click', async function () {
+                            await apiDeleteMovieLike(movieTitle, currentAccount);
+                            location.reload();
+                            alert('Movie deleted!');
+                            document.getElementById('deletePopup').style.display = 'none';
+                        });
+
+                        document.getElementById('noBtn').addEventListener('click', function () {
+                            document.getElementById('deletePopup').style.display = 'none';
+                        });
+
+                        document.addEventListener('click', function (event) {
+                            if (!event.target.closest('.yesNoPopup') && event.target !== document.getElementById('deleteBtn')) {
+                                document.getElementById('deletePopup').style.display = 'none';
+                            }
+                        });
+                    });
+                });
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -663,6 +689,8 @@ $(function () {
 
     if (document.querySelector('.total-review')) {
         var imgTitle = document.querySelector('.img-title-all');
+        var currentAccount = localStorage.getItem('currentAccount');
+
         (async () => {
             try {
                 var movieName = localStorage.getItem('movie_name');
@@ -670,11 +698,61 @@ $(function () {
 
                 const data = await apiUserReviewMovie(movieName);
                 const dataDetail = await apiDetailMovie(movieName);
-                
+
                 imgTitle.src = dataDetail.data[0].main_img;
 
-                LoadReviewElement(data, totalReviewElement, movieName);
+                LoadReviewElement(data, totalReviewElement, movieName, currentAccount);
                 LikeAndDisLikeEventPageReview();
+
+                Array.from(document.getElementsByClassName("btnEditReview")).forEach(function (element) {
+                    element.addEventListener("click", function () {
+                        document.getElementById("review-popup").style.display = "block";
+                        let divParent = element.parentElement.parentElement.parentElement;
+
+                        let starReview = document.getElementById('rating');
+                        let titleReview = document.getElementById('title');
+                        let contentReview = document.getElementById('content');
+
+                        let voteRateElement = divParent.getElementsByClassName("vote-rate")[0];
+                        let titleReviewElement = divParent.getElementsByClassName("h-title-review")[0];
+                        let contentReviewElement = divParent.querySelector(".review-content > p");
+
+                        // console.log(voteRateElement);
+
+                        if (voteRateElement) {
+                            starReview.value = voteRateElement.textContent;
+                        }
+                        if (titleReviewElement) {
+                            titleReview.value = titleReviewElement.textContent;
+                        }
+                        if (contentReviewElement) {
+                            contentReview.value = contentReviewElement.textContent;
+                        }
+                    });
+                });
+
+                Array.from(document.getElementsByClassName("btnDeleteReview")).forEach(function (element) {
+                    element.addEventListener("click", function () {
+                        document.getElementById("deleteReviewPopup").style.display = "block";
+                    });
+                });
+
+                document.getElementById('yesBtnReview').addEventListener('click', async function () {
+                    location.reload();
+                    alert('Review deleted!');
+                    document.getElementById('deleteReviewPopup').style.display = 'none';
+                });
+
+                document.getElementById('noBtnReview').addEventListener('click', function () {
+                    document.getElementById('deleteReviewPopup').style.display = 'none';
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!event.target.closest('.yesNoPopup') && event.target !== document.getElementById('deleteBtn')) {
+                        document.getElementById('deleteReviewPopup').style.display = 'none';
+                    }
+                });
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -709,7 +787,12 @@ $(function () {
             var contentReview = document.getElementById('content').value;
             var currentAccount = localStorage.getItem('currentAccount');
 
-            // Check if all fields have data
+            if (!currentAccount) {
+                alert('Please log in to submit a review.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
             if (!starReview || !titleReview || !contentReview || !movieName) {
                 alert('Please fill in all review information.');
                 return;
@@ -807,7 +890,7 @@ $(function () {
     if (document.querySelector('#page_rating')) {
         var movieName = localStorage.getItem('movie_name');
         var imgTitle = document.querySelector('.img-title-all');
-        var movieNameRating  = document.querySelector('#name-movie-rating');
+        var movieNameRating = document.querySelector('#name-movie-rating');
         movieNameRating.innerHTML = movieName;
 
         (async () => {

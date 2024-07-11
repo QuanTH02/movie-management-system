@@ -52,7 +52,8 @@
                             <li class="pb-3 pt-3"><button id="profile">Profile</button></li>
                             <li><button id="list_film">List film</button></li>
                         </ul>
-                        <li style="position: absolute; bottom: 10px; right: 10px;"><button class="log-out" id="btn-log-out">Log out</button></li>
+                        <li style="position: absolute; bottom: 10px; right: 10px;"><button class="log-out"
+                                id="btn-log-out">Log out</button></li>
                     </div>
                     <div class="col-10 pt-4 pl-5">
                         <h3 id="h3_profile">Profile</h3>
@@ -118,45 +119,57 @@
                         <ul class="pl-0 mt-0">
                             <div class="row list-film-like mt-0">
                                 <div id="movie_like_col_1" class="col-6">
-                                    <a href="detail.html">
-                                        <img src="../media/vebinh1.jpg">
-                                        <div>
-                                            <li>
-                                                <h5>Vệ binh giải ngân hà</h5>
-                                                <ul>
-                                                    <li>2023</li>
-                                                    <i class="fas fa-circle pl-1 pr-1"
-                                                        style="font-size: 2px; vertical-align: middle;"></i>
-                                                    <li>T18</li>
-                                                    <i class="fas fa-circle pl-1 pr-1"
-                                                        style="font-size: 2px; vertical-align: middle;"></i>
-                                                    <li>2h 38m</li>
-                                                </ul>
-                                            </li>
-                                        </div>
-                                    </a>
-                                    <button class="delete-movie" style="display: flex; position:absolute; right: 30px; top: 5px; border-radius: 50%;">
-                                        <i class="fa fa-close" style="font-size:16px"></i>
-                                    </button>   
+                                    <!-- <div class="div-element-movie-like" style="display: flex;">
+                                        <a href="detail.html">
+                                            <img src="../media/vebinh1.jpg">
+                                            <div>
+                                                <li>
+                                                    <h5>Vệ binh giải ngân hà</h5>
+                                                    <ul>
+                                                        <li>2023</li>
+                                                        <i class="fas fa-circle pl-1 pr-1"
+                                                            style="font-size: 2px; vertical-align: middle;"></i>
+                                                        <li>T18</li>
+                                                        <i class="fas fa-circle pl-1 pr-1"
+                                                            style="font-size: 2px; vertical-align: middle;"></i>
+                                                        <li>2h 38m</li>
+                                                    </ul>
+                                                </li>
+                                            </div>
+                                        </a>
+                                        <button class="delete-movie mt-2"
+                                            style="border-radius: 50%; position: absolute; right: 25px;">
+                                            <i class="fa fa-close" style="font-size:16px"></i>
+                                        </button>
+                                    </div> -->
+
+
+
                                 </div>
                                 <div id="movie_like_col_2" class="col-6">
-                                    <!-- <a href="detail.html">
-                                        <img src="../media/vebinh6.jpg">
-                                        <div>
-                                            <li>
-                                                <h5>The Killer</h5>
-                                                <ul>
-                                                    <li>2023</li>
-                                                    <i class="fas fa-circle pl-1 pr-1"
-                                                        style="font-size: 2px; vertical-align: middle;"></i>
-                                                    <li>T17</li>
-                                                    <i class="fas fa-circle pl-1 pr-1"
-                                                        style="font-size: 2px; vertical-align: middle;"></i>
-                                                    <li>2h 13m</li>
-                                                </ul>
-                                            </li>
-                                        </div>
-                                    </a> -->
+                                    <!-- <div class="div-element-movie-like" style="display: flex;">
+                                        <a href="detail.html">
+                                            <img src="../media/vebinh1.jpg">
+                                            <div>
+                                                <li>
+                                                    <h5>Vệ binh giải ngân hà</h5>
+                                                    <ul>
+                                                        <li>2023</li>
+                                                        <i class="fas fa-circle pl-1 pr-1"
+                                                            style="font-size: 2px; vertical-align: middle;"></i>
+                                                        <li>T18</li>
+                                                        <i class="fas fa-circle pl-1 pr-1"
+                                                            style="font-size: 2px; vertical-align: middle;"></i>
+                                                        <li>2h 38m</li>
+                                                    </ul>
+                                                </li>
+                                            </div>
+                                        </a>
+                                        <button class="delete-movie mt-2"
+                                            style="border-radius: 50%; position: absolute; right: 25px;">
+                                            <i class="fa fa-close" style="font-size:16px"></i>
+                                        </button>
+                                    </div> -->
                                 </div>
                             </div>
                         </ul>
@@ -167,6 +180,13 @@
         </div>
     </div>
 
+    <div id="deletePopup" class="yesNoPopup">
+        <p style="color: black;">Are you sure you want to delete this movie?</p>
+        <div class="buttons">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
 
     <footer id="includedContentFooter"></footer>
 

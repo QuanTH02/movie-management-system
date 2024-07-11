@@ -619,6 +619,31 @@ async function apiAddToList(movieName, userName) {
     }
 }
 
+async function apiDeleteMovieLike(movieName, userName) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/likemovie/', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userName: userName,
+                movieName: movieName,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed add to list');
+        }
+
+        alert('Movie deleted from the list successfully!');
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('Failed delete!');
+        return null;
+    }
+}
+
 async function apiGetMovieLikes(userName) {
     try {
         const response = await fetch(`http://127.0.0.1:8000/api/likemovie/?userName=${userName}`, {
@@ -655,4 +680,4 @@ async function apiRatingMovie(movieName) {
 }
 
 
-export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie }
+export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike }
