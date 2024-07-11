@@ -162,4 +162,4 @@ cython_debug/
 
 /media/images
 
-./Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib
+/Film_BE/App_Film_BE/Reconmmendation/Collaborative/collaborative_filtering_model.joblib
