@@ -99,6 +99,7 @@ from .serializers import (
     LikeMovieSerializer,
 )
 
+
 # User
 class LoginView(generics.ListAPIView):
     def post(self, request):
@@ -161,6 +162,7 @@ class RegisterView(generics.ListAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class TicketListView(generics.ListAPIView):
     serializer_class = TicketRoomSerializer
 
@@ -171,66 +173,120 @@ class TicketListView(generics.ListAPIView):
         # Cập nhật giá trị gross_worldwide của từng ticket_room
         for ticket_room in queryset:
             if ticket_room.gross_worldwide:
-                ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
+                ticket_room.gross_worldwide = self.convert_gross_to_number(
+                    ticket_room.gross_worldwide
+                )
 
         return queryset
 
     def convert_gross_to_number(self, gross_str):
-        if gross_str and '$' in gross_str:
+        if gross_str and "$" in gross_str:
             # Loại bỏ ký tự "$" và dấu phẩy từ chuỗi
-            cleaned_str = gross_str.replace('$', '').replace(',', '')
+            cleaned_str = gross_str.replace("$", "").replace(",", "")
             return int(cleaned_str)
         else:
             return None
+
 
 class ReviewView(generics.CreateAPIView):
     serializer_class = FilmReviewSerializer
 
     def create(self, request, *args, **kwargs):
         movie_name = request.data.get("movie")
-        
+
         if not movie_name:
             return Response(
-                {"message": "movie_name is required."}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "movie_name is required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         movie_info = Movieinformation.objects.filter(movie_name=movie_name).first()
         movie_id = movie_info.movie_id
 
-        # Lấy các giá trị khác từ request.data
         star_review = request.data.get("star_review")
         title_review = request.data.get("title_review")
         content_review = request.data.get("content_review")
         name_review = request.data.get("name_review")
 
-        # Lấy thời gian hiện tại
         date_review = timezone.now()
-        
-        # Truy vấn để lấy movie_id từ Movieinformation
+
         total_reviews = FilmReview.objects.count()
         film_review_id = total_reviews + 1
 
-        # Lưu vào bảng FilmReview
-        film_review = FilmReview.objects.create(
-            film_review_id=film_review_id,
-            movie_id=movie_id,
-            star_review=star_review,
-            title_review=title_review,
-            name_review=name_review,
-            date_review=date_review,
-            content_review=content_review,
-        )
+        film_review_id = request.data.get("film_review_id")
 
-        with open("App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", 'a', newline='') as csvfile:
+        # print("ID:", film_review_id)
+        # print("Star: ", star_review)
+
+        if film_review_id:
+            # Cập nhật review nếu đã tồn tại
+            film_review = FilmReview.objects.filter(film_review_id=film_review_id).first()
+            if not film_review:
+                return Response(
+                    {"message": "Review not found."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            film_review.movie_id = movie_id
+            film_review.star_review = star_review
+            film_review.title_review = title_review
+            film_review.name_review = name_review
+            film_review.date_review = date_review
+            film_review.content_review = content_review
+            film_review.save()
+
+            message = "Review updated successfully."
+        else:
+            # Tạo mới review nếu chưa tồn tại
+            total_reviews = FilmReview.objects.count()
+            film_review_id = total_reviews + 1
+            FilmReview.objects.create(
+                film_review_id=film_review_id,
+                movie_id=movie_id,
+                star_review=star_review,
+                title_review=title_review,
+                name_review=name_review,
+                date_review=date_review,
+                content_review=content_review,
+            )
+            message = "Review created successfully."
+
+        with open(
+            "App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", "a", newline=""
+        ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([name_review, movie_id, star_review])
 
-
         return Response(
-            {"message": "Review created successfully."},
+            {"message": message},
             status=status.HTTP_201_CREATED,
         )
 
+    def delete(self, request, *args, **kwargs):
+        film_review_id = request.data.get("film_review_id")
 
+        # print("ID:", film_review_id)
+
+        if not film_review_id:
+            return Response(
+                {"message": "film_review_id is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        film_review = FilmReview.objects.filter(film_review_id=film_review_id).first()
+
+        if not film_review:
+            return Response(
+                {"message": "Review not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        film_review.delete()
+
+        # print("OK")
+
+        return Response(
+            {"message": "Review deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 class FilmListView(generics.ListAPIView):
     serializer_class = FilmSerializer
@@ -240,7 +296,9 @@ class FilmListView(generics.ListAPIView):
 
         for movie_info in queryset:
             if movie_info.total_vote:
-                movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
+                movie_info.total_vote = self.convert_vote_to_number(
+                    movie_info.total_vote
+                )
 
             if movie_info.rating:
                 movie_info.rating = self.extract_rating(movie_info.rating)
@@ -252,11 +310,10 @@ class FilmListView(generics.ListAPIView):
             # print(movie_info.list_img)
         return queryset
 
-    
     def convert_vote_to_number(self, vote_str):
         if vote_str and isinstance(vote_str, str):
             suffixes = {"K": 1e3, "M": 1e6, "B": 1e9}
-            
+
             if vote_str[-1] in suffixes:
                 return int(float(vote_str[:-1]) * suffixes[vote_str[-1]])
             else:
@@ -265,13 +322,11 @@ class FilmListView(generics.ListAPIView):
             return None
 
     def extract_rating(self, rating_str):
-        if rating_str and '/' in rating_str:
-            parts = rating_str.split('/')
+        if rating_str and "/" in rating_str:
+            parts = rating_str.split("/")
             return parts[0]
         else:
             return None
-
-
 
 
 class AwardsListView(generics.ListAPIView):
@@ -279,7 +334,7 @@ class AwardsListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return Awards.objects.filter(movie__movie_id=movie_id)
@@ -297,10 +352,10 @@ class AwardsListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class DirectorListView(generics.ListAPIView):
@@ -308,7 +363,7 @@ class DirectorListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_identifier = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_identifier)
             return self.get_directors_by_movie_id(movie_id)
@@ -334,10 +389,11 @@ class DirectorListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class CameraListView(generics.ListAPIView):
     serializer_class = CameraSerializer
@@ -364,10 +420,10 @@ class CameraListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class CastListView(generics.ListAPIView):
@@ -399,10 +455,10 @@ class CastListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class CinematographyListView(generics.ListAPIView):
@@ -422,9 +478,7 @@ class CinematographyListView(generics.ListAPIView):
         cinematography_ids = movie_cinematography.values_list(
             "cinematography_id", flat=True
         )
-        return Cinematography.objects.filter(
-            cinematography_id__in=cinematography_ids
-        )
+        return Cinematography.objects.filter(cinematography_id__in=cinematography_ids)
 
     def get_cinematographys_by_movie_name(self, movie_name):
         try:
@@ -444,10 +498,10 @@ class CinematographyListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class EditingListView(generics.ListAPIView):
@@ -479,10 +533,10 @@ class EditingListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class GenresListView(generics.ListAPIView):
@@ -514,10 +568,11 @@ class GenresListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class MusicListView(generics.ListAPIView):
     serializer_class = MusicSerializer
@@ -548,10 +603,10 @@ class MusicListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class ProducedListView(generics.ListAPIView):
@@ -583,10 +638,10 @@ class ProducedListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class SpecialeffectsListView(generics.ListAPIView):
@@ -701,6 +756,7 @@ class WritersListView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
+
 class MovieListView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
@@ -726,11 +782,9 @@ class MovieListView(generics.ListAPIView):
     def post(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        response_data = {
-            "message": "Successfully",
-            "data": serializer.data
-        }
+        response_data = {"message": "Successfully", "data": serializer.data}
         return Response(response_data, status=status.HTTP_200_OK)
+
 
 # Không bảng trung gian
 class AspectRatioListView(generics.ListAPIView):
@@ -747,7 +801,9 @@ class AspectRatioListView(generics.ListAPIView):
     def get_aspect_ratios_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            aspect_ratios = AspectRatio.objects.filter(movie__movie_id=movie_info.movie_id)
+            aspect_ratios = AspectRatio.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return aspect_ratios
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -756,10 +812,10 @@ class AspectRatioListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class CinematographicProcessListView(generics.ListAPIView):
@@ -767,7 +823,7 @@ class CinematographicProcessListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return CinematographicProcess.objects.filter(movie__movie_id=movie_id)
@@ -777,7 +833,9 @@ class CinematographicProcessListView(generics.ListAPIView):
     def get_cinematographic_processes_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            cinematographic_processes = CinematographicProcess.objects.filter(movie__movie_id=movie_info.movie_id)
+            cinematographic_processes = CinematographicProcess.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return cinematographic_processes
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -786,17 +844,18 @@ class CinematographicProcessListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class ColorProcessListView(generics.ListAPIView):
     serializer_class = ColorSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return Color.objects.filter(movie__movie_id=movie_id)
@@ -815,10 +874,10 @@ class ColorProcessListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class CountryOriginListView(generics.ListAPIView):
@@ -826,7 +885,7 @@ class CountryOriginListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return CountryOrigin.objects.filter(movie__movie_id=movie_id)
@@ -836,7 +895,9 @@ class CountryOriginListView(generics.ListAPIView):
     def get_country_origins_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            country_origins = CountryOrigin.objects.filter(movie__movie_id=movie_info.movie_id)
+            country_origins = CountryOrigin.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return country_origins
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -845,17 +906,18 @@ class CountryOriginListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class DidYouKnowListView(generics.ListAPIView):
     serializer_class = DidYouKnowSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return DidYouKnow.objects.filter(movie__movie_id=movie_id)
@@ -865,7 +927,9 @@ class DidYouKnowListView(generics.ListAPIView):
     def get_did_you_knows_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            did_you_knows = DidYouKnow.objects.filter(movie__movie_id=movie_info.movie_id)
+            did_you_knows = DidYouKnow.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return did_you_knows
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -874,10 +938,10 @@ class DidYouKnowListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class FilmReviewListView(generics.ListAPIView):
@@ -885,7 +949,7 @@ class FilmReviewListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return FilmReview.objects.filter(movie__movie_id=movie_id)
@@ -895,7 +959,9 @@ class FilmReviewListView(generics.ListAPIView):
     def get_reviews_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            film_reviews = FilmReview.objects.filter(movie__movie_id=movie_info.movie_id)
+            film_reviews = FilmReview.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return film_reviews
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -904,11 +970,10 @@ class FilmReviewListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
-        
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class FilmingLocationsListView(generics.ListAPIView):
@@ -916,7 +981,7 @@ class FilmingLocationsListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return FilmingLocations.objects.filter(movie__movie_id=movie_id)
@@ -926,7 +991,9 @@ class FilmingLocationsListView(generics.ListAPIView):
     def get_locations_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            filming_locations = FilmingLocations.objects.filter(movie__movie_id=movie_info.movie_id)
+            filming_locations = FilmingLocations.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return filming_locations
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
@@ -934,10 +1001,10 @@ class FilmingLocationsListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class LaboratoryListView(generics.ListAPIView):
@@ -945,7 +1012,7 @@ class LaboratoryListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return Laboratory.objects.filter(movie__movie_id=movie_id)
@@ -955,7 +1022,9 @@ class LaboratoryListView(generics.ListAPIView):
     def get_laboratories_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            laboratories = Laboratory.objects.filter(movie__movie_id=movie_info.movie_id)
+            laboratories = Laboratory.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return laboratories
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -964,17 +1033,18 @@ class LaboratoryListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class LanguageListView(generics.ListAPIView):
     serializer_class = LanguageSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return Language.objects.filter(movie__movie_id=movie_id)
@@ -993,17 +1063,18 @@ class LanguageListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class NegativeFormatListView(generics.ListAPIView):
     serializer_class = NegativeFormatSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return NegativeFormat.objects.filter(movie__movie_id=movie_id)
@@ -1013,7 +1084,9 @@ class NegativeFormatListView(generics.ListAPIView):
     def get_negative_formats_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            negative_formats = NegativeFormat.objects.filter(movie__movie_id=movie_info.movie_id)
+            negative_formats = NegativeFormat.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return negative_formats
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1022,10 +1095,10 @@ class NegativeFormatListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class OfficialSiteListView(generics.ListAPIView):
@@ -1033,7 +1106,7 @@ class OfficialSiteListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return OfficialSite.objects.filter(movie__movie_id=movie_id)
@@ -1043,7 +1116,9 @@ class OfficialSiteListView(generics.ListAPIView):
     def get_official_sites_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            official_sites = OfficialSite.objects.filter(movie__movie_id=movie_info.movie_id)
+            official_sites = OfficialSite.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return official_sites
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1052,17 +1127,18 @@ class OfficialSiteListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class PrintedFilmFormatListView(generics.ListAPIView):
     serializer_class = PrintedFilmFormatSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return PrintedFilmFormat.objects.filter(movie__movie_id=movie_id)
@@ -1072,7 +1148,9 @@ class PrintedFilmFormatListView(generics.ListAPIView):
     def get_printed_film_formats_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            printed_film_formats = PrintedFilmFormat.objects.filter(movie__movie_id=movie_info.movie_id)
+            printed_film_formats = PrintedFilmFormat.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return printed_film_formats
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1081,17 +1159,18 @@ class PrintedFilmFormatListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class ProductionCompaniesListView(generics.ListAPIView):
     serializer_class = ProductionCompaniesSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return ProductionCompanies.objects.filter(movie__movie_id=movie_id)
@@ -1101,7 +1180,9 @@ class ProductionCompaniesListView(generics.ListAPIView):
     def get_production_companies_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            production_companies = ProductionCompanies.objects.filter(movie__movie_id=movie_info.movie_id)
+            production_companies = ProductionCompanies.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return production_companies
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1110,10 +1191,10 @@ class ProductionCompaniesListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class RatingFilmListView(generics.ListAPIView):
@@ -1121,7 +1202,7 @@ class RatingFilmListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return RatingFilm.objects.filter(movie__movie_id=movie_id)
@@ -1131,7 +1212,9 @@ class RatingFilmListView(generics.ListAPIView):
     def get_rating_films_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            rating_films = RatingFilm.objects.filter(movie__movie_id=movie_info.movie_id)
+            rating_films = RatingFilm.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
             return rating_films
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1140,17 +1223,18 @@ class RatingFilmListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class SoundMixListView(generics.ListAPIView):
     serializer_class = SoundMixSerializer
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return SoundMix.objects.filter(movie__movie_id=movie_id)
@@ -1169,10 +1253,11 @@ class SoundMixListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "Successfully", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class TicketRoomListView(generics.ListAPIView):
     serializer_class = TicketRoomSerializer
@@ -1180,24 +1265,34 @@ class TicketRoomListView(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]
-        
+
         try:
             movie_id = int(movie_id)
             return TicketRoom.objects.filter(movie__movie_id=movie_id)
         except ValueError:
             return self.get_ticket_rooms_by_movie_name(movie_id)
-    
+
     def get_top_gross_worldwide(self):
         ticket_rooms = TicketRoom.objects.all()
         # Loại bỏ những phòng vé có giá trị gross_worldwide là None
-        ticket_rooms = [tr for tr in ticket_rooms if self.convert_gross_to_number(tr.gross_worldwide) is not None]
+        ticket_rooms = [
+            tr
+            for tr in ticket_rooms
+            if self.convert_gross_to_number(tr.gross_worldwide) is not None
+        ]
         # Sắp xếp theo giá trị gross_worldwide đã chuyển đổi
-        ticket_rooms = sorted(ticket_rooms, key=lambda x: self.convert_gross_to_number(x.gross_worldwide), reverse=True)[:12]
+        ticket_rooms = sorted(
+            ticket_rooms,
+            key=lambda x: self.convert_gross_to_number(x.gross_worldwide),
+            reverse=True,
+        )[:12]
 
         # Lấy thông tin Movieinformation cho mỗi ticket_room
         movie_infos = []
         for ticket_room in ticket_rooms:
-            movie_info = Movieinformation.objects.get(movie_id=ticket_room.movie.movie_id)
+            movie_info = Movieinformation.objects.get(
+                movie_id=ticket_room.movie.movie_id
+            )
             movie_infos.append(movie_info)
 
         return movie_infos
@@ -1205,12 +1300,16 @@ class TicketRoomListView(generics.ListAPIView):
     def get_ticket_rooms_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            ticket_rooms = TicketRoom.objects.filter(movie__movie_id=movie_info.movie_id)
-            
+            ticket_rooms = TicketRoom.objects.filter(
+                movie__movie_id=movie_info.movie_id
+            )
+
             # Cập nhật giá trị gross_worldwide của từng ticket_room
             for ticket_room in ticket_rooms:
                 if ticket_room.gross_worldwide:
-                    ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
+                    ticket_room.gross_worldwide = self.convert_gross_to_number(
+                        ticket_room.gross_worldwide
+                    )
 
             return ticket_rooms
         except Movieinformation.DoesNotExist:
@@ -1218,9 +1317,9 @@ class TicketRoomListView(generics.ListAPIView):
             raise generics.NotFound("Movie not found.")
 
     def convert_gross_to_number(self, gross_str):
-        if gross_str and '$' in gross_str:
+        if gross_str and "$" in gross_str:
             # Loại bỏ ký tự "$" và dấu phẩy từ chuỗi
-            cleaned_str = gross_str.replace('$', '').replace(',', '')
+            cleaned_str = gross_str.replace("$", "").replace(",", "")
             return int(cleaned_str)
         else:
             return None
@@ -1230,15 +1329,18 @@ class TicketRoomListView(generics.ListAPIView):
         queryset_top = self.get_top_gross_worldwide()
         serializer = self.serializer_class(queryset, many=True)
         serializer_top = self.film_serializer_class(queryset_top, many=True)
-        return Response({
-            "message": "Successfully",
-            "data": serializer.data,
-            "data_top": serializer_top.data
-        }, status=status.HTTP_200_OK)
-
+        return Response(
+            {
+                "message": "Successfully",
+                "data": serializer.data,
+                "data_top": serializer_top.data,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 # Create your views here.
+
 
 class AccountListView(generics.ListAPIView):
     serializer_class = AccountSerializer
@@ -1248,21 +1350,23 @@ class AccountListView(generics.ListAPIView):
         return accounts
 
     def post(self, request, *args, **kwargs):
-        current_account = request.data.get('currentAccount')
+        current_account = request.data.get("currentAccount")
         if current_account:
             # Tìm người dùng dựa trên tên tài khoản
             try:
                 user = User.objects.get(username=current_account)
                 serialized_user = self.serializer_class(user)  # Không sử dụng many=True
 
-                return Response({'data': serialized_user.data})  # Trả về serialized data
+                return Response(
+                    {"data": serialized_user.data}
+                )  # Trả về serialized data
             except User.DoesNotExist:
-                return Response({'message': 'User not found'}, status=404)
+                return Response({"message": "User not found"}, status=404)
         else:
-            pfFName = request.data.get('pfFName')
-            pfLName = request.data.get('pfLName')
-            pfEmail = request.data.get('pfEmail')
-            user_id = request.data.get('pfId')
+            pfFName = request.data.get("pfFName")
+            pfLName = request.data.get("pfLName")
+            pfEmail = request.data.get("pfEmail")
+            user_id = request.data.get("pfId")
 
             # print(pfFName)
             # print(pfLName)
@@ -1273,26 +1377,26 @@ class AccountListView(generics.ListAPIView):
             user.first_name = pfFName
             user.last_name = pfLName
             user.email = pfEmail
-            user.save()    
+            user.save()
 
             # print(user)
 
-            return Response({'message': 'Update Success'})
-        
+            return Response({"message": "Update Success"})
+
 
 # Collaborative and Content-Based Filtering
 class RecommendContentBasedView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
-        movie_id = self.kwargs.get('movie_id')
-        
+        movie_id = self.kwargs.get("movie_id")
+
         try:
             movie_id = int(movie_id)
             return self.get_recommend_content_based_by_movie_id(movie_id)
         except (ValueError, TypeError):
             return self.get_recommend_content_based_by_movie_name(movie_id)
-        
+
     def get_recommend_content_based_by_movie_id(self, movie_id):
         try:
             recommended_ids = recommend_content_based_by_movie_id(movie_id)
@@ -1306,11 +1410,15 @@ class RecommendContentBasedView(generics.ListAPIView):
             return self.get_recommend_content_based_by_movie_id(movie_info.movie_id)
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
-    
+
     def get_sorted_queryset(self, recommended_ids):
         queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
         movie_dict = {movie.movie_id: movie for movie in queryset}
-        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
+        sorted_queryset = [
+            movie_dict[movie_id]
+            for movie_id in recommended_ids
+            if movie_id in movie_dict
+        ]
         return sorted_queryset
 
 
@@ -1318,21 +1426,21 @@ class RecommendCollaborativeView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
-        user_id = self.kwargs.get('user_id')
-        
+        user_id = self.kwargs.get("user_id")
+
         try:
             user_id = int(user_id)
             return self.get_recommend_collaborative_by_user_id(user_id)
         except (ValueError, TypeError):
             return self.get_recommend_collaborative_by_user_name(user_id)
-        
+
     def get_recommend_collaborative_by_user_id(self, user_id):
         try:
             recommended_ids = recommend_collaborative_by_user_id(user_id)
             return self.get_sorted_queryset(recommended_ids)[:12]
         except Exception as e:
             raise NotFound(str(e))
-        
+
     def get_recommend_collaborative_by_user_name(self, user_name):
         try:
             user = User.objects.get(username=user_name)
@@ -1343,23 +1451,26 @@ class RecommendCollaborativeView(generics.ListAPIView):
     def get_sorted_queryset(self, recommended_ids):
         queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
         movie_dict = {movie.movie_id: movie for movie in queryset}
-        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
+        sorted_queryset = [
+            movie_dict[movie_id]
+            for movie_id in recommended_ids
+            if movie_id in movie_dict
+        ]
         return sorted_queryset
 
-        
 
 # Load trailer video
 class TrailerMovieView(generics.ListAPIView):
     serializer_class = LinkTrailerSerializer
 
     def get_queryset(self):
-        link_page_trailer = self.kwargs['link_page_trailer']
+        link_page_trailer = self.kwargs["link_page_trailer"]
 
         link_trailer = main_link_trailer(link_page_trailer)
 
         # Trả về một danh sách với một phần tử chứa link_trailer
-        return [{'link_trailer': link_trailer}]
-        
+        return [{"link_trailer": link_trailer}]
+
 
 class ImgMovieView(generics.ListAPIView):
     serializer_class = LinkImgSerializer
@@ -1387,6 +1498,7 @@ class ImgMovieView(generics.ListAPIView):
         except Movieinformation.DoesNotExist:
             raise NotFound("Movie not found.")
 
+
 class TrailerMovieView(generics.ListAPIView):
     serializer_class = LinkTrailerSerializer
 
@@ -1412,25 +1524,27 @@ class TrailerMovieView(generics.ListAPIView):
             return LinkTrailer.objects.filter(link_trailler_id__in=link_trailer_ids)
         except Movieinformation.DoesNotExist:
             raise NotFound("Movie not found.")
-        
+
+
 class LikeMovieView(generics.ListAPIView):
     serializer_class = FilmSerializer
+
     def get_queryset(self):
-        user_name = self.request.query_params.get('userName')
+        user_name = self.request.query_params.get("userName")
         list_like_movie_ids = LikeMovie.objects.filter(user_name=user_name)
-        list_movie_ids = list_like_movie_ids.values_list('movie_id', flat=True)
+        list_movie_ids = list_like_movie_ids.values_list("movie_id", flat=True)
         return Movieinformation.objects.filter(movie_id__in=list_movie_ids)
-    
+
     def post(self, request):
-        user_name = request.data.get('userName')
-        movie_name = request.data.get('movieName')
+        user_name = request.data.get("userName")
+        movie_name = request.data.get("movieName")
 
         if not user_name or not movie_name:
             return Response(
-                {"message": "User name and movie name are required."}, 
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": "User name and movie name are required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         try:
             user = User.objects.get(username=user_name)
         except User.DoesNotExist:
@@ -1444,30 +1558,37 @@ class LikeMovieView(generics.ListAPIView):
             return Response(
                 {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
             )
-            
-        if LikeMovie.objects.filter(user_name=user_name, movie_id=movie_info.movie_id).exists():
+
+        if LikeMovie.objects.filter(
+            user_name=user_name, movie_id=movie_info.movie_id
+        ).exists():
             return Response(
                 {"message": "User has already liked this movie."},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
         else:
-            with open("App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", 'a', newline='') as csvfile:
+            with open(
+                "App_Film_BE\\Reconmmendation\\Collaborative\\output.csv",
+                "a",
+                newline="",
+            ) as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([user_name, movie_info.movie_id, 10])
 
             LikeMovie.objects.create(user_name=user_name, movie_id=movie_info.movie_id)
-            return Response({"message": "Like movie successfully."}, status=status.HTTP_201_CREATED)
-            
+            return Response(
+                {"message": "Like movie successfully."}, status=status.HTTP_201_CREATED
+            )
+
     def delete(self, request):
-        user_name = request.data.get('userName')
-        movie_name = request.data.get('movieName')
+        user_name = request.data.get("userName")
+        movie_name = request.data.get("movieName")
 
         if not user_name or not movie_name:
             return Response(
-                {"message": "User name and movie name are required."}, 
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": "User name and movie name are required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-
 
         try:
             user = User.objects.get(username=user_name)
@@ -1475,7 +1596,6 @@ class LikeMovieView(generics.ListAPIView):
             return Response(
                 {"message": "User not found."}, status=status.HTTP_404_NOT_FOUND
             )
-        
 
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
@@ -1483,15 +1603,18 @@ class LikeMovieView(generics.ListAPIView):
             return Response(
                 {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
             )
-        
 
         try:
-            like_instance = LikeMovie.objects.get(user_name=user_name, movie_id=movie_info.movie_id)
+            like_instance = LikeMovie.objects.get(
+                user_name=user_name, movie_id=movie_info.movie_id
+            )
         except LikeMovie.DoesNotExist:
             return Response(
                 {"message": "User has not liked this movie."},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
-                
+
         like_instance.delete()
-        return Response({"message": "Unlike movie successfully."}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Unlike movie successfully."}, status=status.HTTP_204_NO_CONTENT
+        )

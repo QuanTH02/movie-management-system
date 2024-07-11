@@ -558,6 +558,70 @@ async function apiSubmitReviewMovie(movieName, currentAccount, starReview, title
 }
 
 // ##############################################################################################################
+// Api Update Review Movie
+// ##############################################################################################################
+async function apiUpdateReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview, film_review_id) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/review/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                film_review_id: film_review_id,
+                name_review: currentAccount,
+                star_review: starReview,
+                title_review: titleReview,
+                content_review: contentReview,
+                movie: movieName,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update review');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Check the console for details.');
+        // Log the response text for debugging
+        response.text().then(text => console.error('Response Text:', text));
+        return null;
+    }
+}
+
+// ##############################################################################################################
+// Api Update Review Movie
+// ##############################################################################################################
+async function apiDeleteReviewMovie(film_review_id) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/review/', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                film_review_id: film_review_id,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update review');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Check the console for details.');
+        // Log the response text for debugging
+        response.text().then(text => console.error('Response Text:', text));
+        return null;
+    }
+}
+
+
+
+// ##############################################################################################################
 // Api Return All Img on Movie
 // ##############################################################################################################
 async function apiImgMovie(movieName) {
@@ -680,4 +744,4 @@ async function apiRatingMovie(movieName) {
 }
 
 
-export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike }
+export { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike, apiUpdateReviewMovie, apiDeleteReviewMovie }

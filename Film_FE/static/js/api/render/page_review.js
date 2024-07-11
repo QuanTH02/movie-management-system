@@ -9,6 +9,7 @@ function LoadReviewElement(data, totalReviewElement, movie_name, currentAccount)
         // Tạo HTML từ dữ liệu JSON
         var reviewElement = document.createElement("div");
         reviewElement.classList.add("review-element", "p-3", "mb-2");
+        reviewElement.setAttribute('id', "review-element-" + jsonData.film_review_id);
 
         // Tạo phần tử rate
         var rateElement = document.createElement("div");

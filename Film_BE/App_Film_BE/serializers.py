@@ -178,7 +178,7 @@ class DidYouKnowSerializer(serializers.ModelSerializer):
 class FilmReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = FilmReview
-        fields = ['movie', 'name_review', 'star_review', 'title_review', 'content_review', 'date_review']
+        fields = ['film_review_id', 'movie', 'name_review', 'star_review', 'title_review', 'content_review', 'date_review']
 
     def create(self, validated_data):
         movie_name = validated_data.pop('movie_name')

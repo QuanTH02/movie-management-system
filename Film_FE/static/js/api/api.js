@@ -1,4 +1,4 @@
-import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike } from "./api_func.js"
+import { apiLogin, apiRegister, apiAllMovie, apiAllAccount, apiChangeProfile, apiDetailMovie, apiTrailerMovie, apiImgMovie, apiGenresMovie, apiDirectorMovie, apiWritersMovie, apiCastMovie, apiTaglineMovie, apiDidYouKnowMovie, apiUserReviewMovie, apiCountryOriginMovie, apiOfficialSitesMovie, apiLanguageMovie, apiFilmingLocationsMovie, apiProductionCompaniesMovie, apiBoxOfficeMovie, apiMaybeYouLikeMovie, apiProducedMovie, apiCinematographyMovie, apiEditingMovie, apiSpecialEffectsMovie, apiMusicMovie, apiAwardMovie, apiSubmitReviewMovie, apiMaybeYouLikeMovieCollab, apiAddToList, apiGetMovieLikes, apiRatingMovie, apiDeleteMovieLike, apiUpdateReviewMovie, apiDeleteReviewMovie } from "./api_func.js"
 import { LoadReviewElement, LikeAndDisLikeEventPageReview } from "./render/page_review.js";
 import { LoadFilmHome, MostPopularHome, MostFavouritesHome, toDetail, HighestRevenueHome, LoadRecommendHome } from "./render/page_home.js";
 import { LoadDetail, LoadGenres, LoadDirector, LoadWriter, LoadStar, LoadCast, LoadTagline, LoadDidyouknow, LoadReview, LoadCountry, LoadOfficialSite, LoadLanguage, LoadLocation, LoadCompany, LoadBoxOffice, LikeAndDisLikeEvent, LoadMovieMaybeLike } from "./render/page_detail.js";
@@ -173,29 +173,45 @@ $(function () {
                 // console.log(movieLike);
                 LoadMovieLike(movieLike);
 
-                Array.from(document.getElementsByClassName("div-element-movie-like")).forEach(movielike => {
-                    const deleteButton = movielike.querySelector(".delete-movie");
-                    deleteButton.addEventListener("click", function () {
-                        const movieTitle = movielike.querySelector('h5').innerText;
-                        document.getElementById('deletePopup').style.display = 'block';
+                Array.from(document.getElementsByClassName("div-element-movie-like")).forEach(movie => {
+                    const deleteButton = movie.querySelector(".delete-movie");
 
-                        document.getElementById('yesBtn').addEventListener('click', async function () {
+                    deleteButton.addEventListener("click", function () {
+                        const movieTitle = movie.querySelector('h5').innerText;
+                        const deletePopup = document.getElementById('deletePopup');
+                        const yesBtn = document.getElementById('yesBtn');
+                        const noBtn = document.getElementById('noBtn');
+
+                        deletePopup.style.display = 'block';
+
+                        const handleYesClick = async function () {
+                            // console.log('Delete movie:', movieTitle);
+                            // console.log('Current account:', currentAccount);
+
+                            // console.log("1");
+
                             await apiDeleteMovieLike(movieTitle, currentAccount);
                             location.reload();
-                            alert('Movie deleted!');
-                            document.getElementById('deletePopup').style.display = 'none';
-                        });
+                            deletePopup.style.display = 'none';
+                            yesBtn.removeEventListener('click', handleYesClick);
+                        };
 
-                        document.getElementById('noBtn').addEventListener('click', function () {
-                            document.getElementById('deletePopup').style.display = 'none';
-                        });
+                        const handleNoClick = function () {
+                            deletePopup.style.display = 'none';
+                            noBtn.removeEventListener('click', handleNoClick);
+                        };
+
+                        yesBtn.addEventListener('click', handleYesClick);
+                        noBtn.addEventListener('click', handleNoClick);
 
                         document.addEventListener('click', function (event) {
-                            if (!event.target.closest('.yesNoPopup') && event.target !== document.getElementById('deleteBtn')) {
-                                document.getElementById('deletePopup').style.display = 'none';
+                            if (!event.target.closest('.yesNoPopup') && !event.target.closest('.delete-movie')) {
+                                deletePopup.style.display = 'none';
                             }
-                        });
+                        }, { once: true });
                     });
+
+
                 });
 
             } catch (error) {
@@ -709,7 +725,7 @@ $(function () {
                         document.getElementById("review-popup").style.display = "block";
                         let divParent = element.parentElement.parentElement.parentElement;
 
-                        let starReview = document.getElementById('rating');
+                        let starReview = document.getElementsByClassName('vote-rate')[0];
                         let titleReview = document.getElementById('title');
                         let contentReview = document.getElementById('content');
 
@@ -728,31 +744,91 @@ $(function () {
                         if (contentReviewElement) {
                             contentReview.value = contentReviewElement.textContent;
                         }
+
+                        var film_review_id = element.parentElement.parentElement.parentElement.id.split("-")[2];
+                        // console.log(film_review_id);
+                        // console.log(movieName);
+                        // console.log(currentAccount);
+                        // console.log(starReview.value);
+                        // console.log(titleReview.value);
+                        // console.log(contentReview.value);
+
+                        var imgTitle1 = document.querySelector('.img-title-review');
+                        var titelMovieReview = document.querySelector('.movie-name-popup');
+                        titelMovieReview.innerHTML = movieName;
+                        (async () => {
+                            try {
+                                const dataDetail = await apiDetailMovie(movieName);
+                                imgTitle1.src = dataDetail.data[0].main_img;
+
+                            } catch (error) {
+                                console.error('Error:', error);
+                            }
+                        })();
+
+                        var submitButton = document.getElementById('submit-review');
+                        submitButton.addEventListener('click', async function (event) {
+                            event.preventDefault();
+
+                            try {
+                                const data = await apiUpdateReviewMovie(movieName, currentAccount, starReview.value, titleReview.value, contentReview.value, film_review_id);
+                                alert(data.message);
+                                document.getElementById("review-popup").style.display = "none"; // Close the popup on successful submission
+                                location.reload();
+
+                                // submitButton.removeEventListener('click', handleClick);
+                            } catch (error) {
+                                console.error('Error:', error);
+                                alert('An error occurred while submitting the review. Please try again later.');
+                            }
+                        });
+
                     });
                 });
 
                 Array.from(document.getElementsByClassName("btnDeleteReview")).forEach(function (element) {
                     element.addEventListener("click", function () {
                         document.getElementById("deleteReviewPopup").style.display = "block";
+
+                        const yesBtn = document.getElementById('yesBtnReview');
+                        const noBtn = document.getElementById('noBtnReview');
+
+                        yesBtn.removeEventListener('click', handleYesClick);
+                        noBtn.removeEventListener('click', handleNoClick);
+
+                        async function handleYesClick() {
+                            var film_review_id = element.parentElement.parentElement.parentElement.id.split("-")[2];
+                            await apiDeleteReviewMovie(film_review_id);
+                            console.log("ID: ", film_review_id);
+                            alert('Review deleted!');
+                            document.getElementById("deleteReviewPopup").style.display = "none";
+                            yesBtn.removeEventListener('click', handleYesClick);
+                            location.reload();
+                        }
+
+                        function handleNoClick() {
+                            document.getElementById("deleteReviewPopup").style.display = "none";
+                            noBtn.removeEventListener('click', handleNoClick);
+                        }
+
+                        yesBtn.addEventListener('click', handleYesClick);
+                        noBtn.addEventListener('click', handleNoClick);
+
+                        document.addEventListener('click', function (event) {
+                            if (!event.target.closest('#deleteReviewPopup') && !event.target.closest('.btnDeleteReview')) {
+                                document.getElementById("deleteReviewPopup").style.display = "none";
+                            }
+                        }, { once: true });
                     });
                 });
 
-                document.getElementById('yesBtnReview').addEventListener('click', async function () {
-                    location.reload();
-                    alert('Review deleted!');
-                    document.getElementById('deleteReviewPopup').style.display = 'none';
-                });
+                
 
-                document.getElementById('noBtnReview').addEventListener('click', function () {
-                    document.getElementById('deleteReviewPopup').style.display = 'none';
+                Array.from(document.getElementsByClassName("link-to-review")).forEach(function (element) {
+                    element.addEventListener("click", function () {
+                        submitReviewFunc(1);
+                    });
                 });
-
-                document.addEventListener('click', function (event) {
-                    if (!event.target.closest('.yesNoPopup') && event.target !== document.getElementById('deleteBtn')) {
-                        document.getElementById('deleteReviewPopup').style.display = 'none';
-                    }
-                });
-
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -763,7 +839,8 @@ $(function () {
     // ##############################################################################################################
     // Submit Review 
     // ##############################################################################################################
-    if (document.getElementById('submit-review')) {
+    function submitReviewFunc(choose) {
+        console.log("Choose: ", choose);
         var movieName = localStorage.getItem('movie_name');
         var imgTitle1 = document.querySelector('.img-title-review');
         var titelMovieReview = document.querySelector('.movie-name-popup');
@@ -778,40 +855,44 @@ $(function () {
             }
         })();
 
-        document.getElementById('submit-review').addEventListener('click', async function (event) {
-            event.preventDefault(); // Prevent the default submit behavior
+        if (choose == 1) {
+            console.log("Create");
+            var submitButton = document.getElementById('submit-review');
+            submitButton.addEventListener('click', async function (event) {
+                event.preventDefault(); // Prevent the default submit behavior
 
-            var movieName = localStorage.getItem('movie_name');
-            var starReview = document.getElementById('rating').value;
-            var titleReview = document.getElementById('title').value;
-            var contentReview = document.getElementById('content').value;
-            var currentAccount = localStorage.getItem('currentAccount');
+                var movieName = localStorage.getItem('movie_name');
+                var starReview = document.getElementById('rating').value;
+                var titleReview = document.getElementById('title').value;
+                var contentReview = document.getElementById('content').value;
+                var currentAccount = localStorage.getItem('currentAccount');
 
-            if (!currentAccount) {
-                alert('Please log in to submit a review.');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            if (!starReview || !titleReview || !contentReview || !movieName) {
-                alert('Please fill in all review information.');
-                return;
-            }
+                if (!currentAccount) {
+                    alert('Please log in to submit a review.');
+                    window.location.href = 'login.html';
+                    return;
+                }
 
-            try {
-                const data = await apiSubmitReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview);
-                alert(data.message);
-                console.log("Success");
-                document.getElementById("review-popup").style.display = "none"; // Close the popup on successful submission
-                location.reload();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while submitting the review. Please try again later.');
-            }
-        });
+                if (!starReview || !titleReview || !contentReview || !movieName) {
+                    alert('Please fill in all review information.');
+                    return;
+                }
+
+                try {
+                    const data = await apiSubmitReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview);
+                    alert(data.message);
+                    console.log("Success");
+                    document.getElementById("review-popup").style.display = "none"; // Close the popup on successful submission
+                    location.reload();
+
+                    // submitButton.removeEventListener('click', handleClick);
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the review. Please try again later.');
+                }
+            });
+        }
     }
-
-
 
     // ##############################################################################################################
     // PAGE AWARD
