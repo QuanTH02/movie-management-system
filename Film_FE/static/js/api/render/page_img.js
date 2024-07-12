@@ -1,6 +1,8 @@
 function LoadImg(data) {
     console.log(data);
 
+    document.getElementById("img-main-page-img").src = data[0].link_img;
+
     var parentElement = document.getElementById("imageContainer");
 
     data.forEach(movie => {
