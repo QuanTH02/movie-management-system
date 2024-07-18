@@ -5,7 +5,7 @@ B1: Cài đặt thư viện:
   
 B2: Cài đặt MySQL
 - Vào trang chủ MySQL https://www.mysql.com/ tải bản phù hợp với máy tính về rồi cài đặt
-- 
+  
 B3: Import data vào MySQL
 - Trong MySQL chọn Server -> Data Import -> Chọn Import Self-Contained File, xong rồi chọn file data.sql
 - Sau đó tạo new schema tên data -> Start Import
