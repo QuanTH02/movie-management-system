@@ -1,4 +1,5 @@
 **Hướng dẫn chạy code:**
+
 B1: Cài đặt thư viện:
 - Vào thư mục chính của dự án: movie-management-system
 - Nhập câu lệnh pip install -r requirements.txt
