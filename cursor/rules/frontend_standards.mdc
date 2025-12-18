@@ -1,0 +1,1722 @@
+---
+alwaysApply: true
+---
+
+# Frontend Coding Standards - Next.js + TypeScript + React
+
+## Tổng Quan
+
+File này định nghĩa các quy tắc và chuẩn mực lập trình bắt buộc phải tuân thủ khi phát triển frontend của dự án. Tất cả các developer và AI đều phải tuân thủ các quy tắc này một cách nghiêm ngặt.
+
+## 1. ⚙️ Quy Tắc Cấu Trúc Dự Án (Project Structure)
+
+### 1.1. Cấu Trúc Thư Mục Chính
+
+Dự án sử dụng **Next.js 14 App Router**, cấu trúc thư mục phải tuân theo chuẩn sau:
+
+```
+Film_FE/
+├── app/                          # Next.js App Router
+│   ├── (guest)/                  # Route groups cho guest users
+│   ├── (loggedin)/               # Route groups cho authenticated users
+│   │   ├── content/              # Feature-based routing
+│   │   ├── editor-function/
+│   │   ├── setting/
+│   │   └── ...
+│   ├── components/               # Shared components
+│   │   ├── common/               # Reusable UI components
+│   │   │   ├── Button/
+│   │   │   ├── Form/
+│   │   │   ├── Icon/
+│   │   │   └── ...
+│   │   ├── [FeatureName]/        # Feature-specific components
+│   │   └── ...
+│   ├── lib/                      # Utilities và business logic
+│   │   ├── api/                  # API layer
+│   │   │   ├── generated/        # Auto-generated API client
+│   │   │   └── hooks/            # Custom SWR hooks
+│   │   ├── utils/                # Utility functions
+│   │   └── zods/                 # Zod schemas cho validation
+│   ├── layout.tsx                # Root layout
+│   └── ...
+├── src/                          # Static assets và legacy code
+│   ├── assets/
+│   ├── constants/
+│   └── views/
+├── public/                       # Static files
+├── types/                        # Global TypeScript types
+└── ...
+```
+
+### 1.2. Quy Tắc Đặt Tên Thư Mục
+
+- **Route Groups**: Sử dụng `(groupName)` cho route groups (ví dụ: `(loggedin)`, `(guest)`)
+- **Feature Folders**: Sử dụng **kebab-case** cho tên thư mục feature (ví dụ: `content/writing`, `editor-function`)
+- **Component Folders**: Sử dụng **PascalCase** cho thư mục component (ví dụ: `Button/`, `CreateProjectDialog/`)
+- **Utility Folders**: Sử dụng **camelCase** hoặc **kebab-case** (ví dụ: `api/hooks/`, `utils/`)
+
+### 1.3. Barrel Files (index.ts/js)
+
+**BẮT BUỘC** sử dụng barrel files cho các thư mục có nhiều exports:
+
+```typescript
+// ✅ ĐÚNG: app/components/common/Button/index.ts
+export { default } from './Button';
+export type { ButtonProps } from './Button';
+
+// ✅ ĐÚNG: app/lib/utils/index.ts
+export { formatDate } from './date';
+export { validateEmail } from './validation';
+export { debounce } from './performance';
+
+// ❌ SAI: Import trực tiếp từ file component
+import Button from './Button/Button'; // Không được phép
+```
+
+**Quy tắc:**
+- Tạo `index.ts` trong mỗi thư mục component/utility có nhiều exports
+- Export default component và named exports cho types
+- Không export từ barrel file nếu chỉ có 1 file trong thư mục
+
+### 1.4. File Naming Conventions
+
+- **Components**: `PascalCase.tsx` (ví dụ: `Button.tsx`, `CreateProjectDialog.tsx`)
+- **Hooks**: `camelCase.ts` với prefix `use` (ví dụ: `useCreateProject.ts`, `useGetProjectsList.ts`)
+- **Utils**: `camelCase.ts` (ví dụ: `formatDate.ts`, `validateEmail.ts`)
+- **Types**: `camelCase.ts` hoặc `types.ts` (ví dụ: `api.types.ts`)
+- **Constants**: `camelCase.ts` (ví dụ: `headingCode.ts`, `roleCode.ts`)
+- **Pages**: `page.tsx` (Next.js App Router convention)
+
+## 2. ⚛️ Quy Tắc Thành Phần (Component Rules)
+
+### 2.1. Functional Components với Hooks
+
+**BẮT BUỘC** sử dụng Functional Components với React Hooks. **KHÔNG BAO GIỜ** sử dụng Class Components.
+
+```typescript
+// ✅ ĐÚNG: Functional Component
+interface ButtonProps {
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+function Button({ onClick, children }: ButtonProps) {
+  return <button onClick={onClick}>{children}</button>;
+}
+
+export default Button;
+
+// ❌ SAI: Class Component - KHÔNG ĐƯỢC PHÉP
+class Button extends React.Component {
+  // ...
+}
+```
+
+### 2.2. Đặt Tên Component
+
+- **Component Name**: **PascalCase** (ví dụ: `CreateProjectDialog`, `TaskDetailComponent`)
+- **File Name**: Phải khớp với tên component (ví dụ: `CreateProjectDialog.tsx`)
+- **Default Export**: Component chính phải là default export
+- **Named Exports**: Chỉ export types/interfaces như named exports
+
+```typescript
+// ✅ ĐÚNG
+interface CreateProjectDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function CreateProjectDialog({ isOpen, onClose }: CreateProjectDialogProps) {
+  // ...
+}
+
+export default CreateProjectDialog;
+export type { CreateProjectDialogProps };
+
+// ❌ SAI
+export function CreateProjectDialog() { } // Không dùng named export cho component
+```
+
+### 2.3. Props và TypeScript
+
+**BẮT BUỘC** định nghĩa Props interface với TypeScript. **KHÔNG** sử dụng `any` hoặc `PropTypes`.
+
+```typescript
+// ✅ ĐÚNG: Explicit TypeScript interface
+interface ButtonProps {
+  className?: string;
+  disabled?: boolean;
+  type?: "submit" | "reset" | "button";
+  onClick?: () => void;
+  children?: React.ReactNode;
+  loading?: boolean;
+}
+
+function Button({
+  className,
+  disabled = false,
+  type = "button",
+  onClick,
+  children,
+  loading = false,
+}: ButtonProps) {
+  // ...
+}
+
+// ❌ SAI: Sử dụng any
+function Button(props: any) { }
+
+// ❌ SAI: Sử dụng PropTypes
+Button.propTypes = { ... };
+```
+
+**Quy tắc Props:**
+- **Destructuring**: Luôn destructure props trong function signature
+- **Default Values**: Sử dụng default parameters cho optional props
+- **Optional Props**: Đánh dấu bằng `?` trong interface
+- **Readonly**: Sử dụng `readonly` cho props không nên mutate
+
+### 2.4. Client Components
+
+**BẮT BUỘC** thêm `"use client"` directive cho components sử dụng:
+- React Hooks (useState, useEffect, etc.)
+- Event handlers (onClick, onChange, etc.)
+- Browser APIs (localStorage, window, etc.)
+- Third-party client libraries
+
+```typescript
+// ✅ ĐÚNG
+"use client";
+
+import { useState } from "react";
+
+function InteractiveComponent() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+
+// ❌ SAI: Thiếu "use client" directive
+function InteractiveComponent() {
+  const [count, setCount] = useState(0); // Lỗi: useState chỉ dùng trong Client Component
+}
+```
+
+### 2.5. Tách Logic với Custom Hooks
+
+**BẮT BUỘC** tách logic phức tạp sang Custom Hooks khi:
+- Logic được sử dụng lại ở nhiều components
+- Component có quá nhiều state/hooks (> 5 hooks)
+- Logic liên quan đến API calls hoặc side effects
+
+```typescript
+// ✅ ĐÚNG: Tách logic sang custom hook
+// app/lib/hooks/useProjectForm.ts
+export function useProjectForm(initialData?: Project) {
+  const [formData, setFormData] = useState(initialData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = useCallback(() => {
+    // Validation logic
+  }, [formData]);
+
+  return { formData, setFormData, errors, validate };
+}
+
+// Component sử dụng hook
+function CreateProjectDialog() {
+  const { formData, setFormData, errors, validate } = useProjectForm();
+  // ...
+}
+
+// ❌ SAI: Logic phức tạp nằm trực tiếp trong component
+function CreateProjectDialog() {
+  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  // 50+ dòng validation logic...
+}
+```
+
+**Quy tắc Custom Hooks:**
+- **Naming**: Bắt đầu với `use` (ví dụ: `useProjectForm`, `useApiData`)
+- **Location**: Đặt trong `app/lib/hooks/` hoặc `app/lib/api/hooks/`
+- **Return Type**: Luôn định nghĩa return type rõ ràng
+- **Documentation**: Thêm JSDoc cho hooks phức tạp
+
+### 2.6. Styling
+
+Dự án sử dụng **đa phương thức styling**, ưu tiên theo thứ tự:
+
+#### 2.6.1. Tailwind CSS (Ưu tiên cao nhất)
+
+**BẮT BUỘC** sử dụng Tailwind CSS cho styling mới. Sử dụng utility classes:
+
+```typescript
+// ✅ ĐÚNG: Sử dụng Tailwind classes
+function Button({ className, children }: ButtonProps) {
+  return (
+    <button
+      className={clsx(
+        "hover:!bg-opacity-90 text-sm h-[40px]",
+        "flex items-center justify-center",
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ❌ SAI: Inline styles hoặc CSS modules không cần thiết
+<button style={{ height: '40px' }}> // Không được phép
+```
+
+**Quy tắc Tailwind:**
+- Sử dụng `clsx` hoặc `cn` utility để merge classes
+- Tạo custom classes trong `tailwind.config.ts` cho design tokens
+- Sử dụng responsive prefixes (`sm:`, `md:`, `lg:`) cho responsive design
+- Tránh arbitrary values trừ khi thực sự cần thiết
+
+#### 2.6.2. Emotion (CSS-in-JS) - Cho dynamic styling
+
+Sử dụng Emotion khi cần:
+- Dynamic styles dựa trên props/state
+- Theming phức tạp
+- Styled components với logic phức tạp
+
+```typescript
+// ✅ ĐÚNG: Sử dụng Emotion cho dynamic styling
+import styled from '@emotion/styled';
+
+const StyledButton = styled.button<{ variant: 'primary' | 'secondary' }>`
+  background-color: ${props =>
+    props.variant === 'primary' ? '#007bff' : '#6c757d'};
+  padding: 0.5rem 1rem;
+`;
+```
+
+#### 2.6.3. CSS Modules - Chỉ cho legacy code
+
+**KHÔNG** tạo CSS modules mới. Chỉ maintain code cũ.
+
+### 2.7. Component Size và Single Responsibility Principle (SRP)
+
+**BẮT BUỘC** tuân thủ nguyên tắc SRP: mỗi component chỉ làm một nhiệm vụ.
+
+**Quy tắc:**
+- **JSX markup không quá 50 dòng**: Nếu JSX vượt quá 50 dòng, **BẮT BUỘC** tách thành sub-components
+- **Component nhỏ gọn**: Dễ bảo trì, hiệu năng tốt, dễ tái sử dụng
+- **Tách logic**: Logic phức tạp phải tách sang custom hooks hoặc utility functions
+
+```typescript
+// ❌ SAI: Component quá dài với JSX > 50 dòng
+function UserProfile({ user }: { user: User }) {
+  return (
+    <div>
+      {/* 100+ dòng JSX... */}
+    </div>
+  );
+}
+
+// ✅ ĐÚNG: Tách thành sub-components
+function UserProfile({ user }: { user: User }) {
+  return (
+    <div>
+      <UserHeader user={user} />
+      <UserDetails user={user} />
+      <UserActions user={user} />
+    </div>
+  );
+}
+
+function UserHeader({ user }: { user: User }) {
+  return (
+    <div>
+      {/* < 50 dòng JSX */}
+    </div>
+  );
+}
+```
+
+**Khi nào cần tách component:**
+- JSX markup > 50 dòng
+- Component có nhiều responsibilities (> 3 concerns)
+- Logic phức tạp có thể tái sử dụng
+- Component có quá nhiều props (> 7 props)
+
+### 2.8. Memoization & Performance
+
+Sử dụng memoization một cách **hợp lý**, không lạm dụng:
+
+#### 2.8.1. React.memo
+
+Sử dụng `React.memo` cho components:
+- Render thường xuyên với cùng props
+- Component lớn với nhiều children
+- Component trong list render nhiều lần
+
+```typescript
+// ✅ ĐÚNG: Memo cho component render nhiều lần
+interface ItemProps {
+  id: number;
+  name: string;
+  onClick: (id: number) => void;
+}
+
+const ListItem = React.memo(function ListItem({ id, name, onClick }: ItemProps) {
+  return (
+    <div onClick={() => onClick(id)}>
+      {name}
+    </div>
+  );
+});
+
+// ❌ SAI: Memo không cần thiết cho component đơn giản
+const SimpleButton = React.memo(function SimpleButton({ text }: { text: string }) {
+  return <button>{text}</button>; // Không cần memo
+});
+```
+
+#### 2.8.2. useMemo
+
+Sử dụng `useMemo` cho:
+- Tính toán phức tạp (> 100ms)
+- Derived state từ props phức tạp
+- Object/Array được truyền như props
+
+```typescript
+// ✅ ĐÚNG: useMemo cho tính toán phức tạp
+function DataTable({ data }: { data: Data[] }) {
+  const sortedData = useMemo(() => {
+    return data.sort((a, b) => a.date - b.date); // Expensive operation
+  }, [data]);
+
+  return <table>{/* ... */}</table>;
+}
+
+// ❌ SAI: useMemo không cần thiết
+const doubled = useMemo(() => count * 2, [count]); // Quá đơn giản
+```
+
+#### 2.8.3. useCallback
+
+Sử dụng `useCallback` cho:
+- Functions được truyền như props cho memoized components
+- Functions trong dependency arrays của hooks khác
+- Event handlers trong list items
+
+```typescript
+// ✅ ĐÚNG: useCallback cho function props
+function Parent() {
+  const handleClick = useCallback((id: number) => {
+    // Handle click
+  }, []);
+
+  return <MemoizedChild onClick={handleClick} />;
+}
+
+// ❌ SAI: useCallback không cần thiết
+const handleClick = useCallback(() => {
+  console.log('click'); // Quá đơn giản, không cần memo
+}, []);
+```
+
+#### 2.8.4. Hook Dependencies
+
+**BẮT BUỘC** kiểm tra dependencies của `useEffect`, `useCallback`, `useMemo`:
+
+**Với `useEffect`**: Chỉ có **2 cách đúng** để setup dependencies:
+
+1. **Include tất cả dependencies**: Luôn thêm tất cả dependencies nếu đang update state trong `useEffect`
+2. **Ignore dependencies**: Chỉ khi muốn `useEffect` chạy một lần khi component mount
+
+```typescript
+// ✅ ĐÚNG: Include tất cả dependencies
+useEffect(() => {
+  if (userId && projectId) {
+    fetchData(userId, projectId);
+  }
+}, [userId, projectId]); // Tất cả dependencies
+
+// ✅ ĐÚNG: Chạy một lần khi mount
+useEffect(() => {
+  initializeApp();
+}, []); // Empty array = chỉ chạy khi mount
+
+// ❌ SAI: Thiếu dependencies
+useEffect(() => {
+  fetchData(userId, projectId); // userId, projectId không trong deps
+}, []); // Sẽ có stale closure
+
+// ❌ SAI: Dependencies không đầy đủ
+useEffect(() => {
+  if (user?.id) {
+    fetchData(user.id, projectId);
+  }
+}, [projectId]); // Thiếu user trong deps
+```
+
+**Với `useCallback`**: Chỉ sử dụng khi:
+- Function được truyền như prop cho memoized component
+- Function là dependency của hook khác (`useEffect`, `useMemo`)
+
+```typescript
+// ✅ ĐÚNG: useCallback cho prop của memoized component
+const handleClick = useCallback((id: number) => {
+  // ...
+}, [dependency]);
+
+<MemoizedChild onClick={handleClick} />
+
+// ❌ SAI: useCallback không cần thiết
+const handleClick = useCallback(() => {
+  console.log('click');
+}, []); // Không được truyền như prop, không cần memo
+```
+
+**Với `useMemo`**: Chỉ sử dụng cho:
+- Tính toán tốn kém (> 100ms)
+- Object/Array được truyền như props
+
+```typescript
+// ✅ ĐÚNG: useMemo cho tính toán tốn kém
+const sortedData = useMemo(() => {
+  return largeArray.sort(complexSortFunction);
+}, [largeArray]);
+
+// ❌ SAI: useMemo cho tính toán đơn giản
+const doubled = useMemo(() => count * 2, [count]); // Quá đơn giản
+```
+
+**Quy tắc chung:**
+- **Đo lường trước khi tối ưu**: Chỉ memoize khi có vấn đề performance thực sự
+- **Tránh premature optimization**: Không memoize mọi thứ
+- **Profile**: Sử dụng React DevTools Profiler để xác định bottlenecks
+- **ESLint**: Luôn sử dụng `eslint-plugin-react-hooks` để check dependencies
+
+## 3. 📝 Quy Tắc Logic và Code Styling (Coding Standards)
+
+### 3.1. TypeScript
+
+#### 3.1.1. Strict Typing
+
+**BẮT BUỘC** sử dụng TypeScript với explicit typing. **KHÔNG** sử dụng `any`, `unknown` chỉ khi thực sự cần thiết.
+
+```typescript
+// ✅ ĐÚNG: Explicit types
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+function getUser(id: number): Promise<User> {
+  return api.getUser(id);
+}
+
+// ❌ SAI: Sử dụng any
+function getUser(id: any): any {
+  return api.getUser(id);
+}
+
+// ✅ ĐÚNG: unknown khi cần type safety
+function parseJSON(json: string): unknown {
+  return JSON.parse(json);
+}
+```
+
+#### 3.1.2. Type Definitions
+
+- **Interfaces**: Sử dụng cho object shapes, props, API responses
+- **Types**: Sử dụng cho unions, intersections, utility types
+- **Enums**: Sử dụng cho constants có giá trị cố định
+
+```typescript
+// ✅ ĐÚNG: Interface cho props
+interface ButtonProps {
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+// ✅ ĐÚNG: Type cho union
+type Status = 'pending' | 'success' | 'error';
+
+// ✅ ĐÚNG: Enum cho constants
+enum HeadingCode {
+  H1 = 'h1',
+  H2 = 'h2',
+  H3 = 'h3',
+  H4 = 'h4',
+}
+```
+
+#### 3.1.3. Import Types
+
+**BẮT BUỘC** sử dụng `type` keyword cho type-only imports (theo ESLint rule):
+
+```typescript
+// ✅ ĐÚNG: Type-only import
+import type { User, Project } from '../lib/api/generated';
+import { useGetUser } from '../lib/api/hooks/useGetUser';
+
+// ❌ SAI: Mixed import
+import { User, useGetUser } from './api'; // Không được phép
+```
+
+### 3.2. Naming Conventions
+
+#### 3.2.1. Variables và Functions
+
+- **camelCase** cho variables, functions, methods
+- **Descriptive names**: Tên phải mô tả rõ mục đích
+
+```typescript
+// ✅ ĐÚNG
+const userName = 'John';
+const isAuthenticated = true;
+function getUserById(id: number) { }
+function handleSubmit() { }
+
+// ❌ SAI
+const u = 'John'; // Quá ngắn
+const flag = true; // Không mô tả
+function get() { } // Quá chung chung
+```
+
+#### 3.2.2. Components và Types
+
+- **PascalCase** cho Components, Interfaces, Types, Enums
+
+```typescript
+// ✅ ĐÚNG
+function CreateProjectDialog() { }
+interface UserProfile { }
+type ApiResponse = { };
+enum UserRole { }
+
+// ❌ SAI
+function createProjectDialog() { } // Phải là PascalCase
+```
+
+#### 3.2.3. Constants
+
+- **UPPER_SNAKE_CASE** cho constants toàn cục
+- **camelCase** cho constants trong module
+
+```typescript
+// ✅ ĐÚNG: Global constants
+const API_BASE_URL = 'https://api.example.com';
+const MAX_RETRY_ATTEMPTS = 3;
+
+// ✅ ĐÚNG: Module constants
+const defaultConfig = {
+  timeout: 5000,
+  retries: 3,
+};
+```
+
+### 3.3. Constants & Enums
+
+**BẮT BUỘC** sử dụng `const` và `enum` (hoặc Union Types) cho giá trị cố định:
+
+```typescript
+// ✅ ĐÚNG: Enum
+enum HeadingCode {
+  H1 = 'h1',
+  H2 = 'h2',
+  H3 = 'h3',
+  H4 = 'h4',
+}
+
+// ✅ ĐÚNG: Union Type (preferred cho simple unions)
+type Status = 'pending' | 'success' | 'error';
+
+// ✅ ĐÚNG: Const object
+const API_ENDPOINTS = {
+  USERS: '/api/users',
+  PROJECTS: '/api/projects',
+} as const;
+
+// ❌ SAI: Magic strings/numbers
+if (status === 'pending') { } // Phải dùng constant
+```
+
+**Location**: Đặt constants trong `src/constants/` hoặc `app/lib/constants/`
+
+### 3.4. Conditional Rendering
+
+**Ưu tiên** sử dụng:
+1. **Ternary Operator** (`? :`) cho 2 trường hợp
+2. **Short-Circuiting** (`&&`) cho conditional render
+3. **Early Return** trong functions
+
+```typescript
+// ✅ ĐÚNG: Ternary operator
+{isLoading ? <Spinner /> : <Content />}
+
+// ✅ ĐÚNG: Short-circuiting
+{isAuthenticated && <Dashboard />}
+{error && <ErrorMessage error={error} />}
+
+// ✅ ĐÚNG: Early return trong function
+function renderContent() {
+  if (isLoading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  return <Content />;
+}
+
+// ❌ SAI: Nested if-else trong JSX
+{(() => {
+  if (isLoading) {
+    return <Spinner />;
+  } else {
+    if (error) {
+      return <ErrorMessage />;
+    } else {
+      return <Content />;
+    }
+  }
+})()}
+```
+
+### 3.5. Hooks Declaration Order
+
+**BẮT BUỘC** khai báo hooks ở **đầu component**, không được đặt trong:
+- Conditional statements (`if`, `switch`)
+- Loops (`for`, `while`)
+- Nested functions
+- Sau các logic có thể thay đổi trong quá trình render
+
+```typescript
+// ✅ ĐÚNG: Hooks ở đầu component
+function Component({ isVisible }: { isVisible: boolean }) {
+  // 1. Tất cả hooks ở đây
+  const [state, setState] = useState();
+  const { data } = useSWR('/api/data');
+  useEffect(() => {
+    // ...
+  }, []);
+
+  // 2. Early returns
+  if (!isVisible) return null;
+
+  // 3. Logic và render
+  return <div>{/* ... */}</div>;
+}
+
+// ❌ SAI: Hooks trong conditional
+function Component({ isVisible }: { isVisible: boolean }) {
+  if (!isVisible) return null;
+
+  const [state, setState] = useState(); // ❌ Hook sau conditional
+  // ...
+}
+
+// ❌ SAI: Hooks trong loop
+function Component({ items }: { items: Item[] }) {
+  return items.map(item => {
+    const [state, setState] = useState(); // ❌ Hook trong loop
+    return <div>{/* ... */}</div>;
+  });
+}
+
+// ✅ ĐÚNG: Tách component nếu cần conditional hooks
+function ItemComponent({ item }: { item: Item }) {
+  const [state, setState] = useState(); // ✅ Hook ở đầu
+  return <div>{/* ... */}</div>;
+}
+
+function Component({ items }: { items: Item[] }) {
+  return items.map(item => <ItemComponent key={item.id} item={item} />);
+}
+```
+
+**Lý do:**
+- React yêu cầu hooks phải được gọi theo đúng thứ tự trong mỗi lần render
+- Hooks trong conditional/loop sẽ làm thay đổi thứ tự gọi → gây bugs khó debug
+- Giúp React tối ưu hóa render và quản lý lifecycle hiệu quả
+
+### 3.6. Helper Functions và DRY Principle
+
+**BẮT BUỘC** tạo helper functions (common functions) khi:
+- Function được sử dụng lại ở nhiều nơi (> 2 lần)
+- Logic phức tạp có thể tái sử dụng
+- Cần test riêng logic đó
+
+```typescript
+// ❌ SAI: Lặp lại code
+function ComponentA() {
+  const formatDate = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  };
+  return <div>{formatDate(new Date())}</div>;
+}
+
+function ComponentB() {
+  const formatDate = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  };
+  return <div>{formatDate(new Date())}</div>;
+}
+
+// ✅ ĐÚNG: Tạo helper function
+// app/lib/utils/date.ts
+export function formatDate(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
+// Components sử dụng
+import { formatDate } from '../lib/utils/date';
+
+function ComponentA() {
+  return <div>{formatDate(new Date())}</div>;
+}
+
+function ComponentB() {
+  return <div>{formatDate(new Date())}</div>;
+}
+```
+
+**Location**: Đặt helper functions trong `app/lib/utils/` hoặc `src/utils/`
+
+### 3.7. Cleanup trong useEffect
+
+**BẮT BUỘC** cleanup các resources trong `useEffect`:
+- Timers (`setTimeout`, `setInterval`)
+- Event listeners
+- Subscriptions
+- DOM manipulations
+
+```typescript
+// ✅ ĐÚNG: Cleanup timers
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    // Do something
+  }, 1000);
+
+  return () => clearTimeout(timeoutId); // Cleanup
+}, []);
+
+// ✅ ĐÚNG: Cleanup event listeners
+useEffect(() => {
+  const handleResize = () => {
+    // Handle resize
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  return () => {
+    window.removeEventListener('resize', handleResize); // Cleanup
+  };
+}, []);
+
+// ✅ ĐÚNG: Cleanup subscriptions
+useEffect(() => {
+  const subscription = observable.subscribe(data => {
+    // Handle data
+  });
+
+  return () => {
+    subscription.unsubscribe(); // Cleanup
+  };
+}, []);
+
+// ✅ ĐÚNG: Cleanup DOM manipulations
+useEffect(() => {
+  const lineChart = document?.querySelector('.lineChartObservationVolume');
+
+  if (lineChart) {
+    const timeoutId = setTimeout(() => {
+      lineChart.scrollLeft = 100000;
+    }, 500);
+
+    return () => clearTimeout(timeoutId); // Cleanup
+  }
+}, [dataList]);
+
+// ❌ SAI: Không cleanup
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    // Do something
+  }, 1000);
+  // ❌ Không cleanup → memory leak
+}, []);
+```
+
+### 3.8. Error Handling
+
+**BẮT BUỘC** sử dụng `try...catch` cho async operations và log errors rõ ràng:
+
+```typescript
+// ✅ ĐÚNG: Error handling với try-catch
+async function fetchUserData(userId: number) {
+  try {
+    const user = await api.getUser(userId);
+    return user;
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    // Log to error tracking service (Sentry, etc.)
+    throw error; // Re-throw để component xử lý
+  }
+}
+
+// ✅ ĐÚNG: Error handling trong SWR hooks
+const { data, error } = useSWR('/api/user', fetcher, {
+  onError: (err) => {
+    console.error('API Error:', err);
+    if (err?.toString()?.includes('401')) {
+      signOut({ callbackUrl: '/login' });
+    }
+  },
+});
+
+// ❌ SAI: Không xử lý error
+async function fetchUserData(userId: number) {
+  const user = await api.getUser(userId); // Có thể throw error
+  return user;
+}
+```
+
+**Quy tắc Error Handling:**
+- **Log errors**: Luôn log errors với context đầy đủ
+- **User-friendly messages**: Hiển thị message dễ hiểu cho user
+- **Error boundaries**: Sử dụng React Error Boundaries cho component errors
+- **API errors**: Xử lý riêng cho 401, 403, 500, etc.
+- **Cover normal & abnormal cases**: **BẮT BUỘC** xử lý cả success và error cases
+- **Handle issues in general/logical way**: Xử lý errors ở tầng phù hợp (server/client), không xử lý riêng lẻ trong từng component
+
+```typescript
+// ❌ SAI: Xử lý error riêng lẻ trong component
+function Page() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
+  if (error === 'unauthorized') {
+    // Xử lý unauthorized ở đây - SAI
+    return <div>Unauthorized</div>;
+  }
+}
+
+// ✅ ĐÚNG: Xử lý ở middleware hoặc server layer
+// middleware.ts hoặc layout.tsx
+if (error === 'unauthorized') {
+  redirect('/login');
+}
+```
+
+### 3.9. Console và Debugger
+
+**BẮT BUỘC** loại bỏ tất cả `console.*` và `debugger` statements trước khi commit:
+
+```typescript
+// ❌ SAI: Có console và debugger
+function Component() {
+  console.log('Debug info');
+  console.error('Error');
+  debugger; // Không được phép
+  return <div>Content</div>;
+}
+
+// ✅ ĐÚNG: Sử dụng proper logging hoặc xóa hết
+function Component() {
+  // Sử dụng error tracking service (Sentry, etc.) thay vì console
+  // hoặc xóa hết console statements
+  return <div>Content</div>;
+}
+```
+
+**Quy tắc:**
+- **Development**: Có thể dùng `console.log` tạm thời khi debug
+- **Before commit**: **BẮT BUỘC** xóa tất cả console statements
+- **Production**: Sử dụng error tracking service (Sentry) thay vì console
+- **ESLint**: Sử dụng rule `no-console` và `no-debugger` để enforce
+
+### 3.10. ES6+ Features
+
+**Ưu tiên** sử dụng ES6+ features:
+
+```typescript
+// ✅ ĐÚNG: Arrow functions
+const handleClick = () => {
+  // ...
+};
+
+// ✅ ĐÚNG: Destructuring
+const { name, email } = user;
+const [first, second] = items;
+
+// ✅ ĐÚNG: Spread operator
+const newUser = { ...user, name: 'Updated' };
+const allItems = [...items, newItem];
+
+// ✅ ĐÚNG: Template literals
+const message = `Hello, ${name}!`;
+
+// ✅ ĐÚNG: Optional chaining
+const email = user?.profile?.email;
+
+// ✅ ĐÚNG: Nullish coalescing
+const name = user?.name ?? 'Anonymous';
+
+// ❌ SAI: Old syntax
+function handleClick() { } // Arrow function preferred
+const name = user && user.profile && user.profile.name; // Use optional chaining
+```
+
+## 4. 🌐 Quy Tắc Giao Tiếp API (API Communication)
+
+### 4.1. API Layer Structure
+
+**BẮT BUỘC** tập trung logic API vào các layer riêng biệt:
+
+```
+app/lib/api/
+├── generated/          # Auto-generated API client (OpenAPI)
+├── hooks/             # Custom SWR hooks
+└── ...
+```
+
+### 4.2. Custom SWR Hooks
+
+**BẮT BUỘC** sử dụng custom hooks cho tất cả API calls:
+
+```typescript
+// ✅ ĐÚNG: Custom hook pattern
+// app/lib/api/hooks/useGetProjectsList.ts
+import { signOut } from "next-auth/react";
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import type { ProjectResponse } from "../generated";
+import useApi from "./useApi";
+
+const useGetProjectsList = (options?: SWRConfiguration<ProjectResponse[]>) => {
+  const api = useApi();
+  const session = useSession();
+
+  return useSWR(
+    session.status === "authenticated" && `/api/projects`,
+    async () => api.apiApi.apiProjectsList(),
+    {
+      throwOnError: false,
+      ...options,
+      onError: (err) => {
+        if (err?.toString()?.includes("401")) {
+          signOut({ callbackUrl: "/login" });
+        }
+      },
+    },
+  );
+};
+
+export default useGetProjectsList;
+
+// ✅ ĐÚNG: Mutation hook pattern
+// app/lib/api/hooks/useCreateProject.ts
+import type { SWRMutationConfiguration } from "swr/mutation";
+import useSWRMutation from "swr/mutation";
+import type { ApiApiApiProjectsCreateRequest } from "../generated";
+import useApi from "./useApi";
+
+const useCreateProject = (options?: SWRMutationConfiguration<number, any>) => {
+  const api = useApi();
+  return useSWRMutation(
+    "/api/projects",
+    async (_: string, { arg }: { arg: ApiApiApiProjectsCreateRequest }) =>
+      api.apiApi.apiProjectsCreate(arg),
+    {
+      throwOnError: false,
+      ...options,
+      onError: (err) => {
+        if (err?.toString()?.includes("401")) {
+          signOut({ callbackUrl: "/login" });
+        }
+      },
+    },
+  );
+};
+
+export default useCreateProject;
+
+// ❌ SAI: Gọi API trực tiếp trong component
+function Component() {
+  const [data, setData] = useState();
+  useEffect(() => {
+    fetch('/api/projects').then(res => res.json()).then(setData); // Không được phép
+  }, []);
+}
+```
+
+### 4.3. Loading và Error States
+
+**BẮT BUỘC** xử lý loading và error states:
+
+```typescript
+// ✅ ĐÚNG: Xử lý loading và error
+function ProjectsList() {
+  const { data, error, isLoading, mutate } = useGetProjectsList();
+
+  if (isLoading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  if (!data) return null;
+
+  return (
+    <div>
+      {data.map(project => (
+        <ProjectItem key={project.id} project={project} />
+      ))}
+    </div>
+  );
+}
+
+// ✅ ĐÚNG: Mutation với loading state
+function CreateProjectForm() {
+  const { trigger, isMutating } = useCreateProject();
+
+  const handleSubmit = async (data: CreateProjectRequest) => {
+    await trigger(
+      { projectId, createProjectRequest: data },
+      {
+        onSuccess: () => {
+          showSnackBar("Project created successfully");
+          mutate(); // Refresh list
+        },
+        onError: (err) => {
+          showSnackBar(undefined, "Failed to create project");
+        },
+      }
+    );
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <button type="submit" disabled={isMutating}>
+        {isMutating ? 'Creating...' : 'Create'}
+      </button>
+    </form>
+  );
+}
+```
+
+### 4.4. Data Caching với SWR
+
+SWR tự động cache data. **BẮT BUỘC** sử dụng các options phù hợp:
+
+```typescript
+// ✅ ĐÚNG: SWR configuration
+const { data } = useGetProjectsList({
+  revalidateOnMount: true,        // Revalidate khi mount
+  revalidateOnFocus: true,        // Revalidate khi focus window
+  revalidateOnReconnect: true,    // Revalidate khi reconnect
+  dedupingInterval: 2000,         // Dedupe requests trong 2s
+});
+
+// ✅ ĐÚNG: Manual revalidation
+const { data, mutate } = useGetProjectsList();
+// Sau khi create/update, refresh data
+mutate();
+```
+
+### 4.5. API Error Handling
+
+**BẮT BUỘC** xử lý các loại errors:
+
+```typescript
+// ✅ ĐÚNG: Centralized error handling
+const ERROR_CODES = {
+  NO_ACTION_PERMITTED: "no_action_permitted",
+  USAGE_EXPIRED: "usage_expired",
+  UNAUTHORIZED: "401",
+} as const;
+
+const ERROR_MESSAGES = {
+  [ERROR_CODES.NO_ACTION_PERMITTED]: "利用文字数を超過しています",
+  [ERROR_CODES.USAGE_EXPIRED]: "利用期間外です",
+  DEFAULT: "エラーが発生しました。もう一度試してください。",
+};
+
+function handleApiError(error: unknown) {
+  const errorMessage = error?.message || error?.toString();
+
+  if (error?.body?.code === ERROR_CODES.NO_ACTION_PERMITTED) {
+    return ERROR_MESSAGES[ERROR_CODES.NO_ACTION_PERMITTED];
+  }
+
+  if (errorMessage?.includes(ERROR_CODES.UNAUTHORIZED)) {
+    signOut({ callbackUrl: "/login" });
+    return;
+  }
+
+  return ERROR_MESSAGES.DEFAULT;
+}
+```
+
+## 5. 🎣 Quy Tắc React Hooks
+
+**Lưu ý**: Các quy tắc về hooks cũng được đề cập trong section 2 và 3. Section này tổng hợp và chi tiết hóa các quy tắc quan trọng nhất.
+
+### 5.1. Hooks Dependencies
+
+**BẮT BUỘC** kiểm tra dependencies của `useEffect`, `useCallback`, `useMemo` một cách chính xác.
+
+#### 5.1.1. useEffect Dependencies
+
+Có **chỉ hai cách đúng** để setup `useEffect`:
+
+1. **Include tất cả dependencies**: Luôn thêm tất cả dependencies nếu đang update state trong `useEffect`
+
+```typescript
+// ✅ ĐÚNG: Include tất cả dependencies
+function Component({ userId }: { userId: number }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    fetchUser(userId).then(setUser);
+  }, [userId]); // Phải include userId
+
+  return <div>{user?.name}</div>;
+}
+
+// ❌ SAI: Thiếu dependencies
+useEffect(() => {
+  fetchUser(userId).then(setUser);
+}, []); // Thiếu userId - có thể gây bug
+```
+
+2. **Ignore dependencies**: Chỉ khi muốn `useEffect` chạy một lần khi component mount
+
+```typescript
+// ✅ ĐÚNG: Chạy một lần khi mount
+useEffect(() => {
+  // Setup code chỉ chạy một lần
+  const timer = setInterval(() => {
+    // ...
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, []); // Empty array = chỉ chạy khi mount
+```
+
+#### 5.1.2. useCallback Dependencies
+
+**Quy tắc:**
+- Sử dụng `useCallback` khi function được truyền như prop cho memoized component
+- **BẮT BUỘC** include tất cả dependencies
+
+```typescript
+// ✅ ĐÚNG: useCallback với đầy đủ dependencies
+function Parent() {
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState('');
+
+  const handleClick = useCallback(() => {
+    console.log(count, name); // Sử dụng count và name
+  }, [count, name]); // Phải include cả count và name
+
+  return <MemoizedChild onClick={handleClick} />;
+}
+
+// ❌ SAI: Thiếu dependencies
+const handleClick = useCallback(() => {
+  console.log(count, name);
+}, [count]); // Thiếu name - có thể gây stale closure
+```
+
+#### 5.1.3. useMemo Dependencies
+
+**Quy tắc:**
+- Sử dụng `useMemo` để memoize **values** (không phải functions)
+- **BẮT BUỘC** include tất cả dependencies
+
+```typescript
+// ✅ ĐÚNG: useMemo với đầy đủ dependencies
+function Component({ items, filter }: Props) {
+  const filteredItems = useMemo(() => {
+    return items.filter(item => item.status === filter);
+  }, [items, filter]); // Phải include cả items và filter
+
+  return <List items={filteredItems} />;
+}
+```
+
+### 5.2. Hooks Phải Ở Top của Component
+
+**BẮT BUỘC** khai báo tất cả hooks ở đầu component, trước mọi logic khác.
+
+```typescript
+// ✅ ĐÚNG: Hooks ở top
+function Component({ userId }: { userId: number }) {
+  // 1. Tất cả hooks ở đây
+  const [user, setUser] = useState<User | null>(null);
+  const { data } = useSWR(`/api/user/${userId}`);
+  const router = useRouter();
+
+  // 2. Derived state / computed values
+  const isAuthenticated = !!user;
+
+  // 3. Event handlers
+  const handleClick = useCallback(() => {
+    // ...
+  }, []);
+
+  // 4. Effects
+  useEffect(() => {
+    // ...
+  }, []);
+
+  // 5. Early returns
+  if (!isAuthenticated) return null;
+
+  // 6. Render
+  return <div>Content</div>;
+}
+
+// ❌ SAI: Hooks ở giữa component
+function Component({ userId }: { userId: number }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  if (!user) {
+    const { data } = useSWR(`/api/user/${userId}`); // SAI: Hook trong conditional
+    return null;
+  }
+
+  return <div>Content</div>;
+}
+```
+
+**Lý do:**
+- React yêu cầu hooks phải được gọi theo đúng thứ tự trong mỗi lần render
+- Hooks trong conditional sẽ làm thay đổi thứ tự gọi hooks → gây bugs
+- Giúp React tối ưu hóa render và quản lý lifecycle hiệu quả
+
+**Nếu component quá dài:**
+- **Tách component**: Nếu có quá nhiều hooks (> 10 hooks), nên tách thành nhiều components nhỏ hơn
+
+### 5.3. Cleanup trong useEffect
+
+**BẮT BUỘC** cleanup (unregister) tất cả timers, event listeners, subscriptions trong cleanup function của `useEffect`.
+
+```typescript
+// ✅ ĐÚNG: Cleanup timers
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    // Do something
+  }, 500);
+
+  // Cleanup function
+  return () => clearTimeout(timeoutId);
+}, [dependencies]);
+
+// ✅ ĐÚNG: Cleanup event listeners
+useEffect(() => {
+  const handleClick = () => {
+    // Handle click
+  };
+
+  document.addEventListener('click', handleClick);
+
+  // Cleanup function
+  return () => {
+    document.removeEventListener('click', handleClick);
+  };
+}, []);
+
+// ✅ ĐÚNG: Cleanup subscriptions
+useEffect(() => {
+  const subscription = observable.subscribe((value) => {
+    // Handle value
+  });
+
+  // Cleanup function
+  return () => {
+    subscription.unsubscribe();
+  };
+}, []);
+
+// ✅ ĐÚNG: Cleanup DOM manipulation
+useEffect(() => {
+  const lineChart = document?.querySelector('.lineChartObservationVolume');
+
+  if (lineChart) {
+    const timeoutId = setTimeout(() => {
+      lineChart.scrollLeft = 100000;
+    }, 500);
+
+    // Cleanup function
+    return () => clearTimeout(timeoutId);
+  }
+}, [dataList]);
+
+// ❌ SAI: Không cleanup
+useEffect(() => {
+  const timer = setInterval(() => {
+    // Do something
+  }, 1000);
+  // Thiếu cleanup → memory leak
+}, []);
+```
+
+**Quy tắc:**
+- **Luôn cleanup**: Mọi side effect cần cleanup function
+- **Memory leaks**: Không cleanup sẽ gây memory leaks
+- **Performance**: Cleanup giúp tránh unnecessary operations
+
+## 6. 🛠️ Quy Tắc Tối Ưu Hóa và Refactoring
+
+### 6.1. Loại Bỏ Code Chết
+
+**BẮT BUỘC** loại bỏ:
+- Code đã comment (trừ khi có lý do rõ ràng)
+- Unused imports
+- Unused variables/functions
+- Dead code paths
+
+```typescript
+// ❌ SAI: Commented code
+// function oldFunction() {
+//   return 'old';
+// }
+
+// ✅ ĐÚNG: Xóa code không dùng
+// Hoặc giải thích lý do nếu cần giữ lại
+// TODO: Remove after migration to new API (2024-12-31)
+```
+
+**Tools:**
+- ESLint rule: `@typescript-eslint/no-unused-vars`
+- Pre-commit hooks để check unused code
+
+### 6.2. Sử Dụng ES6+ Features
+
+**Ưu tiên** sử dụng modern JavaScript:
+
+```typescript
+// ✅ ĐÚNG: Arrow functions
+const handleClick = () => { };
+
+// ✅ ĐÚNG: Destructuring với default values
+const { name = 'Anonymous', email } = user;
+
+// ✅ ĐÚNG: Spread operator
+const newState = { ...oldState, updated: true };
+
+// ✅ ĐÚNG: Rest parameters
+function sum(...numbers: number[]) {
+  return numbers.reduce((a, b) => a + b, 0);
+}
+
+// ✅ ĐÚNG: Array methods
+const filtered = items.filter(item => item.active);
+const mapped = items.map(item => ({ ...item, processed: true }));
+
+// ❌ SAI: Old syntax
+function handleClick() { } // Arrow function preferred
+for (let i = 0; i < items.length; i++) { } // Use forEach/map
+```
+
+### 6.3. Linter & Formatter
+
+Dự án sử dụng:
+- **ESLint**: Airbnb TypeScript config
+- **Prettier**: Code formatting
+
+#### 6.3.1. ESLint Rules
+
+Các rules quan trọng:
+- `@typescript-eslint/consistent-type-imports`: Bắt buộc type imports
+- `@typescript-eslint/no-unused-vars`: Không cho phép unused variables
+- `@typescript-eslint/no-explicit-any`: Tránh sử dụng `any`
+
+#### 6.3.2. Prettier Configuration
+
+```json
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true
+}
+```
+
+**Quy tắc:**
+- **Semi-colons**: **BẮT BUỘC** sử dụng (`semi: true`)
+- **Quotes**: Single quotes (theo Airbnb config)
+- **Trailing commas**: Luôn thêm trailing comma
+- **Tab width**: 2 spaces
+
+### 6.4. Code Organization
+
+#### 6.4.1. Import Order
+
+**BẮT BUỘC** sắp xếp imports theo thứ tự:
+1. React và Next.js
+2. Third-party libraries
+3. Internal components
+4. Internal utilities/hooks
+5. Types
+6. Styles
+
+```typescript
+// ✅ ĐÚNG: Import order
+// 1. React/Next.js
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+// 2. Third-party
+import { clsx } from "clsx";
+import type { SWRConfiguration } from "swr";
+
+// 3. Internal components
+import Button from "../components/common/Button";
+import Form from "../components/common/Form";
+
+// 4. Internal utilities/hooks
+import { useGetProjectsList } from "../lib/api/hooks/useGetProjectsList";
+
+// 5. Types
+import type { Project } from "../lib/api/generated";
+
+// 6. Styles (nếu có)
+import "./styles.css";
+```
+
+#### 6.4.2. Component Structure
+
+**BẮT BUỘC** tổ chức component theo thứ tự:
+
+```typescript
+// ✅ ĐÚNG: Component structure
+"use client";
+
+// 1. Imports
+import { useState } from "react";
+import type { ComponentProps } from "./types";
+
+// 2. Types/Interfaces
+interface ComponentProps {
+  // ...
+}
+
+// 3. Constants (nếu có)
+const DEFAULT_VALUE = 0;
+
+// 4. Component
+function Component({ prop1, prop2 }: ComponentProps) {
+  // 4.1. Hooks
+  const [state, setState] = useState();
+
+  // 4.2. Derived state / computed values
+  const computedValue = useMemo(() => {
+    // ...
+  }, [dependencies]);
+
+  // 4.3. Event handlers
+  const handleClick = useCallback(() => {
+    // ...
+  }, []);
+
+  // 4.4. Effects
+  useEffect(() => {
+    // ...
+  }, []);
+
+  // 4.5. Early returns
+  if (condition) return null;
+
+  // 4.6. Render
+  return (
+    <div>
+      {/* JSX */}
+    </div>
+  );
+}
+
+// 5. Exports
+export default Component;
+export type { ComponentProps };
+```
+
+### 6.5. Performance Best Practices
+
+#### 6.5.1. Code Splitting
+
+Sử dụng dynamic imports cho:
+- Heavy components
+- Third-party libraries lớn
+- Components chỉ render trong điều kiện đặc biệt
+
+```typescript
+// ✅ ĐÚNG: Dynamic import
+import dynamic from 'next/dynamic';
+
+const HeavyChart = dynamic(() => import('./HeavyChart'), {
+  loading: () => <Spinner />,
+  ssr: false, // Nếu component không cần SSR
+});
+
+// ❌ SAI: Import trực tiếp component nặng
+import HeavyChart from './HeavyChart'; // Load ngay cả khi không dùng
+```
+
+#### 6.5.2. Image Optimization
+
+**BẮT BUỘC** sử dụng Next.js Image component:
+
+```typescript
+// ✅ ĐÚNG: Next.js Image
+import Image from 'next/image';
+
+<Image
+  src="/logo.png"
+  alt="Logo"
+  width={200}
+  height={200}
+  priority // Cho above-the-fold images
+/>
+
+// ❌ SAI: HTML img tag
+<img src="/logo.png" alt="Logo" />
+```
+
+## 7. 📋 PR Review Checklist
+
+### 7.1. Common Checks
+
+- [ ] **No degradation**: Feature không làm giảm performance hoặc phá vỡ tính năng hiện có
+- [ ] **Can it be built**: Code có thể build thành công (`npm run build`)
+- [ ] **No console & debugger**: Không có `console.log`, `console.debug`, `debugger` trong code
+- [ ] **Cover normal & abnormal cases**: Feature xử lý cả trường hợp bình thường và bất thường (errors, edge cases)
+
+### 7.2. ReactJS/NextJS Specific
+
+- [ ] **Component size**: Components nhỏ gọn, JSX markup không quá 50 dòng (SRP principle)
+- [ ] **No linter errors**: Code không có linter errors và đã format với Prettier
+- [ ] **No React warnings**: Không có React warnings trong console
+- [ ] **Test re-render**: Đã test re-render với React Developer Tools
+- [ ] **DRY principle**: Không lặp lại code, đã extract thành helper functions/components
+- [ ] **Code consistency**: Code tuân thủ patterns hiện có của dự án
+- [ ] **No unused props/imports**: Không có unused props và imports
+- [ ] **No hardcoded values**: Sử dụng constants thay vì hardcoded values
+- [ ] **Custom hooks**: Đã optimize với custom hooks khi cần
+- [ ] **Hook dependencies**: Đã check dependencies của `useCallback`, `useEffect`, `useMemo`
+- [ ] **Helper functions**: Đã tạo helper functions cho code lặp lại
+- [ ] **Exception handling**: Đã implement proper error handling
+- [ ] **Cleanup effects**: Đã cleanup timers và event listeners trong `useEffect`
+- [ ] **Hooks at top**: Hooks được khai báo ở đầu component
+- [ ] **Multilingual**: Đã implement multilingual handling (nếu project support)
+- [ ] **General handling**: Xử lý issues một cách general và logical (không xử lý riêng lẻ trong từng page)
+
+### 7.3. Package Management
+
+- [ ] **Notify leader**: Đã thông báo leader nếu thêm package mới từ NPM
+
+### 7.4. Technical Checks
+
+- [ ] TypeScript không có errors
+- [ ] ESLint không có errors/warnings
+- [ ] Prettier đã format code
+- [ ] Components có proper TypeScript types
+- [ ] API calls sử dụng custom hooks
+- [ ] Error handling đã được implement
+- [ ] Loading states đã được xử lý
+- [ ] "use client" directive đã thêm cho client components
+- [ ] Imports đã được sắp xếp đúng thứ tự
+- [ ] Code tuân thủ tất cả quy tắc trong file này
+
+## 8. 🌍 Multilingual Support
+
+Nếu project hỗ trợ đa ngôn ngữ, **BẮT BUỘC** implement multilingual handling:
+
+```typescript
+// ✅ ĐÚNG: Sử dụng i18n cho text
+import { useTranslation } from 'next-i18next';
+
+function Component() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <h1>{t('common:title')}</h1>
+      <p>{t('common:description')}</p>
+    </div>
+  );
+}
+
+// ❌ SAI: Hardcoded text
+function Component() {
+  return (
+    <div>
+      <h1>Title</h1> {/* ❌ Hardcoded */}
+      <p>Description</p> {/* ❌ Hardcoded */}
+    </div>
+  );
+}
+```
+
+**Quy tắc:**
+- Tất cả user-facing text phải được translate
+- Sử dụng translation keys thay vì hardcoded strings
+- Placeholder text cũng phải được translate
+- Error messages phải được translate
+
+## 9. 🎯 General và Logical Handling
+
+**BẮT BUỘC** xử lý issues một cách general và logical:
+
+```typescript
+// ❌ SAI: Xử lý riêng lẻ trong từng page
+function SomePage() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
+
+  if (error === 'unauthorized') {
+    // Xử lý unauthorized riêng trong page này
+    showMessage('Unauthorized');
+  }
+  // ...
+}
+
+// ✅ ĐÚNG: Xử lý ở tầng cao hơn (middleware, layout, hoặc error boundary)
+// middleware.ts hoặc layout.tsx
+if (error === 'unauthorized') {
+  redirect('/login');
+}
+```
+
+**Quy tắc:**
+- **Authentication errors**: Xử lý ở middleware hoặc API layer
+- **Authorization errors**: Redirect về login page ở tầng server
+- **Common errors**: Xử lý ở Error Boundary hoặc global error handler
+- **Không xử lý riêng lẻ**: Tránh xử lý cùng một vấn đề ở nhiều nơi khác nhau
+
+## 10. 🔄 Migration và Cải Tiến
+
+### 10.1. Cải Tiến Code Hiện Tại
+
+Khi refactor code cũ, **ưu tiên**:
+1. Chuyển Class Components → Functional Components
+2. Thêm TypeScript types cho untyped code
+3. Tách logic phức tạp sang custom hooks
+4. Chuyển CSS modules → Tailwind CSS
+5. Thêm error handling cho API calls
+6. Implement proper loading states
+
+### 10.2. Strict TypeScript
+
+**Mục tiêu**: Bật `strict: true` trong `tsconfig.json`. Hiện tại `strict: false` để tương thích với code cũ.
+
+**Kế hoạch**:
+- Dần dần fix type errors
+- Thêm explicit types cho untyped code
+- Loại bỏ `any` types
+- Enable strict mode khi đã sẵn sàng
+
+## 11. 📚 Tài Liệu Tham Khảo
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [SWR Documentation](https://swr.vercel.app)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [ESLint Rules](https://eslint.org/docs/rules/)
+- [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
+
+---
+
+**Lưu ý**: File này là **living document** và sẽ được cập nhật thường xuyên. Mọi thay đổi cần được thảo luận và approve bởi team trước khi áp dụng.
