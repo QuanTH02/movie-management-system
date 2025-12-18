@@ -88,7 +88,7 @@ $(function () {
     // ##############################################################################################################
     // console.log(document.getElementById('searchInput'));
     // if (document.getElementById('searchInput')) {
-    //     fetch(`http://127.0.0.1:8000/api/film/`)
+    //     fetch(`/api/film/`)
     //         .then(response => {
     //             return response.json();
     //         })

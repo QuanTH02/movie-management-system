@@ -1,26 +1,68 @@
-**Hướng dẫn chạy code:**
+# Movie Management System
 
-B1: Cài đặt thư viện:
-- Vào thư mục chính của dự án: movie-management-system
-- Nhập câu lệnh pip install -r requirements.txt
-  
-B2: Cài đặt MySQL
-- Vào trang chủ MySQL https://www.mysql.com/ tải bản phù hợp với máy tính về rồi cài đặt
-  
-B3: Import data vào MySQL
-- Trong MySQL chọn Server -> Data Import -> Chọn Import Self-Contained File, xong rồi chọn file data.sql
-- Sau đó tạo new schema tên data -> Start Import
-  
-B4: Cài đặt cấu hình
-- Vào Film_BE -> Film_BE -> settings.py, cuộn xuống dưới tìm mục DATABASES, cấu hình phù hợp với name là 'data'
-  
-B5: Cập nhật link ảnh
-- Nhập py ./Crawl/autoUpdate/update.py
-  
-B5: Train model gợi ý
-- Nhập py ./Film_BE/App_Film_BE/Recommendation/Collaborative/auto_train.py
-- Vào ./Film_BE/App_Film_BE/Recommendation/Content-Based, chạy file content_based.ipynb
-  
-B6: Bắt đầu chạy chương trình
-- Chạy BE: Vào Film_BE nhập câu lệnh "py manage.py migrate", xong rồi nhập câu lệnh "py manage.py runserver"
-- Chạy FE: Cài đặt LiveServer, nhấn vào Film_FE -> templates -> home.html rồi chạy
+## Quick Start với Docker
+
+### Yêu cầu
+- Docker
+- Docker Compose
+
+### Cách chạy
+
+1. Clone repository:
+```bash
+git clone <repository-url>
+cd movie-management-system
+```
+
+2. Cấu hình môi trường:
+```bash
+# Copy file .env.example thành .env và chỉnh sửa các thông tin nhạy cảm
+cp .env.example .env
+# Chỉnh sửa file .env với các giá trị phù hợp
+```
+
+3. Chạy ứng dụng:
+```bash
+docker-compose up -d
+```
+
+4. Truy cập ứng dụng:
+- Mở trình duyệt và vào: **http://localhost:3000**
+
+### Tài khoản Admin
+
+Thông tin đăng nhập admin được cấu hình trong file `.env`:
+- **Username**: Giá trị của `ADMIN_USERNAME` (mặc định: `admin`)
+- **Password**: Giá trị của `ADMIN_PASSWORD` (mặc định: `123456`)
+
+### Cấu hình môi trường (.env)
+
+File `.env` chứa các thông tin nhạy cảm:
+- Database credentials
+- Django secret key
+- Admin user credentials
+- MySQL root password
+
+**Lưu ý**: File `.env` đã được thêm vào `.gitignore` và sẽ không được commit lên repository. Hãy sử dụng `.env.example` làm template.
+
+### Các lệnh hữu ích
+
+```bash
+# Xem logs
+docker-compose logs -f
+
+# Dừng ứng dụng
+docker-compose down
+
+# Khởi động lại
+docker-compose restart
+
+# Xem trạng thái
+docker-compose ps
+```
+
+### Cấu trúc
+
+- **Frontend**: Nginx serving static files trên port 3000
+- **Backend**: Django API trên port 8000 (internal)
+- **Database**: MySQL trên port 3306 (internal)

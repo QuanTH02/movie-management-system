@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy import sparse 
 from joblib import dump
 from joblib import load
+import os
 
 class CF(object):
     """docstring for CF"""
@@ -142,9 +143,17 @@ class CF(object):
         return recommended_items
 
 def recommend_collaborative_by_user_id(user_id):
-    loaded_rs = load("App_Film_BE\\Reconmmendation\\Collaborative\\collaborative_filtering_model.joblib")
-    recommended_items = loaded_rs.print_recommendation_for_user(user_id)
-    return recommended_items
+    # Get the directory of this file
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(BASE_DIR, 'collaborative_filtering_model.joblib')
+    
+    try:
+        loaded_rs = load(model_path)
+        recommended_items = loaded_rs.print_recommendation_for_user(user_id)
+        return recommended_items
+    except FileNotFoundError:
+        print(f"Warning: Collaborative filtering model not found at {model_path}")
+        return []
 
 if __name__ == '__main__':
     print(recommend_collaborative_by_user_id(7))

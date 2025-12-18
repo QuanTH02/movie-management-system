@@ -149,10 +149,13 @@ class RegisterView(generics.ListAPIView):
                 )
 
             # Create a new user
-            user = User.objects.create_user(
-                username=account, email=gmail, password=password
+            user = User(
+                username=account, 
+                email=gmail, 
+                last_name=name,
+                last_login=timezone.now()
             )
-            user.last_name = name
+            user.set_password(password)
             user.save()
 
             return Response(

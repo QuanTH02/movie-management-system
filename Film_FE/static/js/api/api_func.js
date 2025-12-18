@@ -3,7 +3,7 @@
 // ##############################################################################################################
 async function apiLogin(username, password) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/login/', {
+        const response = await fetch('/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ async function apiLogin(username, password) {
 // ##############################################################################################################
 async function apiRegister(data_inp) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/register/', {
+        const response = await fetch('/api/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ async function apiRegister(data_inp) {
 // ##############################################################################################################
 async function apiAllMovie() {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/film/`);
+        const response = await fetch(`/api/film/`);
         if (!response.ok) {
             throw new Error('Failed to fetch movies');
         }
@@ -74,7 +74,7 @@ async function apiAllMovie() {
 // ##############################################################################################################
 async function apiAllAccount(currentAccount) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/account/`, {
+        const response = await fetch(`/api/account/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ async function apiAllAccount(currentAccount) {
 // ##############################################################################################################
 async function apiChangeProfile(pfFName, pfLName, pfEmail, pfId) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/account/`, {
+        const response = await fetch(`/api/account/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ async function apiChangeProfile(pfFName, pfLName, pfEmail, pfId) {
 // ##############################################################################################################
 async function apiDetailMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`, {
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ async function apiDetailMovie(movieName) {
 // ##############################################################################################################
 async function apiGenresMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/genres`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/genres`);
         if (!response.ok) {
             throw new Error('Failed to fetch genres data');
         }
@@ -170,7 +170,7 @@ async function apiGenresMovie(movieName) {
 // ##############################################################################################################
 async function apiDirectorMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/director/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/director/`);
         if (!response.ok) {
             throw new Error('Failed to fetch director data');
         }
@@ -188,7 +188,7 @@ async function apiDirectorMovie(movieName) {
 // ##############################################################################################################
 async function apiWritersMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/writers/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/writers/`);
         if (!response.ok) {
             throw new Error('Failed to fetch writers data');
         }
@@ -206,7 +206,7 @@ async function apiWritersMovie(movieName) {
 // ##############################################################################################################
 async function apiCastMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/cast/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/cast/`);
         if (!response.ok) {
             throw new Error('Failed to fetch cast data');
         }
@@ -224,7 +224,7 @@ async function apiCastMovie(movieName) {
 // ##############################################################################################################
 async function apiTaglineMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/taglines/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/taglines/`);
         if (!response.ok) {
             throw new Error('Failed to fetch tagline data');
         }
@@ -242,7 +242,7 @@ async function apiTaglineMovie(movieName) {
 // ##############################################################################################################
 async function apiDidYouKnowMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/didyouknow/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/didyouknow/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Did You Know data');
         }
@@ -260,7 +260,7 @@ async function apiDidYouKnowMovie(movieName) {
 // ##############################################################################################################
 async function apiUserReviewMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filmreview/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/filmreview/`);
         if (!response.ok) {
             throw new Error('Failed to fetch User Reviews data');
         }
@@ -278,7 +278,7 @@ async function apiUserReviewMovie(movieName) {
 // ##############################################################################################################
 async function apiCountryOriginMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/countryorigin/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/countryorigin/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Country Origin data');
         }
@@ -296,7 +296,7 @@ async function apiCountryOriginMovie(movieName) {
 // ##############################################################################################################
 async function apiOfficialSitesMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/officialsite/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/officialsite/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Official Sites data');
         }
@@ -314,7 +314,7 @@ async function apiOfficialSitesMovie(movieName) {
 // ##############################################################################################################
 async function apiLanguageMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/language/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/language/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Language data');
         }
@@ -331,7 +331,7 @@ async function apiLanguageMovie(movieName) {
 // ##############################################################################################################
 async function apiFilmingLocationsMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filminglocations/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/filminglocations/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Filming Locations data');
         }
@@ -349,7 +349,7 @@ async function apiFilmingLocationsMovie(movieName) {
 // ##############################################################################################################
 async function apiProductionCompaniesMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/productioncompanies/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/productioncompanies/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Production Companies data');
         }
@@ -367,7 +367,7 @@ async function apiProductionCompaniesMovie(movieName) {
 // ##############################################################################################################
 async function apiBoxOfficeMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/ticketroom/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/ticketroom/`);
         if (!response.ok) {
             throw new Error('Failed to fetch Box Office data');
         }
@@ -385,7 +385,7 @@ async function apiBoxOfficeMovie(movieName) {
 // ##############################################################################################################
 async function apiMaybeYouLikeMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/recommend/contentbased/${encodeURIComponent(movieName)}/`);
+        const response = await fetch(`/api/recommend/contentbased/${encodeURIComponent(movieName)}/`);
         if (!response.ok) {
             throw new Error('Failed to fetch recommended movies');
         }
@@ -402,7 +402,7 @@ async function apiMaybeYouLikeMovie(movieName) {
 // ##############################################################################################################
 async function apiMaybeYouLikeMovieCollab(username) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/recommend/collaborative/${encodeURIComponent(username)}/`);
+        const response = await fetch(`/api/recommend/collaborative/${encodeURIComponent(username)}/`);
         if (!response.ok) {
             throw new Error('Failed to fetch recommended movies');
         }
@@ -420,7 +420,7 @@ async function apiMaybeYouLikeMovieCollab(username) {
 // ##############################################################################################################
 async function apiProducedMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/produced/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/produced/`);
         if (!response.ok) {
             throw new Error('Failed to fetch produced movies');
         }
@@ -438,7 +438,7 @@ async function apiProducedMovie(movieName) {
 // ##############################################################################################################
 async function apiCinematographyMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/cinematography/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/cinematography/`);
         if (!response.ok) {
             throw new Error('Failed to fetch cinematography information');
         }
@@ -456,7 +456,7 @@ async function apiCinematographyMovie(movieName) {
 // ##############################################################################################################
 async function apiEditingMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/editing/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/editing/`);
         if (!response.ok) {
             throw new Error('Failed to fetch editing information');
         }
@@ -474,7 +474,7 @@ async function apiEditingMovie(movieName) {
 // ##############################################################################################################
 async function apiSpecialEffectsMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/specialeffects/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/specialeffects/`);
         if (!response.ok) {
             throw new Error('Failed to fetch special effects information');
         }
@@ -492,7 +492,7 @@ async function apiSpecialEffectsMovie(movieName) {
 // ##############################################################################################################
 async function apiMusicMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/music/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/music/`);
         if (!response.ok) {
             throw new Error('Failed to fetch music information');
         }
@@ -510,7 +510,7 @@ async function apiMusicMovie(movieName) {
 // ##############################################################################################################
 async function apiAwardMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/award/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/award/`);
         if (!response.ok) {
             throw new Error('Failed to fetch award information');
         }
@@ -528,7 +528,7 @@ async function apiAwardMovie(movieName) {
 // ##############################################################################################################
 async function apiSubmitReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/review/', {
+        const response = await fetch('/api/review/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -562,7 +562,7 @@ async function apiSubmitReviewMovie(movieName, currentAccount, starReview, title
 // ##############################################################################################################
 async function apiUpdateReviewMovie(movieName, currentAccount, starReview, titleReview, contentReview, film_review_id) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/review/', {
+        const response = await fetch('/api/review/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -597,7 +597,7 @@ async function apiUpdateReviewMovie(movieName, currentAccount, starReview, title
 // ##############################################################################################################
 async function apiDeleteReviewMovie(film_review_id) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/review/', {
+        const response = await fetch('/api/review/', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -626,7 +626,7 @@ async function apiDeleteReviewMovie(film_review_id) {
 // ##############################################################################################################
 async function apiImgMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/linkimg/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/linkimg/`);
         if (!response.ok) {
             throw new Error('Failed to fetch award information');
         }
@@ -643,7 +643,7 @@ async function apiImgMovie(movieName) {
 // ##############################################################################################################
 async function apiTrailerMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/linktrailer/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/linktrailer/`);
         if (!response.ok) {
             throw new Error('Failed to fetch award information');
         }
@@ -660,7 +660,7 @@ async function apiTrailerMovie(movieName) {
 // ##############################################################################################################
 async function apiAddToList(movieName, userName) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/likemovie/', {
+        const response = await fetch('/api/likemovie/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -685,7 +685,7 @@ async function apiAddToList(movieName, userName) {
 
 async function apiDeleteMovieLike(movieName, userName) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/likemovie/', {
+        const response = await fetch('/api/likemovie/', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -710,7 +710,7 @@ async function apiDeleteMovieLike(movieName, userName) {
 
 async function apiGetMovieLikes(userName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/likemovie/?userName=${userName}`, {
+        const response = await fetch(`/api/likemovie/?userName=${userName}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -731,7 +731,7 @@ async function apiGetMovieLikes(userName) {
 
 async function apiRatingMovie(movieName) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/ratingfilm/`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/ratingfilm/`);
         if (!response.ok) {
             throw new Error('Failed to fetch music information');
         }

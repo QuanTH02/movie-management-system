@@ -20,7 +20,7 @@ $(function () {
             var password = document.getElementById("passwordField1").value;
 
             // Sử dụng Fetch API để gửi yêu cầu POST đến API login
-            fetch('http://127.0.0.1:8000/api/login/', {
+            fetch('/api/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ $(function () {
                 };
 
                 // Sử dụng Fetch API để gửi yêu cầu POST đến API
-                fetch('http://127.0.0.1:8000/api/register/', {
+                fetch('/api/register/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ $(function () {
     // ##############################################################################################################
     // console.log(document.getElementById('searchInput'));
     // if (document.getElementById('searchInput')) {
-    //     fetch(`http://127.0.0.1:8000/api/film/`)
+    //     fetch(`/api/film/`)
     //         .then(response => {
     //             return response.json();
     //         })
@@ -119,7 +119,7 @@ $(function () {
     // Load Film Home
     // ##############################################################################################################
     if (document.getElementById('listRightVideo')) {
-        fetch(`http://127.0.0.1:8000/api/film/`)
+        fetch(`/api/film/`)
             .then(response => {
                 return response.json();
             })
@@ -138,7 +138,7 @@ $(function () {
     }
 
     // if (document.getElementById('listRightVideo')) {
-    //     fetch(`http://127.0.0.1:8000/api/ticketroom/`)
+    //     fetch(`/api/ticketroom/`)
     //         .then(response => {
     //             return response.json();
     //         })
@@ -161,7 +161,7 @@ $(function () {
         var currentAccount = localStorage.getItem('currentAccount');
 
         // console.log(currentAccount);
-        fetch(`http://127.0.0.1:8000/api/account/`, {
+        fetch(`/api/account/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -197,7 +197,7 @@ $(function () {
             if (pfLName == "") pfLName = document.getElementById('pf-l-name').placeholder;
             if (pfEmail == "") pfEmail = document.getElementById('pf-email').placeholder;
 
-            fetch(`http://127.0.0.1:8000/api/account/`, {
+            fetch(`/api/account/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ $(function () {
         var currentAccount = localStorage.getItem('currentAccount');
 
         // console.log(currentAccount);
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/`, {
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ $(function () {
                 // Load Trailer
                 // ##############################################################################################################
 
-                fetch(`http://127.0.0.1:8000/api/link_trailer/${encodeURIComponent(linkTrailer)}/`)
+                fetch(`/api/link_trailer/${encodeURIComponent(linkTrailer)}/`)
                     .then(response => {
                         return response.json();
                     })
@@ -274,7 +274,7 @@ $(function () {
                 // ##############################################################################################################
                 // Load Img
                 // ##############################################################################################################
-                fetch(`http://127.0.0.1:8000/api/link_img/${encodeURIComponent(linkImg)}/`)
+                fetch(`/api/link_img/${encodeURIComponent(linkImg)}/`)
                     .then(response => {
                         return response.json();
                     })
@@ -301,7 +301,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/genres`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/genres`)
             .then(response => {
                 return response.json();
             })
@@ -321,7 +321,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/director/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/director/`)
             .then(response => {
                 return response.json();
             })
@@ -341,7 +341,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/writers/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/writers/`)
             .then(response => {
                 return response.json();
             })
@@ -361,7 +361,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
         var totalReviewElement = document.querySelector('#p-movie-total-review-detail');
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
             .then(response => {
                 return response.json();
             })
@@ -380,7 +380,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/cast/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/cast/`)
             .then(response => {
                 return response.json();
             })
@@ -401,7 +401,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/taglines/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/taglines/`)
             .then(response => {
                 return response.json();
             })
@@ -421,7 +421,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/didyouknow/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/didyouknow/`)
             .then(response => {
                 return response.json();
             })
@@ -441,7 +441,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
             .then(response => {
                 return response.json();
             })
@@ -462,7 +462,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/countryorigin/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/countryorigin/`)
             .then(response => {
                 return response.json();
             })
@@ -482,7 +482,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/officialsite/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/officialsite/`)
             .then(response => {
                 return response.json();
             })
@@ -502,7 +502,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/language/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/language/`)
             .then(response => {
                 return response.json();
             })
@@ -522,7 +522,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filminglocations/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/filminglocations/`)
             .then(response => {
                 return response.json();
             })
@@ -542,7 +542,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/productioncompanies/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/productioncompanies/`)
             .then(response => {
                 return response.json();
             })
@@ -562,7 +562,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/ticketroom/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/ticketroom/`)
             .then(response => {
                 return response.json();
             })
@@ -581,7 +581,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/recommend/contentbased/${encodeURIComponent(movieName)}/`)
+        fetch(`/api/recommend/contentbased/${encodeURIComponent(movieName)}/`)
             .then(response => {
                 return response.json();
             })
@@ -603,7 +603,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/director/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/director/`)
             .then(response => {
                 return response.json();
             })
@@ -623,7 +623,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/writers/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/writers/`)
             .then(response => {
                 return response.json();
             })
@@ -643,7 +643,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/cast/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/cast/`)
             .then(response => {
                 return response.json();
             })
@@ -663,7 +663,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/produced/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/produced/`)
             .then(response => {
                 return response.json();
             })
@@ -683,7 +683,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/cinematography/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/cinematography/`)
             .then(response => {
                 return response.json();
             })
@@ -703,7 +703,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/editing/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/editing/`)
             .then(response => {
                 return response.json();
             })
@@ -723,7 +723,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/specialeffects/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/specialeffects/`)
             .then(response => {
                 return response.json();
             })
@@ -743,7 +743,7 @@ $(function () {
     if (document.getElementById('page_cast_and_crew')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/music/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/music/`)
             .then(response => {
                 return response.json();
             })
@@ -768,7 +768,7 @@ $(function () {
     if (document.querySelector('.total-review')) {
         var movieName = localStorage.getItem('movie_name');
         var totalReviewElement = document.querySelector('.total-review');
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/filmreview/`)
             .then(response => {
                 return response.json();
             })
@@ -804,7 +804,7 @@ $(function () {
             }
 
             // Gửi Review 
-            fetch('http://127.0.0.1:8000/api/review/', {
+            fetch('/api/review/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -848,7 +848,7 @@ $(function () {
         var movieName = localStorage.getItem('movie_name');
         document.querySelector('#name-movie-award').textContent = movieName;
 
-        fetch(`http://127.0.0.1:8000/api/movie/${encodeURIComponent(movieName)}/award/`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/award/`)
             .then(response => {
                 return response.json();
             })

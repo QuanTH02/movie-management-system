@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,16 +21,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k33dlh6!4st&2w6iic2h_q2e!skn-6f)haz7#x_m(_*-^3myx!'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-k33dlh6!4st&2w6iic2h_q2e!skn-6f)haz7#x_m(_*-^3myx!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # For development only
 
 # Application definition
 
@@ -82,12 +88,12 @@ WSGI_APPLICATION = 'Film_BE.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'alldata',
-        'USER': "root",
-        'PASSWORD': "123456",
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'ENGINE': 'mysql.connector.django',
+        'NAME': os.environ.get('DB_NAME', 'alldata'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123456'),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 
