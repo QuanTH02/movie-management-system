@@ -1,12 +1,26 @@
-FROM nginx:alpine
+FROM node:18-alpine
 
-# Copy frontend files
-COPY . /usr/share/nginx/html/
+WORKDIR /app
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy package files
+COPY package*.json ./
 
-EXPOSE 80
+# Install all dependencies (including devDependencies for build)
+RUN npm ci
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy project files
+COPY . .
 
+# Build Next.js app
+RUN npm run build
+
+# Expose port
+EXPOSE 3000
+
+# Start Next.js server
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# NEXT_PUBLIC_API_URL will be set by docker-compose
+CMD ["npm", "start"]

@@ -168,6 +168,7 @@ class RegisterView(generics.ListAPIView):
 
 class TicketListView(generics.ListAPIView):
     serializer_class = TicketRoomSerializer
+    film_serializer_class = FilmSerializer
 
     def get_queryset(self):
         # Lấy danh sách TicketRoom từ cơ sở dữ liệu
@@ -182,6 +183,31 @@ class TicketListView(generics.ListAPIView):
 
         return queryset
 
+    def get_top_gross_worldwide(self):
+        ticket_rooms = TicketRoom.objects.all()
+        # Loại bỏ những phòng vé có giá trị gross_worldwide là None
+        ticket_rooms = [
+            tr
+            for tr in ticket_rooms
+            if self.convert_gross_to_number(tr.gross_worldwide) is not None
+        ]
+        # Sắp xếp theo giá trị gross_worldwide đã chuyển đổi
+        ticket_rooms = sorted(
+            ticket_rooms,
+            key=lambda x: self.convert_gross_to_number(x.gross_worldwide),
+            reverse=True,
+        )[:12]
+
+        # Lấy thông tin Movieinformation cho mỗi ticket_room
+        movie_infos = []
+        for ticket_room in ticket_rooms:
+            movie_info = Movieinformation.objects.get(
+                movie_id=ticket_room.movie.movie_id
+            )
+            movie_infos.append(movie_info)
+
+        return movie_infos
+
     def convert_gross_to_number(self, gross_str):
         if gross_str and "$" in gross_str:
             # Loại bỏ ký tự "$" và dấu phẩy từ chuỗi
@@ -189,6 +215,20 @@ class TicketListView(generics.ListAPIView):
             return int(cleaned_str)
         else:
             return None
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        queryset_top = self.get_top_gross_worldwide()
+        serializer = self.serializer_class(queryset, many=True)
+        serializer_top = self.film_serializer_class(queryset_top, many=True)
+        return Response(
+            {
+                "message": "Successfully",
+                "data": serializer.data,
+                "data_top": serializer_top.data,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class ReviewView(generics.CreateAPIView):

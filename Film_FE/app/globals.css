@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import legacy CSS - using absolute paths from public */
+@import url('/static/home.css');
+@import url('/static/login.css');
+@import url('/static/lib-bootstrap/bootstrap.css');
+
