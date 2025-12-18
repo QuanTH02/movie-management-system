@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { SWRConfiguration } from 'swr';
-import useSWR from 'swr';
-import type { Movie } from '@/types/api.types';
-import useApi from '../useApi';
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import type { Movie } from "@/types/api.types";
+import useApi from "../useApi";
 
 interface TopRevenueResponse {
   data_top?: Movie[];
@@ -15,7 +15,7 @@ const useGetTopRevenue = (options?: SWRConfiguration<TopRevenueResponse>) => {
   const { fetcher } = useApi();
 
   return useSWR<TopRevenueResponse>(
-    '/ticketroom/',
+    "/ticketroom/",
     async (url: string) => {
       const data = await fetcher(url);
       // Handle both response formats: {data_top: [...]} or direct list
@@ -32,4 +32,3 @@ const useGetTopRevenue = (options?: SWRConfiguration<TopRevenueResponse>) => {
 };
 
 export default useGetTopRevenue;
-

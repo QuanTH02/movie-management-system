@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged for frontend files
+echo "📦 Checking Frontend files..."
+npx lint-staged
+
+# Run pre-commit hooks from root (for backend)
+cd ..
+BE_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^Film_BE/.*\.py$' || true)
+if [ -n "$BE_FILES" ] && [ -f .pre-commit-config.yaml ]; then
+  echo "🐍 Checking Backend files..."
+  # Try to use pre-commit if available
+  if command -v pre-commit >/dev/null 2>&1; then
+    pre-commit run --files $BE_FILES
+  elif [ -f ~/.local/bin/pre-commit ]; then
+    ~/.local/bin/pre-commit run --files $BE_FILES
+  else
+    # Fallback: run checks manually
+    cd Film_BE
+    echo "  Running Black..."
+    black --check . 2>/dev/null || black . 2>/dev/null || true
+    echo "  Running isort..."
+    isort --check-only . 2>/dev/null || isort . 2>/dev/null || true
+    echo "  Running flake8..."
+    flake8 . 2>/dev/null || true
+    cd ..
+  fi
+fi
+
+echo "✅ Pre-commit checks completed!"

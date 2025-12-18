@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
+    domains: ["localhost"],
   },
   // Enable trailing slash to match Django's requirement
   trailingSlash: true,
@@ -11,11 +11,11 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/static/:path*',
+        source: "/static/:path*",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
@@ -24,4 +24,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { SWRConfiguration } from 'swr';
-import useSWR from 'swr';
-import useApi from '../useApi';
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import useApi from "../useApi";
 
 interface DidYouKnow {
   didyouknow_id: number;
@@ -14,14 +14,17 @@ interface DidYouKnow {
   [key: string]: unknown;
 }
 
-const useGetMovieDidYouKnow = (movieName: string | null, options?: SWRConfiguration<DidYouKnow[]>) => {
+const useGetMovieDidYouKnow = (
+  movieName: string | null,
+  options?: SWRConfiguration<DidYouKnow[]>,
+) => {
   const { fetcher } = useApi();
 
   return useSWR<DidYouKnow[]>(
     movieName ? `/movie/${encodeURIComponent(movieName)}/didyouknow/` : null,
     async (url: string) => {
       const response = await fetcher(url);
-      return Array.isArray(response) ? response : (response?.data || []);
+      return Array.isArray(response) ? response : response?.data || [];
     },
     {
       revalidateOnFocus: false,
@@ -31,4 +34,3 @@ const useGetMovieDidYouKnow = (movieName: string | null, options?: SWRConfigurat
 };
 
 export default useGetMovieDidYouKnow;
-

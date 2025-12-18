@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { SWRConfiguration } from 'swr';
-import useSWR from 'swr';
-import useApi from '../useApi';
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import useApi from "../useApi";
 
 interface Trailer {
   link_trailer_id: number;
@@ -10,14 +10,17 @@ interface Trailer {
   [key: string]: unknown;
 }
 
-const useGetMovieTrailers = (movieId: string | null, options?: SWRConfiguration<Trailer[]>) => {
+const useGetMovieTrailers = (
+  movieId: string | null,
+  options?: SWRConfiguration<Trailer[]>,
+) => {
   const { fetcher } = useApi();
 
   return useSWR<Trailer[]>(
     movieId ? `/movie/${encodeURIComponent(movieId)}/linktrailer/` : null,
     async (url: string) => {
       const response = await fetcher(url);
-      return Array.isArray(response) ? response : (response?.data || []);
+      return Array.isArray(response) ? response : response?.data || [];
     },
     {
       revalidateOnFocus: false,
@@ -27,4 +30,3 @@ const useGetMovieTrailers = (movieId: string | null, options?: SWRConfiguration<
 };
 
 export default useGetMovieTrailers;
-

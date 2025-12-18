@@ -65,14 +65,13 @@ export const handlers = [
 
   // Mock POST /api/register/
   http.post(`${API_BASE_URL}/register/`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as { account?: string; name?: string };
     return HttpResponse.json({
       message: 'Registration successful!',
       user: {
-        account: body.account,
-        name: body.name,
+        account: body.account || '',
+        name: body.name || '',
       },
     });
   }),
 ];
-

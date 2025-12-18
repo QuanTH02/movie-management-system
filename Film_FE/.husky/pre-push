@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run tests before push (optional - can be slow)
+# Uncomment if you want to run tests before push
+# echo "Running frontend tests..."
+# npm test -- --passWithNoTests
+
+# echo "Running backend tests..."
+# cd ../Film_BE
+# pytest --maxfail=1 -q || exit 1

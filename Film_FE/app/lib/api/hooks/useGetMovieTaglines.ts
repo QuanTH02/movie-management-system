@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { SWRConfiguration } from 'swr';
-import useSWR from 'swr';
-import useApi from '../useApi';
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import useApi from "../useApi";
 
 interface Tagline {
   taglines_id: number;
@@ -11,14 +11,17 @@ interface Tagline {
   [key: string]: unknown;
 }
 
-const useGetMovieTaglines = (movieName: string | null, options?: SWRConfiguration<Tagline[]>) => {
+const useGetMovieTaglines = (
+  movieName: string | null,
+  options?: SWRConfiguration<Tagline[]>,
+) => {
   const { fetcher } = useApi();
 
   return useSWR<Tagline[]>(
     movieName ? `/movie/${encodeURIComponent(movieName)}/taglines/` : null,
     async (url: string) => {
       const response = await fetcher(url);
-      return Array.isArray(response) ? response : (response?.data || []);
+      return Array.isArray(response) ? response : response?.data || [];
     },
     {
       revalidateOnFocus: false,
@@ -28,4 +31,3 @@ const useGetMovieTaglines = (movieName: string | null, options?: SWRConfiguratio
 };
 
 export default useGetMovieTaglines;
-

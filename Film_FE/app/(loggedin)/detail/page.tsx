@@ -55,8 +55,15 @@ function DetailContent() {
   }, [searchParams]);
 
   const movie = useMemo(() => {
-    if (!movieDetail?.data || movieDetail.data.length === 0) return null;
-    return movieDetail.data[0];
+    if (!movieDetail?.data) return null;
+    const data = movieDetail.data;
+    // Check if data is an array
+    if (Array.isArray(data)) {
+      if (data.length === 0) return null;
+      return data[0];
+    }
+    // If data is not an array, return it directly
+    return data;
   }, [movieDetail]);
 
   const mainTrailer = useMemo(() => {

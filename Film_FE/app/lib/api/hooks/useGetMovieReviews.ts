@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { SWRConfiguration } from 'swr';
-import useSWR from 'swr';
-import useApi from '../useApi';
+import type { SWRConfiguration } from "swr";
+import useSWR from "swr";
+import useApi from "../useApi";
 
 interface Review {
   film_review_id: number;
@@ -15,14 +15,17 @@ interface Review {
   dislike_count?: number;
 }
 
-const useGetMovieReviews = (movieName: string | null, options?: SWRConfiguration<Review[]>) => {
+const useGetMovieReviews = (
+  movieName: string | null,
+  options?: SWRConfiguration<Review[]>,
+) => {
   const { fetcher } = useApi();
 
   return useSWR<Review[]>(
     movieName ? `/movie/${encodeURIComponent(movieName)}/filmreview/` : null,
     async (url: string) => {
       const response = await fetcher(url);
-      return Array.isArray(response) ? response : (response?.data || []);
+      return Array.isArray(response) ? response : response?.data || [];
     },
     {
       revalidateOnFocus: false,
@@ -32,4 +35,3 @@ const useGetMovieReviews = (movieName: string | null, options?: SWRConfiguration
 };
 
 export default useGetMovieReviews;
-
