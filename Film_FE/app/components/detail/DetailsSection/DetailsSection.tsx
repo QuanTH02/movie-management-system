@@ -61,7 +61,7 @@ function DetailsSection({
               <span key={country.countryorigin_id || index}>
                 <a
                   href="#"
-                  className="text-link-DEFAULT hover:text-link-hover transition-colors duration-hover"
+                  className="text-link hover:text-link-hover transition-colors duration-hover"
                 >
                   {String(
                     country.country_origin_name || country.country_name || "",
@@ -117,7 +117,7 @@ function DetailsSection({
               <span key={company.productioncompanies_id || index}>
                 <a
                   href="#"
-                  className="text-link-DEFAULT hover:text-link-hover transition-colors duration-hover"
+                  className="text-link hover:text-link-hover transition-colors duration-hover"
                 >
                   {String(
                     company.company_name ||

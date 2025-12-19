@@ -66,7 +66,7 @@ const config: Config = {
           dark: '#2563eb',
           light: '#60a5fa',
         },
-        // Link Colors
+        // Link Colors - Use text-link, text-link-hover, text-link-active
         link: {
           DEFAULT: '#a855f7', // Primary purple
           hover: '#9333ea',

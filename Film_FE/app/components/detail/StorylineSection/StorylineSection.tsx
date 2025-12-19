@@ -59,7 +59,7 @@ function StorylineSection({
                 <Link
                   key={genre.genres_id || index}
                   href={`/search?genre=${encodeURIComponent(genre.genres_name)}`}
-                  className="px-3 py-1 rounded-badge border border-dark-border text-link-DEFAULT hover:bg-dark-card-hover hover:border-primary-500 transition-colors duration-hover text-sm"
+                  className="px-3 py-1 rounded-badge border border-dark-border text-link hover:bg-dark-card-hover hover:border-primary-500 hover:text-link-hover transition-colors duration-hover text-sm"
                 >
                   {genre.genres_name}
                 </Link>

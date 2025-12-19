@@ -54,7 +54,7 @@ function MovieIntro({
                 <Link
                   key={genre.genres_id || index}
                   href={`/search?genre=${encodeURIComponent(genre.genres_name)}`}
-                  className="px-3 py-1 rounded-badge border border-dark-border text-dark-text hover:bg-dark-card-hover hover:border-primary-500 transition-colors duration-hover text-sm"
+                  className="px-3 py-1 rounded-badge border border-dark-border text-link hover:bg-dark-card-hover hover:border-primary-500 hover:text-link-hover transition-colors duration-hover text-sm"
                 >
                   {genre.genres_name}
                 </Link>
@@ -82,7 +82,7 @@ function MovieIntro({
                   <span key={director.director_id || index}>
                     <Link
                       href={`/cast-and-crew?director=${encodeURIComponent(director.director_name)}`}
-                      className="text-link-DEFAULT hover:text-link-hover transition-colors duration-hover"
+                      className="text-link hover:text-link-hover transition-colors duration-hover"
                     >
                       {director.director_name}
                     </Link>
@@ -103,7 +103,7 @@ function MovieIntro({
                   <span key={writer.writers_id || index}>
                     <Link
                       href="#"
-                      className="text-link-DEFAULT hover:text-link-hover transition-colors duration-hover"
+                      className="text-link hover:text-link-hover transition-colors duration-hover"
                     >
                       {writer.name}
                     </Link>
@@ -124,7 +124,7 @@ function MovieIntro({
                   <span key={star.cast_id || index}>
                     <Link
                       href="#"
-                      className="text-link-DEFAULT hover:text-link-hover transition-colors duration-hover"
+                      className="text-link hover:text-link-hover transition-colors duration-hover"
                     >
                       {star.name}
                     </Link>
