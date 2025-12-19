@@ -6,8 +6,10 @@ import Link from "next/link";
 import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import { useGetMovieImages } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
 
 function ImageGalleryContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [movieName, setMovieName] = useState<string | null>(null);
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
@@ -33,16 +35,16 @@ function ImageGalleryContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                Movie name required
+                {t.pages.img.imageGallery.split(":")[0] + " required"}
               </h2>
               <p className="text-dark-text-secondary mb-4">
-                Please provide a movie name in the URL.
+                {t.detail.provideMovieName}
               </p>
               <Link
                 href="/"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
               >
-                ← Back to Home
+                {t.detail.backToHome}
               </Link>
             </div>
           </Container>
@@ -59,7 +61,9 @@ function ImageGalleryContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-              <p className="mt-4 text-dark-text-secondary">Loading images...</p>
+              <p className="mt-4 text-dark-text-secondary">
+                {t.pages.img.loadingImages}
+              </p>
             </div>
           </Container>
         </div>
@@ -77,12 +81,12 @@ function ImageGalleryContent() {
               href={`/detail?movie=${encodeURIComponent(movieName)}`}
               className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
             >
-              ← Back to Movie
+              {t.pages.img.backToMovie}
             </Link>
           </div>
 
           <h1 className="text-3xl font-bold text-dark-text mb-8">
-            Image Gallery: {movieName}
+            {translate(t.pages.img.imageGallery, { movieName })}
           </h1>
 
           {images && images.length > 0 ? (
@@ -110,7 +114,7 @@ function ImageGalleryContent() {
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                No images available for this movie.
+                {t.pages.img.noImages}
               </p>
             </div>
           )}
@@ -143,6 +147,7 @@ function ImageGalleryContent() {
 }
 
 function ImageGalleryPage() {
+  const { t } = useI18n();
   return (
     <Suspense
       fallback={
@@ -152,7 +157,9 @@ function ImageGalleryPage() {
             <Container>
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-                <p className="mt-4 text-dark-text-secondary">Loading...</p>
+                <p className="mt-4 text-dark-text-secondary">
+                  {t.common.loading}
+                </p>
               </div>
             </Container>
           </div>

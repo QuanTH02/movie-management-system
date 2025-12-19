@@ -34,9 +34,11 @@ import {
   useGetMovieCompanies,
   useGetRecommendContentBased,
 } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
 import type { Movie } from "@/types/api.types";
 
 function DetailContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [movieName, setMovieName] = useState<string | null>(null);
@@ -126,7 +128,7 @@ function DetailContent() {
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
               <p className="mt-4 text-dark-text-secondary">
-                Loading movie details...
+                {t.detail.loadingDetails}
               </p>
             </div>
           </Container>
@@ -143,18 +145,20 @@ function DetailContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                {!movieName ? "Movie name required" : "Movie not found"}
+                {!movieName
+                  ? t.detail.movieNameRequired
+                  : t.detail.movieNotFound}
               </h2>
               <p className="text-dark-text-secondary mb-4">
                 {!movieName
-                  ? "Please provide a movie name in the URL."
-                  : "Please check the movie name and try again."}
+                  ? t.detail.provideMovieName
+                  : t.detail.checkMovieName}
               </p>
               <Link
                 href="/"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
               >
-                ← Back to Home
+                {t.detail.backToHome}
               </Link>
             </div>
           </Container>
@@ -171,16 +175,18 @@ function DetailContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                Movie not found
+                {t.detail.movieNotFound}
               </h2>
               <p className="text-dark-text-secondary mb-4">
-                The movie "{movieName}" could not be found.
+                {translate(t.detail.movieNotFoundMessage, {
+                  movieName,
+                })}
               </p>
               <Link
                 href="/"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
               >
-                ← Back to Home
+                {t.detail.backToHome}
               </Link>
             </div>
           </Container>
@@ -200,14 +206,14 @@ function DetailContent() {
               href={`/cast-and-crew?movie=${encodeURIComponent(movieName)}`}
               className="text-dark-text hover:text-primary-600 transition-colors duration-hover font-semibold"
             >
-              Cast & Crew
+              {t.detail.castAndCrew}
             </Link>
-            <span className="text-dark-text-secondary">•</span>
+            <span className="text-dark-text">•</span>
             <Link
               href={`/user-review?movie=${encodeURIComponent(movieName)}`}
               className="text-dark-text hover:text-primary-600 transition-colors duration-hover font-semibold"
             >
-              User review
+              {t.detail.userReviews}
             </Link>
           </div>
 
@@ -284,6 +290,7 @@ function DetailContent() {
 }
 
 function DetailPage() {
+  const { t } = useI18n();
   return (
     <Suspense
       fallback={
@@ -293,7 +300,9 @@ function DetailPage() {
             <Container>
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-                <p className="mt-4 text-dark-text-secondary">Loading...</p>
+                <p className="mt-4 text-dark-text-secondary">
+                  {t.common.loading}
+                </p>
               </div>
             </Container>
           </div>

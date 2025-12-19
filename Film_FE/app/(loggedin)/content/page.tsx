@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import MovieCard from "@/app/components/common/MovieCard";
 import { useGetAllMovies, useAddToList } from "@/app/lib/api/hooks";
+import { useI18n } from "@/app/lib/i18n";
+import { useToast } from "@/app/components/common/Toast";
+import type { Movie } from "@/types/api.types";
 
 function ContentPage() {
+  const { t } = useI18n();
+  const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const { data: movies, isLoading } = useGetAllMovies();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
-      if (typeof window !== "undefined") {
-        alert("Movie has been added to your list!");
-      }
+      toast.success(t.home.movieAddedToList);
     },
     onError: () => {
-      if (typeof window !== "undefined") {
-        alert("Failed to add to list!");
-      }
+      toast.error(t.home.failedToAddToList);
     },
   });
 
@@ -28,13 +29,16 @@ function ContentPage() {
     }
   }, []);
 
-  const handleAddToList = (movieName: string) => {
-    if (!currentAccount) {
-      alert("Please login to add movies to your list");
-      return;
-    }
-    addToListTrigger({ userName: currentAccount, movieName });
-  };
+  const handleAddToList = useCallback(
+    (movieName: string) => {
+      if (!currentAccount) {
+        toast.warning(t.home.pleaseLoginToAdd);
+        return;
+      }
+      addToListTrigger({ userName: currentAccount, movieName });
+    },
+    [currentAccount, addToListTrigger, toast, t],
+  );
 
   if (isLoading) {
     return (
@@ -45,7 +49,7 @@ function ContentPage() {
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
               <p className="mt-4 text-dark-text-secondary">
-                Loading content...
+                {t.pages.content.loadingContent}
               </p>
             </div>
           </Container>
@@ -60,7 +64,7 @@ function ContentPage() {
       <div className="bg-dark-bg pt-20 pb-16">
         <Container>
           <h1 className="text-3xl font-bold text-dark-text mb-8">
-            All Content
+            {t.pages.content.allContent}
           </h1>
 
           {movies && movies.length > 0 ? (
@@ -76,7 +80,7 @@ function ContentPage() {
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                No content available.
+                {t.pages.content.noContentAvailable}
               </p>
             </div>
           )}

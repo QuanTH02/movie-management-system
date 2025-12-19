@@ -11,15 +11,19 @@ import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import { useLogin } from "@/app/lib/api/hooks";
 import { useToast } from "@/app/components/common/Toast";
+import { useI18n } from "@/app/lib/i18n";
 import {
-  loginSchema,
+  createLoginSchema,
   type LoginFormData,
 } from "@/app/lib/validations/auth.schema";
 
 function LoginPage() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
+
+  const loginSchema = createLoginSchema(t);
 
   const {
     register,
@@ -39,15 +43,12 @@ function LoginPage() {
         if (typeof window !== "undefined" && username) {
           localStorage.setItem("currentAccount", username);
         }
-        toast.success("Login successful! Welcome back.");
+        toast.success(t.login.loginSuccessful);
         router.push("/");
       }
     },
     onError: (error) => {
-      toast.error(
-        error?.message ||
-          "Login failed. Please check your credentials and try again.",
-      );
+      toast.error(error?.message || t.login.loginFailed);
     },
   });
 
@@ -63,11 +64,9 @@ function LoginPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-dark-text mb-2">
-              Welcome Back
+              {t.login.welcomeBack}
             </h1>
-            <p className="text-dark-text-secondary">
-              Sign in to continue to your account
-            </p>
+            <p className="text-dark-text">{t.login.signInToContinue}</p>
           </div>
 
           {/* Login Card */}
@@ -75,9 +74,9 @@ function LoginPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
                 <Input
-                  label="Account"
+                  label={t.login.account}
                   type="text"
-                  placeholder="Enter your account"
+                  placeholder={t.login.enterAccount}
                   {...register("username")}
                   error={errors.username?.message}
                   className="w-full"
@@ -86,9 +85,9 @@ function LoginPage() {
 
               <div>
                 <Input
-                  label="Password"
+                  label={t.login.password}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t.login.enterPassword}
                   {...register("password")}
                   error={errors.password?.message}
                   rightIcon={
@@ -97,7 +96,9 @@ function LoginPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
                       aria-label={
-                        showPassword ? "Hide password" : "Show password"
+                        showPassword
+                          ? t.login.hidePassword
+                          : t.login.showPassword
                       }
                     >
                       <i
@@ -119,14 +120,14 @@ function LoginPage() {
                     className="w-4 h-4 rounded border-dark-border bg-dark-surface text-primary-600 focus:ring-primary-500 focus:ring-2"
                   />
                   <span className="text-sm text-dark-text-secondary">
-                    Remember me
+                    {t.login.rememberMe}
                   </span>
                 </label>
                 <a
                   href="#"
                   className="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-hover"
                 >
-                  Forgot password?
+                  {t.login.forgotPassword}
                 </a>
               </div>
 
@@ -138,7 +139,7 @@ function LoginPage() {
                 loading={isSubmitting}
                 className="mt-6"
               >
-                {isSubmitting ? "Signing in..." : "Sign In"}
+                {isSubmitting ? t.login.signingIn : t.login.signIn}
               </Button>
             </form>
 
@@ -149,7 +150,7 @@ function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-4 bg-dark-card text-dark-text-secondary">
-                  New to HYFMovie?
+                  {t.login.newToHyfmovie}
                 </span>
               </div>
             </div>
@@ -157,12 +158,12 @@ function LoginPage() {
             {/* Sign Up Link */}
             <div className="text-center">
               <p className="text-sm text-dark-text-secondary">
-                Don&apos;t have an account?{" "}
+                {t.login.dontHaveAccount}{" "}
                 <Link
                   href="/register"
                   className="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-hover"
                 >
-                  Sign up now
+                  {t.login.signUpNow}
                 </Link>
               </p>
             </div>
@@ -170,20 +171,20 @@ function LoginPage() {
 
           {/* Additional Info */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-dark-text-muted">
-              By signing in, you agree to our{" "}
+            <p className="text-xs text-dark-text-secondary">
+              {t.login.agreeToTerms}{" "}
               <a
                 href="#"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
               >
-                Terms of Service
+                {t.login.termsOfService}
               </a>{" "}
-              and{" "}
+              {t.login.and}{" "}
               <a
                 href="#"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
               >
-                Privacy Policy
+                {t.login.privacyPolicy}
               </a>
             </p>
           </div>

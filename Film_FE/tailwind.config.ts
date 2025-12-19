@@ -42,8 +42,8 @@ const config: Config = {
           border: '#2a2a2a', // Border color
           'border-light': '#3a3a3a', // Light border
           text: '#ffffff', // Primary text
-          'text-secondary': '#b3b3b3', // Secondary text
-          'text-muted': '#808080', // Muted text
+          'text-secondary': '#d1d5db', // Secondary text (lighter for better contrast)
+          'text-muted': '#a3a3a3', // Muted text (lighter for better contrast)
         },
         // Semantic Colors
         success: {

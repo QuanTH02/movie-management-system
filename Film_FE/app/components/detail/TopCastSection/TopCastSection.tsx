@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/app/lib/i18n";
 import SectionTitle from "../SectionTitle";
 
 interface Cast {
@@ -14,13 +15,14 @@ interface TopCastSectionProps {
 }
 
 function TopCastSection({ cast }: TopCastSectionProps) {
+  const { t } = useI18n();
   if (!cast || cast.length === 0) return null;
 
   const topCast = cast.slice(0, 10);
 
   return (
     <div className="mb-8">
-      <SectionTitle>Top cast</SectionTitle>
+      <SectionTitle>{t.detail.topCast}</SectionTitle>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {topCast.map((actor, index) => (
           <div
@@ -32,7 +34,7 @@ function TopCastSection({ cast }: TopCastSectionProps) {
                 {actor.name}
               </h5>
               <p className="text-dark-text-secondary text-sm">
-                {String(actor.character_name || actor.role || "Actor")}
+                {String(actor.character_name || actor.role || t.detail.actor)}
               </p>
             </div>
           </div>

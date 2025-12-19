@@ -99,7 +99,7 @@ function Toast({ toast, onRemove }: ToastProps) {
       <button
         onClick={() => onRemove(toast.id)}
         className={clsx(
-          "flex-shrink-0 text-dark-text-muted hover:text-dark-text",
+          "flex-shrink-0 text-dark-text-secondary hover:text-dark-text",
           "transition-colors duration-hover",
         )}
         aria-label="Close"

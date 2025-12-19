@@ -6,9 +6,13 @@ import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import MovieCard from "@/app/components/common/MovieCard";
 import { useGetAllMovies, useAddToList } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
+import { useToast } from "@/app/components/common/Toast";
 import type { Movie } from "@/types/api.types";
 
 function SearchContent() {
+  const { t } = useI18n();
+  const toast = useToast();
   const searchParams = useSearchParams();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -16,14 +20,10 @@ function SearchContent() {
   const { data: movies, isLoading } = useGetAllMovies();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
-      if (typeof window !== "undefined") {
-        alert("Movie has been added to your list!");
-      }
+      toast.success(t.home.movieAddedToList);
     },
     onError: () => {
-      if (typeof window !== "undefined") {
-        alert("Failed to add to list!");
-      }
+      toast.error(t.home.failedToAddToList);
     },
   });
 
@@ -39,7 +39,7 @@ function SearchContent() {
 
   const handleAddToList = (movieName: string) => {
     if (!currentAccount) {
-      alert("Please login to add movies to your list");
+      toast.warning(t.home.pleaseLoginToAdd);
       return;
     }
     addToListTrigger({ userName: currentAccount, movieName });
@@ -81,7 +81,9 @@ function SearchContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-              <p className="mt-4 text-dark-text-secondary">Loading...</p>
+              <p className="mt-4 text-dark-text-secondary">
+                {t.search.loading}
+              </p>
             </div>
           </Container>
         </div>
@@ -95,13 +97,17 @@ function SearchContent() {
       <div className="bg-dark-bg pt-20 pb-16">
         <Container>
           <h1 className="text-3xl font-bold text-dark-text mb-6">
-            {query ? `Search Results for "${query}"` : "Search Movies"}
+            {query
+              ? translate(t.search.searchResults, { query })
+              : t.search.searchMovies}
           </h1>
 
           {query && (
             <p className="text-dark-text-secondary mb-8">
-              Found {filteredMovies.length} result
-              {filteredMovies.length !== 1 ? "s" : ""}
+              {translate(t.search.foundResults, {
+                count: filteredMovies.length,
+                plural: filteredMovies.length !== 1 ? "s" : "",
+              })}
             </p>
           )}
 
@@ -118,13 +124,13 @@ function SearchContent() {
           ) : query ? (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                No movies found matching your search.
+                {t.search.noMoviesFound}
               </p>
             </div>
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                Enter a search query to find movies.
+                {t.search.enterSearchQuery}
               </p>
             </div>
           )}

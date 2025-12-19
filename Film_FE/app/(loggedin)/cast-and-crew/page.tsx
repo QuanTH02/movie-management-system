@@ -11,8 +11,10 @@ import {
   useGetMovieDirectors,
   useGetMovieWriters,
 } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
 
 function CastAndCrewContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [movieName, setMovieName] = useState<string | null>(null);
   const [directorName, setDirectorName] = useState<string | null>(null);
@@ -44,16 +46,16 @@ function CastAndCrewContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                Movie or Director required
+                {t.pages.castAndCrew.movieOrDirectorRequired}
               </h2>
               <p className="text-dark-text-secondary mb-4">
-                Please provide a movie name or director name in the URL.
+                {t.pages.castAndCrew.provideMovieOrDirector}
               </p>
               <Link
                 href="/"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
               >
-                ← Back to Home
+                {t.detail.backToHome}
               </Link>
             </div>
           </Container>
@@ -61,6 +63,10 @@ function CastAndCrewContent() {
       </>
     );
   }
+
+  const hasDirectors = directors && directors.length > 0;
+  const hasWriters = writers && writers.length > 0;
+  const hasCast = cast && cast.length > 0;
 
   return (
     <>
@@ -76,21 +82,21 @@ function CastAndCrewContent() {
               }
               className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
             >
-              ← Back
+              {t.pages.castAndCrew.back}
             </Link>
           </div>
 
           <h1 className="text-3xl font-bold text-dark-text mb-8">
             {movieName
-              ? `Cast & Crew: ${movieName}`
-              : `Director: ${directorName}`}
+              ? translate(t.pages.castAndCrew.castAndCrew, { movieName })
+              : translate(t.pages.castAndCrew.director, { directorName })}
           </h1>
 
           {/* Directors */}
-          {directors && directors.length > 0 && (
-            <div className="mb-12">
+          {hasDirectors && (
+            <div className={hasWriters || hasCast ? "mb-12" : "mb-0"}>
               <h2 className="text-2xl font-bold text-dark-text mb-6">
-                Directors
+                {t.pages.castAndCrew.directors}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {directors.map((director, index) => (
@@ -105,10 +111,10 @@ function CastAndCrewContent() {
           )}
 
           {/* Writers */}
-          {writers && writers.length > 0 && (
-            <div className="mb-12">
+          {hasWriters && (
+            <div className={hasCast ? "mb-12" : "mb-0"}>
               <h2 className="text-2xl font-bold text-dark-text mb-6">
-                Writers
+                {t.pages.castAndCrew.writers}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {writers.map((writer, index) => (
@@ -123,9 +129,11 @@ function CastAndCrewContent() {
           )}
 
           {/* Cast */}
-          {cast && cast.length > 0 && (
+          {hasCast && (
             <div className="mb-0">
-              <h2 className="text-2xl font-bold text-dark-text mb-6">Cast</h2>
+              <h2 className="text-2xl font-bold text-dark-text mb-6">
+                {t.pages.castAndCrew.cast}
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {cast.map((actor, index) => (
                   <Card key={actor.cast_id || index} className="p-4">
@@ -148,15 +156,13 @@ function CastAndCrewContent() {
             </div>
           )}
 
-          {(!cast || cast.length === 0) &&
-            (!directors || directors.length === 0) &&
-            (!writers || writers.length === 0) && (
-              <div className="text-center py-20">
-                <p className="text-dark-text-secondary">
-                  No cast and crew information available.
-                </p>
-              </div>
-            )}
+          {!hasCast && !hasDirectors && !hasWriters && (
+            <div className="text-center py-20">
+              <p className="text-dark-text-secondary">
+                {t.pages.castAndCrew.noInfoAvailable}
+              </p>
+            </div>
+          )}
         </Container>
       </div>
     </>
@@ -164,6 +170,7 @@ function CastAndCrewContent() {
 }
 
 function CastAndCrewPage() {
+  const { t } = useI18n();
   return (
     <Suspense
       fallback={
@@ -173,7 +180,9 @@ function CastAndCrewPage() {
             <Container>
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-                <p className="mt-4 text-dark-text-secondary">Loading...</p>
+                <p className="mt-4 text-dark-text-secondary">
+                  {t.common.loading}
+                </p>
               </div>
             </Container>
           </div>

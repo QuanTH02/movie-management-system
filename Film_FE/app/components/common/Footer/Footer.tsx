@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 
 function Footer() {
+  const { t } = useI18n();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -52,8 +54,7 @@ function Footer() {
                 <span className="text-accent-orange">e</span>
               </Link>
               <p className="text-dark-text-secondary text-sm leading-relaxed">
-                Your ultimate destination for discovering, exploring, and
-                enjoying the best movies. Find your next favorite film today.
+                {t.footer.description}
               </p>
               {/* Social Media Links */}
               <div className="flex items-center space-x-4 pt-2">
@@ -99,7 +100,7 @@ function Footer() {
             {/* Quick Links */}
             <div>
               <h3 className="text-dark-text font-semibold text-lg mb-4">
-                Quick Links
+                {t.footer.quickLinks}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -108,7 +109,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-home text-xs mr-2 group-hover:translate-x-1 transition-transform duration-hover" />
-                    Home
+                    {t.footer.home}
                   </Link>
                 </li>
                 <li>
@@ -117,7 +118,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-film text-xs mr-2 group-hover:translate-x-1 transition-transform duration-hover" />
-                    Browse Movies
+                    {t.footer.browseMovies}
                   </Link>
                 </li>
                 <li>
@@ -126,7 +127,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-search text-xs mr-2 group-hover:translate-x-1 transition-transform duration-hover" />
-                    Search
+                    {t.footer.search}
                   </Link>
                 </li>
                 <li>
@@ -135,7 +136,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-user text-xs mr-2 group-hover:translate-x-1 transition-transform duration-hover" />
-                    My Profile
+                    {t.footer.myProfile}
                   </Link>
                 </li>
               </ul>
@@ -144,7 +145,7 @@ function Footer() {
             {/* Categories */}
             <div>
               <h3 className="text-dark-text font-semibold text-lg mb-4">
-                Categories
+                {t.footer.categories}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -153,7 +154,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-fire text-xs mr-2 group-hover:scale-110 transition-transform duration-hover" />
-                    Action
+                    {t.footer.action}
                   </Link>
                 </li>
                 <li>
@@ -162,7 +163,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-theater-masks text-xs mr-2 group-hover:scale-110 transition-transform duration-hover" />
-                    Drama
+                    {t.footer.drama}
                   </Link>
                 </li>
                 <li>
@@ -171,7 +172,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-laugh text-xs mr-2 group-hover:scale-110 transition-transform duration-hover" />
-                    Comedy
+                    {t.footer.comedy}
                   </Link>
                 </li>
                 <li>
@@ -180,7 +181,7 @@ function Footer() {
                     className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm flex items-center group"
                   >
                     <i className="fas fa-exclamation-triangle text-xs mr-2 group-hover:scale-110 transition-transform duration-hover" />
-                    Thriller
+                    {t.footer.thriller}
                   </Link>
                 </li>
               </ul>
@@ -189,7 +190,7 @@ function Footer() {
             {/* Contact Info */}
             <div>
               <h3 className="text-dark-text font-semibold text-lg mb-4">
-                Contact Us
+                {t.footer.contactUs}
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start text-dark-text-secondary text-sm">
@@ -225,27 +226,28 @@ function Footer() {
           {/* Bottom Bar */}
           <div className="border-t border-dark-border pt-8">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-              <p className="text-dark-text-muted text-sm text-center md:text-left">
-                © {new Date().getFullYear()} HYF Movie. All rights reserved.
+              <p className="text-dark-text-secondary text-sm text-center md:text-left">
+                © {new Date().getFullYear()} HYF Movie.{" "}
+                {t.footer.allRightsReserved}
               </p>
               <div className="flex items-center space-x-6">
                 <Link
                   href="/privacy"
-                  className="text-dark-text-muted hover:text-primary-600 transition-colors duration-hover text-sm"
+                  className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm"
                 >
-                  Privacy Policy
+                  {t.footer.privacyPolicy}
                 </Link>
                 <Link
                   href="/terms"
-                  className="text-dark-text-muted hover:text-primary-600 transition-colors duration-hover text-sm"
+                  className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm"
                 >
-                  Terms of Service
+                  {t.footer.termsOfService}
                 </Link>
                 <Link
                   href="/about"
-                  className="text-dark-text-muted hover:text-primary-600 transition-colors duration-hover text-sm"
+                  className="text-dark-text-secondary hover:text-primary-600 transition-colors duration-hover text-sm"
                 >
-                  About Us
+                  {t.footer.aboutUs}
                 </Link>
               </div>
             </div>

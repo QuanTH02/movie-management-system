@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Button from "../Button";
 import Input from "../Input";
+import { useI18n } from "@/app/lib/i18n";
 
 interface NavbarProps {
   currentAccount?: string | null;
@@ -13,9 +14,11 @@ interface NavbarProps {
 
 function Navbar({ currentAccount }: NavbarProps) {
   const router = useRouter();
+  const { t, language, setLanguage } = useI18n();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilter, setSearchFilter] = useState("0");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
@@ -32,6 +35,11 @@ function Navbar({ currentAccount }: NavbarProps) {
         `/search?q=${encodeURIComponent(searchQuery)}&filter=${searchFilter}`,
       );
     }
+  };
+
+  const handleLanguageChange = (lang: "en" | "ja") => {
+    setLanguage(lang);
+    setShowLanguageDropdown(false);
   };
 
   return (
@@ -63,28 +71,93 @@ function Navbar({ currentAccount }: NavbarProps) {
               onChange={(e) => setSearchFilter(e.target.value)}
               className="px-3 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value="0">All</option>
-              <option value="1">Movie Name</option>
-              <option value="2">Year</option>
-              <option value="3">Rating</option>
+              <option value="0">{t.navbar.searchFilter.all}</option>
+              <option value="1">{t.navbar.searchFilter.movieName}</option>
+              <option value="2">{t.navbar.searchFilter.year}</option>
+              <option value="3">{t.navbar.searchFilter.rating}</option>
             </select>
             <input
               type="search"
-              placeholder="Search movies..."
+              placeholder={t.navbar.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 px-4 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <Button type="submit" variant="primary" size="md">
-              Search
+              {t.navbar.search}
             </Button>
           </form>
 
           {/* Right Menu */}
           <div className="flex items-center gap-4">
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+                className="flex items-center gap-2 px-3 py-2 rounded-input bg-dark-card hover:bg-dark-card-hover text-dark-text transition-colors duration-hover"
+                aria-label="Select language"
+                aria-expanded={showLanguageDropdown}
+                aria-haspopup="true"
+              >
+                <i className="fas fa-globe text-sm" />
+                <span className="hidden sm:inline text-sm font-medium">
+                  {language.toUpperCase()}
+                </span>
+                <i
+                  className={clsx(
+                    "fas fa-chevron-down text-xs transition-transform duration-hover",
+                    {
+                      "rotate-180": showLanguageDropdown,
+                    },
+                  )}
+                />
+              </button>
+
+              {showLanguageDropdown && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowLanguageDropdown(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-32 bg-dark-card border border-dark-border rounded-card shadow-card z-20">
+                    <button
+                      onClick={() => handleLanguageChange("en")}
+                      className={clsx(
+                        "w-full text-left px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card flex items-center gap-2",
+                        {
+                          "bg-primary-600/20": language === "en",
+                        },
+                      )}
+                    >
+                      <span className="text-sm">🇺🇸</span>
+                      <span className="text-sm">{t.common.english}</span>
+                      {language === "en" && (
+                        <i className="fas fa-check text-primary-600 ml-auto" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleLanguageChange("ja")}
+                      className={clsx(
+                        "w-full text-left px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card flex items-center gap-2",
+                        {
+                          "bg-primary-600/20": language === "ja",
+                        },
+                      )}
+                    >
+                      <span className="text-sm">🇯🇵</span>
+                      <span className="text-sm">{t.common.japanese}</span>
+                      {language === "ja" && (
+                        <i className="fas fa-check text-primary-600 ml-auto" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             <button
               className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
-              aria-label="Toggle theme"
+              aria-label={t.navbar.toggleTheme}
             >
               <i className="fas fa-moon text-lg" />
             </button>
@@ -98,7 +171,7 @@ function Navbar({ currentAccount }: NavbarProps) {
                   aria-haspopup="true"
                 >
                   <i className="fas fa-cog" />
-                  <span className="hidden sm:inline">Settings</span>
+                  <span className="hidden sm:inline">{t.navbar.settings}</span>
                   <i
                     className={clsx(
                       "fas fa-chevron-down text-xs transition-transform duration-hover",
@@ -121,13 +194,13 @@ function Navbar({ currentAccount }: NavbarProps) {
                         className="block px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card"
                         onClick={() => setShowDropdown(false)}
                       >
-                        Profile
+                        {t.navbar.profile}
                       </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card"
                       >
-                        Log out
+                        {t.navbar.logout}
                       </button>
                     </div>
                   </>
@@ -136,7 +209,7 @@ function Navbar({ currentAccount }: NavbarProps) {
             ) : (
               <Link href="/login">
                 <Button variant="outline" size="md">
-                  Login
+                  {t.navbar.login}
                 </Button>
               </Link>
             )}

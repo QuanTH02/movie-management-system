@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useI18n, translate } from "@/app/lib/i18n";
 import Card from "../Card";
 import type { Movie } from "@/types/api.types";
 
@@ -10,6 +11,7 @@ interface BannerCarouselProps {
 }
 
 function BannerCarousel({ movies }: BannerCarouselProps) {
+  const { t } = useI18n();
   const [currentIndex, setCurrentIndex] = useState(0);
   const bannerMovies = movies.slice(0, 3);
 
@@ -65,14 +67,14 @@ function BannerCarousel({ movies }: BannerCarouselProps) {
             <button
               onClick={handlePrev}
               className="absolute left-4 top-1/2 -translate-y-1/2 bg-dark-bg/80 hover:bg-dark-bg backdrop-blur-sm text-white p-3 rounded-full transition-all duration-hover z-10"
-              aria-label="Previous"
+              aria-label={t.common.previous}
             >
               <i className="fas fa-chevron-left" />
             </button>
             <button
               onClick={handleNext}
               className="absolute right-4 top-1/2 -translate-y-1/2 bg-dark-bg/80 hover:bg-dark-bg backdrop-blur-sm text-white p-3 rounded-full transition-all duration-hover z-10"
-              aria-label="Next"
+              aria-label={t.common.next}
             >
               <i className="fas fa-chevron-right" />
             </button>
@@ -91,7 +93,9 @@ function BannerCarousel({ movies }: BannerCarouselProps) {
                     ? "w-8 bg-primary-600"
                     : "w-2 bg-white/50 hover:bg-white/75"
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={translate(t.common.goToSlide, {
+                  number: String(index + 1),
+                })}
               />
             ))}
           </div>
@@ -102,7 +106,7 @@ function BannerCarousel({ movies }: BannerCarouselProps) {
       <div className="lg:col-span-1">
         <Card className="h-full p-6">
           <h3 className="text-xl font-bold text-dark-text mb-4">
-            Next Trailers
+            {t.detail.nextTrailers}
           </h3>
           <div className="space-y-4">
             {bannerMovies.map((movie, index) => {
@@ -151,7 +155,7 @@ function BannerCarousel({ movies }: BannerCarouselProps) {
             href="/browse"
             className="block mt-4 text-right text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
           >
-            Browse All →
+            {t.detail.browseAll} →
           </Link>
         </Card>
       </div>

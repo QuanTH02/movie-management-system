@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 import SectionTitle from "../SectionTitle";
 
 interface Genre {
@@ -24,9 +25,10 @@ function StorylineSection({
   taglines,
   genres,
 }: StorylineSectionProps) {
+  const { t } = useI18n();
   return (
     <div className="mb-8">
-      <SectionTitle>Storyline</SectionTitle>
+      <SectionTitle>{t.detail.storyline}</SectionTitle>
       <div className="space-y-4">
         {storyline && (
           <p className="text-dark-text-secondary text-base leading-relaxed">
@@ -36,7 +38,9 @@ function StorylineSection({
 
         {taglines && taglines.length > 0 && (
           <div>
-            <p className="text-dark-text font-semibold mb-2">Taglines</p>
+            <p className="text-dark-text font-semibold mb-2">
+              {t.detail.taglines}
+            </p>
             <p className="text-dark-text-secondary">
               {String(
                 taglines[0].taglines_content || taglines[0].tagline || "",
@@ -47,7 +51,9 @@ function StorylineSection({
 
         {genres && genres.length > 0 && (
           <div>
-            <p className="text-dark-text font-semibold mb-2">Genres</p>
+            <p className="text-dark-text font-semibold mb-2">
+              {t.detail.genres}
+            </p>
             <div className="flex flex-wrap gap-2">
               {genres.map((genre, index) => (
                 <Link

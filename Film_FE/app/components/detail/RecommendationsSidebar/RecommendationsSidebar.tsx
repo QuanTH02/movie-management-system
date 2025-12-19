@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 import Card from "@/app/components/common/Card";
 import type { Movie } from "@/types/api.types";
 
@@ -11,13 +12,14 @@ interface RecommendationsSidebarProps {
 function RecommendationsSidebar({
   recommendations,
 }: RecommendationsSidebarProps) {
+  const { t } = useI18n();
   if (!recommendations || recommendations.length === 0) {
     return (
       <div className="bg-dark-card rounded-card p-6">
         <h2 className="text-xl font-bold text-dark-text mb-4">
-          | Maybe you like
+          | {t.detail.maybeYouLike}
         </h2>
-        <p className="text-dark-text-secondary">No recommendations available</p>
+        <p className="text-dark-text-secondary">{t.detail.noRecommendations}</p>
       </div>
     );
   }
@@ -25,7 +27,7 @@ function RecommendationsSidebar({
   return (
     <div className="bg-dark-card rounded-card p-6">
       <h2 className="text-xl font-bold text-dark-text mb-4">
-        | Maybe you like
+        | {t.detail.maybeYouLike}
       </h2>
       <div className="space-y-4">
         {recommendations.slice(0, 5).map((recMovie, idx) => {

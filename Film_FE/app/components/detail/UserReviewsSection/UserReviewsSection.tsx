@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 import SectionTitle from "../SectionTitle";
 import Card from "@/app/components/common/Card";
 import Button from "@/app/components/common/Button";
@@ -20,6 +21,7 @@ interface UserReviewsSectionProps {
 }
 
 function UserReviewsSection({ reviews, movieName }: UserReviewsSectionProps) {
+  const { t } = useI18n();
   if (!reviews || reviews.length === 0) return null;
 
   const topReviews = reviews.slice(0, 3);
@@ -27,13 +29,13 @@ function UserReviewsSection({ reviews, movieName }: UserReviewsSectionProps) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <SectionTitle>User reviews</SectionTitle>
+        <SectionTitle>{t.detail.userReviews}</SectionTitle>
         <Link
           href={`/user-review?movie=${encodeURIComponent(movieName || "")}`}
         >
           <Button variant="outline" size="sm">
             <i className="fa-solid fa-plus mr-2" />
-            Add Review
+            {t.detail.addReview}
           </Button>
         </Link>
       </div>
@@ -48,7 +50,7 @@ function UserReviewsSection({ reviews, movieName }: UserReviewsSectionProps) {
               <div className="flex items-center gap-1">
                 <i className="fas fa-star text-rating-DEFAULT text-sm" />
                 <span className="text-dark-text font-semibold">
-                  {review.star_review}/10
+                  {review.star_review}
                 </span>
               </div>
             </div>

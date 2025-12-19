@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/app/lib/i18n";
+
 interface Country {
   countryorigin_id?: number;
   country_origin_name?: string;
@@ -37,13 +39,14 @@ function DetailsSection({
   locations,
   companies,
 }: DetailsSectionProps) {
+  const { t } = useI18n();
   return (
     <div className="mb-8">
       <div className="space-y-4">
         {releaseDate && releaseDate.trim() && (
           <div>
             <span className="text-dark-text font-semibold mr-2">
-              Release date:
+              {t.detail.releaseDate}
             </span>
             <span className="text-dark-text-secondary">{releaseDate}</span>
           </div>
@@ -52,7 +55,7 @@ function DetailsSection({
         {countries && countries.length > 0 && (
           <div>
             <span className="text-dark-text font-semibold mr-2">
-              Countries of origin:
+              {t.detail.countriesOfOrigin}
             </span>
             {countries.map((country, index) => (
               <span key={country.countryorigin_id || index}>
@@ -65,7 +68,7 @@ function DetailsSection({
                   )}
                 </a>
                 {index < countries.length - 1 && (
-                  <span className="mx-2 text-dark-text-secondary">•</span>
+                  <span className="mx-2 text-dark-text">•</span>
                 )}
               </span>
             ))}
@@ -74,14 +77,16 @@ function DetailsSection({
 
         {languages && languages.length > 0 && (
           <div>
-            <span className="text-dark-text font-semibold mr-2">Language:</span>
+            <span className="text-dark-text font-semibold mr-2">
+              {t.detail.language}
+            </span>
             {languages.map((lang, index) => (
               <span key={lang.language_id || index}>
                 <span className="text-dark-text-secondary">
                   {lang.language_name}
                 </span>
                 {index < languages.length - 1 && (
-                  <span className="mx-2 text-dark-text-secondary">•</span>
+                  <span className="mx-2 text-dark-text">•</span>
                 )}
               </span>
             ))}
@@ -91,7 +96,7 @@ function DetailsSection({
         {locations && locations.length > 0 && (
           <div>
             <span className="text-dark-text font-semibold mr-2">
-              Filming locations:
+              {t.detail.filmingLocations}
             </span>
             <span className="text-dark-text-secondary">
               {locations
@@ -106,7 +111,7 @@ function DetailsSection({
         {companies && companies.length > 0 && (
           <div>
             <span className="text-dark-text font-semibold mr-2">
-              Production companies:
+              {t.detail.productionCompanies}
             </span>
             {companies.map((company, index) => (
               <span key={company.productioncompanies_id || index}>
@@ -121,7 +126,7 @@ function DetailsSection({
                   )}
                 </a>
                 {index < companies.length - 1 && (
-                  <span className="mx-2 text-dark-text-secondary">•</span>
+                  <span className="mx-2 text-dark-text">•</span>
                 )}
               </span>
             ))}

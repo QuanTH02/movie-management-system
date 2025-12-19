@@ -50,7 +50,7 @@ function Input({
       </div>
       {error && <p className="mt-1 text-sm text-error-DEFAULT">{error}</p>}
       {helperText && !error && (
-        <p className="mt-1 text-sm text-dark-text-muted">{helperText}</p>
+        <p className="mt-1 text-sm text-dark-text-secondary">{helperText}</p>
       )}
     </div>
   );

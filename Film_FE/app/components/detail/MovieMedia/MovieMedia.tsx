@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 import type { Movie } from "@/types/api.types";
 
 interface MovieMediaProps {
@@ -10,6 +11,7 @@ interface MovieMediaProps {
 }
 
 function MovieMedia({ movie, mainTrailer, movieName }: MovieMediaProps) {
+  const { t } = useI18n();
   return (
     <div className="grid grid-cols-12 gap-4 mb-6">
       {/* Movie Poster */}
@@ -57,7 +59,7 @@ function MovieMedia({ movie, mainTrailer, movieName }: MovieMediaProps) {
         {mainTrailer && (
           <video controls className="w-full h-auto rounded-card">
             <source src={mainTrailer} type="video/mp4" />
-            Your browser does not support the video tag.
+            {t.detail.videoNotSupported}
           </video>
         )}
       </div>
@@ -66,14 +68,14 @@ function MovieMedia({ movie, mainTrailer, movieName }: MovieMediaProps) {
       <div className="col-span-12 md:col-span-2 flex flex-col gap-2">
         <button className="flex flex-col items-center justify-center p-4 rounded-card bg-gradient-to-br from-white/10 to-dark-border hover:opacity-90 transition-opacity duration-hover">
           <i className="fa-solid fa-play text-2xl text-dark-text-secondary mb-2" />
-          <span className="text-dark-text-secondary">Video</span>
+          <span className="text-dark-text-secondary">{t.detail.video}</span>
         </button>
         <Link
           href={`/img?movie=${encodeURIComponent(movieName || "")}`}
           className="flex flex-col items-center justify-center p-4 rounded-card bg-gradient-to-br from-white/10 to-dark-border hover:opacity-90 transition-opacity duration-hover"
         >
           <i className="fa-solid fa-image text-2xl text-dark-text-secondary mb-2" />
-          <span className="text-dark-text-secondary">Image</span>
+          <span className="text-dark-text-secondary">{t.detail.image}</span>
         </Link>
       </div>
     </div>

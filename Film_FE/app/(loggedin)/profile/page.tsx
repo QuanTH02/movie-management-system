@@ -14,10 +14,14 @@ import {
   useGetLikedMovies,
   useDeleteLikedMovie,
 } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
+import { useToast } from "@/app/components/common/Toast";
 import type { Movie } from "@/types/api.types";
 
 function ProfilePage() {
   const router = useRouter();
+  const { t } = useI18n();
+  const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -42,14 +46,10 @@ function ProfilePage() {
       onSuccess: () => {
         refetchLiked();
         setShowDeleteConfirm(null);
-        if (typeof window !== "undefined") {
-          alert("Movie removed from favorites!");
-        }
+        toast.success("Movie removed from favorites!");
       },
       onError: () => {
-        if (typeof window !== "undefined") {
-          alert("Failed to remove movie!");
-        }
+        toast.error("Failed to remove movie!");
       },
     });
 
@@ -86,7 +86,7 @@ function ProfilePage() {
     setTimeout(() => {
       setIsLoading(false);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     }, 1000);
   };
 
@@ -107,7 +107,7 @@ function ProfilePage() {
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
               <p className="mt-4 text-dark-text-secondary">
-                Loading profile...
+                {t.profile.loadingProfile}
               </p>
             </div>
           </Container>
@@ -122,7 +122,9 @@ function ProfilePage() {
       <div className="bg-dark-bg pt-20 pb-16">
         <Container>
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold text-dark-text mb-8">Profile</h1>
+            <h1 className="text-3xl font-bold text-dark-text mb-8">
+              {t.profile.profile}
+            </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Profile Information */}
@@ -131,7 +133,7 @@ function ProfilePage() {
                   <div className="space-y-6">
                     <div>
                       <label className="block text-dark-text font-semibold mb-2">
-                        Username
+                        {t.profile.username}
                       </label>
                       <Input
                         type="text"
@@ -143,7 +145,7 @@ function ProfilePage() {
 
                     <div>
                       <label className="block text-dark-text font-semibold mb-2">
-                        First Name
+                        {t.profile.firstName}
                       </label>
                       <Input
                         type="text"
@@ -160,7 +162,7 @@ function ProfilePage() {
 
                     <div>
                       <label className="block text-dark-text font-semibold mb-2">
-                        Last Name
+                        {t.profile.lastName}
                       </label>
                       <Input
                         type="text"
@@ -177,7 +179,7 @@ function ProfilePage() {
 
                     <div>
                       <label className="block text-dark-text font-semibold mb-2">
-                        Email
+                        {t.profile.email}
                       </label>
                       <Input
                         type="email"
@@ -201,7 +203,9 @@ function ProfilePage() {
                             disabled={isLoading}
                             fullWidth
                           >
-                            {isLoading ? "Saving..." : "Save Changes"}
+                            {isLoading
+                              ? t.profile.saving
+                              : t.profile.saveChanges}
                           </Button>
                           <Button
                             variant="outline"
@@ -223,7 +227,7 @@ function ProfilePage() {
                             }}
                             fullWidth
                           >
-                            Cancel
+                            {t.profile.cancel}
                           </Button>
                         </>
                       ) : (
@@ -232,7 +236,7 @@ function ProfilePage() {
                           onClick={() => setIsEditing(true)}
                           fullWidth
                         >
-                          Edit Profile
+                          {t.profile.edit}
                         </Button>
                       )}
                     </div>
@@ -245,7 +249,7 @@ function ProfilePage() {
                 <Card className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-dark-text">
-                      Favorite Movies
+                      {t.profile.favoriteMovies}
                     </h2>
                     {likedMovies && likedMovies.length > 0 && (
                       <span className="text-dark-text-secondary">
@@ -279,7 +283,7 @@ function ProfilePage() {
                                 />
                               ) : (
                                 <div className="absolute inset-0 flex items-center justify-center bg-dark-card">
-                                  <i className="fas fa-image text-4xl text-dark-text-muted" />
+                                  <i className="fas fa-image text-4xl text-dark-text-secondary" />
                                 </div>
                               )}
                               {/* Delete Button */}
@@ -330,12 +334,14 @@ function ProfilePage() {
                     </div>
                   ) : (
                     <div className="text-center py-20">
-                      <i className="fas fa-heart text-6xl text-dark-text-muted mb-4" />
+                      <i className="fas fa-heart text-6xl text-dark-text-secondary mb-4" />
                       <p className="text-dark-text-secondary text-lg mb-4">
-                        No favorite movies yet
+                        {t.profile.noFavoriteMovies}
                       </p>
                       <Link href="/browse">
-                        <Button variant="primary">Browse Movies</Button>
+                        <Button variant="primary">
+                          {t.browse.browseMovies}
+                        </Button>
                       </Link>
                     </div>
                   )}
@@ -351,11 +357,12 @@ function ProfilePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-bg/80 backdrop-blur-sm">
           <Card className="p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold text-dark-text mb-4">
-              Remove from Favorites?
+              {t.profile.removeFromFavorites}
             </h3>
             <p className="text-dark-text-secondary mb-6">
-              Are you sure you want to remove &quot;{showDeleteConfirm}&quot;
-              from your favorite movies?
+              {translate(t.profile.confirmRemove, {
+                movieName: showDeleteConfirm,
+              })}
             </p>
             <div className="flex gap-4">
               <Button
@@ -364,7 +371,7 @@ function ProfilePage() {
                 disabled={isDeleting}
                 fullWidth
               >
-                {isDeleting ? "Removing..." : "Yes, Remove"}
+                {isDeleting ? t.profile.removing : t.profile.yesRemove}
               </Button>
               <Button
                 variant="outline"
@@ -372,7 +379,7 @@ function ProfilePage() {
                 disabled={isDeleting}
                 fullWidth
               >
-                Cancel
+                {t.profile.cancel}
               </Button>
             </div>
           </Card>

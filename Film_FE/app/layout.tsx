@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "@/app/components/common/Footer";
 import { ToastProvider } from "@/app/components/common/Toast";
+import { I18nProvider } from "@/app/lib/i18n";
 
 export const metadata: Metadata = {
   title: "HYF Movie",
@@ -25,10 +26,12 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-dark-bg">
-        <ToastProvider>
-          {children}
-          <Footer />
-        </ToastProvider>
+        <I18nProvider>
+          <ToastProvider>
+            {children}
+            <Footer />
+          </ToastProvider>
+        </I18nProvider>
       </body>
     </html>
   );

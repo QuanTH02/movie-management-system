@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import clsx from "clsx";
+import { useI18n } from "@/app/lib/i18n";
 import Card from "../Card";
 import Button from "../Button";
 import type { Movie } from "@/types/api.types";
@@ -13,6 +13,7 @@ interface MovieCardProps {
 }
 
 function MovieCard({ movie, onAddToList }: MovieCardProps) {
+  const { t } = useI18n();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
   const rating =
     movie.rating && String(movie.rating).includes("/")
       ? String(movie.rating).split("/")[0]
-      : movie.movie_rating || movie.rating || "N/A";
+      : movie.movie_rating || movie.rating || t.detail.notAvailable;
 
   const detailUrl = `/detail?movie=${encodeURIComponent(movie.movie_name)}`;
 
@@ -51,7 +52,7 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-dark-card">
-              <i className="fas fa-image text-4xl text-dark-text-muted" />
+              <i className="fas fa-image text-4xl text-dark-text-secondary" />
             </div>
           )}
           {/* Rating Badge */}
@@ -81,7 +82,7 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
               }}
             >
               <i className="fas fa-plus mr-2" />
-              Add to List
+              {t.detail.addToList}
             </Button>
             <Link href={detailUrl}>
               <Button
@@ -93,7 +94,7 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
                 }}
               >
                 <i className="fa fa-play mr-2" />
-                Watch
+                {t.detail.watch}
               </Button>
             </Link>
           </div>

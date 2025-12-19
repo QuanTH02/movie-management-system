@@ -11,16 +11,20 @@ import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import { useRegister } from "@/app/lib/api/hooks";
 import { useToast } from "@/app/components/common/Toast";
+import { useI18n } from "@/app/lib/i18n";
 import {
-  registerSchema,
+  createRegisterSchema,
   type RegisterFormData,
 } from "@/app/lib/validations/auth.schema";
 
 function RegisterPage() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const registerSchema = createRegisterSchema(t);
 
   const {
     register,
@@ -33,15 +37,13 @@ function RegisterPage() {
 
   const { trigger: registerTrigger } = useRegister({
     onSuccess: (data) => {
-      toast.success(
-        data?.message || "Registration successful! Please sign in to continue.",
-      );
+      toast.success(data?.message || t.register.registrationSuccessful);
       setTimeout(() => {
         router.push("/login");
       }, 1500);
     },
     onError: (error) => {
-      toast.error(error?.message || "Registration failed. Please try again.");
+      toast.error(error?.message || t.register.registrationFailed);
     },
   });
 
@@ -63,11 +65,9 @@ function RegisterPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-dark-text mb-2">
-              Create Your Account
+              {t.register.createAccount}
             </h1>
-            <p className="text-dark-text-secondary">
-              Join HYFMovie and start exploring
-            </p>
+            <p className="text-dark-text">{t.register.joinHyfmovie}</p>
           </div>
 
           {/* Register Card */}
@@ -75,21 +75,21 @@ function RegisterPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
                 <Input
-                  label="Account"
+                  label={t.register.account}
                   type="text"
-                  placeholder="Choose a username"
+                  placeholder={t.register.chooseUsername}
                   {...register("account")}
                   error={errors.account?.message}
-                  helperText="Only letters, numbers, and underscores allowed"
+                  helperText={t.register.accountHelper}
                   className="w-full"
                 />
               </div>
 
               <div>
                 <Input
-                  label="Full Name"
+                  label={t.register.fullName}
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder={t.register.enterFullName}
                   {...register("name")}
                   error={errors.name?.message}
                   className="w-full"
@@ -98,9 +98,9 @@ function RegisterPage() {
 
               <div>
                 <Input
-                  label="Email"
+                  label={t.register.email}
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t.register.enterEmail}
                   {...register("gmail")}
                   error={errors.gmail?.message}
                   className="w-full"
@@ -109,19 +109,21 @@ function RegisterPage() {
 
               <div>
                 <Input
-                  label="Password"
+                  label={t.register.password}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create a password"
+                  placeholder={t.register.createPassword}
                   {...register("password")}
                   error={errors.password?.message}
-                  helperText="Must be at least 6 characters"
+                  helperText={t.register.passwordHelper}
                   rightIcon={
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
                       aria-label={
-                        showPassword ? "Hide password" : "Show password"
+                        showPassword
+                          ? t.register.hidePassword
+                          : t.register.showPassword
                       }
                     >
                       <i
@@ -138,9 +140,9 @@ function RegisterPage() {
 
               <div>
                 <Input
-                  label="Confirm Password"
+                  label={t.register.confirmPassword}
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
+                  placeholder={t.register.confirmPasswordPlaceholder}
                   {...register("confirm_password")}
                   error={errors.confirm_password?.message}
                   rightIcon={
@@ -151,7 +153,9 @@ function RegisterPage() {
                       }
                       className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
                       aria-label={
-                        showConfirmPassword ? "Hide password" : "Show password"
+                        showConfirmPassword
+                          ? t.register.hidePassword
+                          : t.register.showPassword
                       }
                     >
                       <i
@@ -174,7 +178,9 @@ function RegisterPage() {
                 loading={isSubmitting}
                 className="mt-6"
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {isSubmitting
+                  ? t.register.creatingAccount
+                  : t.register.createAccountButton}
               </Button>
             </form>
 
@@ -185,7 +191,7 @@ function RegisterPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-4 bg-dark-card text-dark-text-secondary">
-                  Already have an account?
+                  {t.register.alreadyHaveAccount}
                 </span>
               </div>
             </div>
@@ -193,12 +199,12 @@ function RegisterPage() {
             {/* Sign In Link */}
             <div className="text-center">
               <p className="text-sm text-dark-text-secondary">
-                Already registered?{" "}
+                {t.register.alreadyRegistered}{" "}
                 <Link
                   href="/login"
                   className="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-hover"
                 >
-                  Sign in here
+                  {t.register.signInHere}
                 </Link>
               </p>
             </div>
@@ -206,20 +212,20 @@ function RegisterPage() {
 
           {/* Additional Info */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-dark-text-muted">
-              By creating an account, you agree to our{" "}
+            <p className="text-xs text-dark-text-secondary">
+              {t.register.agreeToTerms}{" "}
               <a
                 href="#"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
               >
-                Terms of Service
+                {t.register.termsOfService}
               </a>{" "}
-              and{" "}
+              {t.register.and}{" "}
               <a
                 href="#"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
               >
-                Privacy Policy
+                {t.register.privacyPolicy}
               </a>
             </p>
           </div>

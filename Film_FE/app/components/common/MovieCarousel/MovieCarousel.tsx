@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import MovieCard from "../MovieCard";
 import SectionTitle from "@/app/components/detail/SectionTitle";
 import type { Movie } from "@/types/api.types";
+import { useI18n, translate } from "@/app/lib/i18n";
 
 interface MovieCarouselProps {
   movies: Movie[];
@@ -12,6 +13,7 @@ interface MovieCarouselProps {
 }
 
 function MovieCarousel({ movies, title, onAddToList }: MovieCarouselProps) {
+  const { t } = useI18n();
   const [currentSlide, setCurrentSlide] = useState(0);
   const itemsPerSlide = 6;
   const totalSlides = Math.ceil(movies.length / itemsPerSlide);
@@ -40,14 +42,14 @@ function MovieCarousel({ movies, title, onAddToList }: MovieCarouselProps) {
             <button
               onClick={handlePrev}
               className="p-2 rounded-card bg-dark-card hover:bg-dark-card-hover text-dark-text transition-colors duration-hover"
-              aria-label="Previous"
+              aria-label={t.common.previous}
             >
               <i className="fas fa-chevron-left" />
             </button>
             <button
               onClick={handleNext}
               className="p-2 rounded-card bg-dark-card hover:bg-dark-card-hover text-dark-text transition-colors duration-hover"
-              aria-label="Next"
+              aria-label={t.common.next}
             >
               <i className="fas fa-chevron-right" />
             </button>
@@ -77,7 +79,9 @@ function MovieCarousel({ movies, title, onAddToList }: MovieCarouselProps) {
                   ? "w-8 bg-primary-600"
                   : "w-2 bg-dark-border hover:bg-dark-card-hover"
               }`}
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={translate(t.common.goToSlide, {
+                number: String(index + 1),
+              })}
             />
           ))}
         </div>

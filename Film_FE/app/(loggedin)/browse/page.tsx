@@ -5,9 +5,13 @@ import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import MovieCard from "@/app/components/common/MovieCard";
 import { useGetAllMovies, useAddToList } from "@/app/lib/api/hooks";
+import { useI18n } from "@/app/lib/i18n";
+import { useToast } from "@/app/components/common/Toast";
 import type { Movie } from "@/types/api.types";
 
 function BrowsePage() {
+  const { t } = useI18n();
+  const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<"name" | "rating" | "year" | "revenue">(
     "name",
@@ -16,14 +20,10 @@ function BrowsePage() {
   const { data: movies, isLoading, error } = useGetAllMovies();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
-      if (typeof window !== "undefined") {
-        alert("Movie has been added to your list!");
-      }
+      toast.success(t.home.movieAddedToList);
     },
     onError: () => {
-      if (typeof window !== "undefined") {
-        alert("Failed to add to list!");
-      }
+      toast.error(t.home.failedToAddToList);
     },
   });
 
@@ -35,7 +35,7 @@ function BrowsePage() {
 
   const handleAddToList = (movieName: string) => {
     if (!currentAccount) {
-      alert("Please login to add movies to your list");
+      toast.warning(t.home.pleaseLoginToAdd);
       return;
     }
     addToListTrigger({ userName: currentAccount, movieName });
@@ -89,7 +89,9 @@ function BrowsePage() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-              <p className="mt-4 text-dark-text-secondary">Loading movies...</p>
+              <p className="mt-4 text-dark-text-secondary">
+                {t.browse.loadingMovies}
+              </p>
             </div>
           </Container>
         </div>
@@ -105,10 +107,10 @@ function BrowsePage() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <p className="text-error-DEFAULT text-lg font-semibold mb-2">
-                Error loading movies
+                {t.browse.errorLoadingMovies}
               </p>
               <p className="text-dark-text-secondary text-sm">
-                {error.message || "Unknown error"}
+                {error.message || t.home.unknownError}
               </p>
             </div>
           </Container>
@@ -124,13 +126,15 @@ function BrowsePage() {
         <Container>
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-dark-text mb-6">
-              Browse Movies
+              {t.browse.browseMovies}
             </h1>
 
             {/* Filters */}
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center gap-2">
-                <label className="text-dark-text font-semibold">Sort by:</label>
+                <label className="text-dark-text font-semibold">
+                  {t.browse.sortBy}
+                </label>
                 <select
                   value={sortBy}
                   onChange={(e) =>
@@ -140,21 +144,23 @@ function BrowsePage() {
                   }
                   className="px-3 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="name">Name</option>
-                  <option value="rating">Rating</option>
-                  <option value="year">Year</option>
-                  <option value="revenue">Revenue</option>
+                  <option value="name">{t.browse.name}</option>
+                  <option value="rating">{t.browse.rating}</option>
+                  <option value="year">{t.browse.year}</option>
+                  <option value="revenue">{t.browse.revenue}</option>
                 </select>
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-dark-text font-semibold">Genre:</label>
+                <label className="text-dark-text font-semibold">
+                  {t.browse.genre}
+                </label>
                 <select
                   value={filterGenre}
                   onChange={(e) => setFilterGenre(e.target.value)}
                   className="px-3 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="all">All Genres</option>
+                  <option value="all">{t.browse.allGenres}</option>
                   {/* Genre options would be populated from API */}
                 </select>
               </div>
@@ -175,7 +181,7 @@ function BrowsePage() {
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                No movies found.
+                {t.browse.noMoviesFound}
               </p>
             </div>
           )}

@@ -11,9 +11,13 @@ import {
   useGetTopRevenue,
   useAddToList,
 } from "@/app/lib/api/hooks";
+import { useI18n } from "@/app/lib/i18n";
+import { useToast } from "@/app/components/common/Toast";
 import type { Movie } from "@/types/api.types";
 
 function HomePage() {
+  const { t } = useI18n();
+  const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const { data: movies, error, isLoading } = useGetAllMovies();
   const { data: recommendedMovies } =
@@ -21,14 +25,10 @@ function HomePage() {
   const { data: topRevenueData } = useGetTopRevenue();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
-      if (typeof window !== "undefined") {
-        alert("Movie has been added to your list!");
-      }
+      toast.success(t.home.movieAddedToList);
     },
     onError: () => {
-      if (typeof window !== "undefined") {
-        alert("Failed to add to list!");
-      }
+      toast.error(t.home.failedToAddToList);
     },
   });
 
@@ -41,12 +41,12 @@ function HomePage() {
   const handleAddToList = useCallback(
     (movieName: string) => {
       if (!currentAccount) {
-        alert("Please login to add movies to your list");
+        toast.warning(t.home.pleaseLoginToAdd);
         return;
       }
       addToListTrigger({ userName: currentAccount, movieName });
     },
-    [currentAccount, addToListTrigger],
+    [currentAccount, addToListTrigger, toast, t],
   );
 
   const mostPopularMovies = useMemo(() => {
@@ -88,7 +88,9 @@ function HomePage() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-              <p className="mt-4 text-dark-text-secondary">Loading movies...</p>
+              <p className="mt-4 text-dark-text-secondary">
+                {t.home.loadingMovies}
+              </p>
             </div>
           </Container>
         </div>
@@ -104,10 +106,10 @@ function HomePage() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <p className="text-error-DEFAULT text-lg font-semibold mb-2">
-                Error loading movies
+                {t.home.errorLoadingMovies}
               </p>
               <p className="text-dark-text-secondary text-sm">
-                {error.message || "Unknown error"}
+                {error.message || t.home.unknownError}
               </p>
             </div>
           </Container>
@@ -124,10 +126,10 @@ function HomePage() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                No movies available
+                {t.home.noMoviesAvailable}
               </h2>
               <p className="text-dark-text-secondary">
-                Please check back later
+                {t.home.checkBackLater}
               </p>
             </div>
           </Container>
@@ -152,19 +154,19 @@ function HomePage() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-dark-text">
-                Recommendations
+                {t.home.recommendations}
               </h2>
             </div>
             {!currentAccount && (
               <div className="bg-dark-card rounded-card p-6 text-center mb-6">
                 <p className="text-dark-text-secondary mb-2">
-                  To get personalized recommendations, please log in
+                  {t.home.loginForRecommendations}
                 </p>
                 <a
                   href="/login"
                   className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
                 >
-                  Login →
+                  {t.home.login} →
                 </a>
               </div>
             )}
@@ -173,7 +175,7 @@ function HomePage() {
               recommendedMovies.length > 0 && (
                 <MovieCarousel
                   movies={recommendedMovies.slice(0, 12)}
-                  title="For You"
+                  title={t.home.forYou}
                   onAddToList={handleAddToList}
                 />
               )}
@@ -184,7 +186,7 @@ function HomePage() {
             <div className="mb-12">
               <MovieCarousel
                 movies={mostPopularMovies}
-                title="Most Popular"
+                title={t.home.mostPopular}
                 onAddToList={handleAddToList}
               />
             </div>
@@ -195,7 +197,7 @@ function HomePage() {
             <div className="mb-12">
               <MovieCarousel
                 movies={mostFavouritesMovies}
-                title="Highest Rated"
+                title={t.home.highestRated}
                 onAddToList={handleAddToList}
               />
             </div>
@@ -206,7 +208,7 @@ function HomePage() {
             <div className="mb-0">
               <MovieCarousel
                 movies={highestRevenueMovies}
-                title="Highest Revenue"
+                title={t.home.highestRevenue}
                 onAddToList={handleAddToList}
               />
             </div>

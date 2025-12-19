@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/app/lib/i18n";
 
 interface Genre {
   genres_id?: number;
@@ -41,6 +42,7 @@ function MovieIntro({
   reviewCount = 0,
   movieName,
 }: MovieIntroProps) {
+  const { t } = useI18n();
   return (
     <div className="mb-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -62,7 +64,7 @@ function MovieIntro({
 
           {/* Description */}
           {description && (
-            <p className="text-dark-text-secondary text-lg leading-relaxed mb-4">
+            <p className="text-dark-text text-lg leading-relaxed mb-4">
               {description}
             </p>
           )}
@@ -74,7 +76,7 @@ function MovieIntro({
             {directors && directors.length > 0 && (
               <div>
                 <span className="text-dark-text font-semibold mr-2">
-                  Director:
+                  {t.detail.director}
                 </span>
                 {directors.map((director, index) => (
                   <span key={director.director_id || index}>
@@ -85,7 +87,7 @@ function MovieIntro({
                       {director.director_name}
                     </Link>
                     {index < directors.length - 1 && (
-                      <span className="mx-2 text-dark-text-secondary">•</span>
+                      <span className="mx-2 text-dark-text">•</span>
                     )}
                   </span>
                 ))}
@@ -95,7 +97,7 @@ function MovieIntro({
             {writers && writers.length > 0 && (
               <div>
                 <span className="text-dark-text font-semibold mr-2">
-                  Writer:
+                  {t.detail.writer}
                 </span>
                 {writers.slice(0, 3).map((writer, index) => (
                   <span key={writer.writers_id || index}>
@@ -106,7 +108,7 @@ function MovieIntro({
                       {writer.name}
                     </Link>
                     {index < Math.min(writers.length, 3) - 1 && (
-                      <span className="mx-2 text-dark-text-secondary">•</span>
+                      <span className="mx-2 text-dark-text">•</span>
                     )}
                   </span>
                 ))}
@@ -116,7 +118,7 @@ function MovieIntro({
             {cast && cast.length > 0 && (
               <div>
                 <span className="text-dark-text font-semibold mr-2">
-                  Stars:
+                  {t.detail.stars}
                 </span>
                 {cast.slice(0, 3).map((star, index) => (
                   <span key={star.cast_id || index}>
@@ -127,7 +129,7 @@ function MovieIntro({
                       {star.name}
                     </Link>
                     {index < Math.min(cast.length, 3) - 1 && (
-                      <span className="mx-2 text-dark-text-secondary">•</span>
+                      <span className="mx-2 text-dark-text">•</span>
                     )}
                   </span>
                 ))}
@@ -145,7 +147,9 @@ function MovieIntro({
             <span className="text-3xl font-bold text-primary-600">
               {reviewCount}
             </span>
-            <span className="text-dark-text-secondary">User reviews</span>
+            <span className="text-dark-text-secondary">
+              {t.detail.userReviewsCount}
+            </span>
           </Link>
         </div>
       </div>

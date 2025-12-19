@@ -7,8 +7,10 @@ import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import Card from "@/app/components/common/Card";
 import { useGetMovieReviews } from "@/app/lib/api/hooks";
+import { useI18n, translate } from "@/app/lib/i18n";
 
 function UserReviewContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [movieName, setMovieName] = useState<string | null>(null);
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
@@ -33,16 +35,16 @@ function UserReviewContent() {
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
               <h2 className="text-dark-text text-2xl font-bold mb-2">
-                Movie name required
+                {t.detail.movieNameRequired}
               </h2>
               <p className="text-dark-text-secondary mb-4">
-                Please provide a movie name in the URL.
+                {t.detail.provideMovieName}
               </p>
               <Link
                 href="/"
                 className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
               >
-                ← Back to Home
+                {t.detail.backToHome}
               </Link>
             </div>
           </Container>
@@ -60,7 +62,7 @@ function UserReviewContent() {
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
               <p className="mt-4 text-dark-text-secondary">
-                Loading reviews...
+                {t.pages.userReview.loadingReviews}
               </p>
             </div>
           </Container>
@@ -79,12 +81,12 @@ function UserReviewContent() {
               href={`/detail?movie=${encodeURIComponent(movieName)}`}
               className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
             >
-              ← Back to Movie
+              {t.pages.userReview.backToMovie}
             </Link>
           </div>
 
           <h1 className="text-3xl font-bold text-dark-text mb-8">
-            User Reviews: {movieName}
+            {translate(t.pages.userReview.userReviews, { movieName })}
           </h1>
 
           {reviews && reviews.length > 0 ? (
@@ -97,7 +99,7 @@ function UserReviewContent() {
                         {review.title_review}
                       </h3>
                       <p className="text-dark-text-secondary text-sm">
-                        by {review.name_review}
+                        {t.pages.userReview.by} {review.name_review}
                         {review.date_review && (
                           <span className="ml-2">• {review.date_review}</span>
                         )}
@@ -110,12 +112,12 @@ function UserReviewContent() {
                           className={`fas fa-star ${
                             i < review.star_review
                               ? "text-rating-DEFAULT"
-                              : "text-dark-text-muted"
+                              : "text-dark-text-secondary"
                           }`}
                         />
                       ))}
                       <span className="ml-2 text-dark-text font-semibold">
-                        {review.star_review}/5
+                        {review.star_review}
                       </span>
                     </div>
                   </div>
@@ -145,7 +147,7 @@ function UserReviewContent() {
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">
-                No reviews available for this movie yet.
+                {t.pages.userReview.noReviews}
               </p>
             </div>
           )}
@@ -156,6 +158,7 @@ function UserReviewContent() {
 }
 
 function UserReviewPage() {
+  const { t } = useI18n();
   return (
     <Suspense
       fallback={
@@ -165,7 +168,9 @@ function UserReviewPage() {
             <Container>
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
-                <p className="mt-4 text-dark-text-secondary">Loading...</p>
+                <p className="mt-4 text-dark-text-secondary">
+                  {t.common.loading}
+                </p>
               </div>
             </Container>
           </div>
