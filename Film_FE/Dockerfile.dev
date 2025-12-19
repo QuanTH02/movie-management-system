@@ -10,7 +10,12 @@ ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 COPY package*.json ./
 
 # Install all dependencies (including devDependencies for dev mode)
-RUN npm ci
+# Use npm install for dev mode to be more flexible with lock file
+RUN npm install
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
 EXPOSE 3000
@@ -19,6 +24,9 @@ EXPOSE 3000
 ENV NODE_ENV=development
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+
+# Use entrypoint to ensure dependencies are installed
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Start Next.js dev server with hot reload
 CMD ["npm", "run", "dev"]
