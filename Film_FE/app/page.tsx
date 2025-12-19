@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import Navbar from "@/app/components/common/Navbar";
 import BannerCarousel from "@/app/components/common/BannerCarousel";
 import MovieCarousel from "@/app/components/common/MovieCarousel";
-import MovieCard from "@/app/components/common/MovieCard";
+import Container from "@/app/components/common/Container";
 import {
   useGetAllMovies,
   useGetRecommendCollaborative,
@@ -84,8 +84,13 @@ function HomePage() {
     return (
       <>
         <Navbar currentAccount={currentAccount} />
-        <div className="div-container mt-4" style={{ paddingTop: "56px" }}>
-          <div className="text-center">Loading...</div>
+        <div className="bg-dark-bg pt-20 pb-16">
+          <Container>
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600" />
+              <p className="mt-4 text-dark-text-secondary">Loading movies...</p>
+            </div>
+          </Container>
         </div>
       </>
     );
@@ -95,13 +100,17 @@ function HomePage() {
     return (
       <>
         <Navbar currentAccount={currentAccount} />
-        <div className="div-container mt-4" style={{ paddingTop: "56px" }}>
-          <div className="text-center text-danger">
-            <p>Error loading movies. Please try again later.</p>
-            <p style={{ fontSize: "12px", color: "#666" }}>
-              {error.message || "Unknown error"}
-            </p>
-          </div>
+        <div className="bg-dark-bg pt-20 pb-16">
+          <Container>
+            <div className="flex flex-col items-center justify-center py-20">
+              <p className="text-error-DEFAULT text-lg font-semibold mb-2">
+                Error loading movies
+              </p>
+              <p className="text-dark-text-secondary text-sm">
+                {error.message || "Unknown error"}
+              </p>
+            </div>
+          </Container>
         </div>
       </>
     );
@@ -111,19 +120,17 @@ function HomePage() {
     return (
       <>
         <Navbar currentAccount={currentAccount} />
-        <div
-          className="div-container mt-4"
-          style={{
-            paddingTop: "56px",
-            minHeight: "100vh",
-            backgroundColor: "#000",
-            color: "#fff",
-          }}
-        >
-          <div className="text-center" style={{ padding: "50px" }}>
-            <h2 style={{ color: "#fff" }}>No movies available</h2>
-            <p style={{ color: "#ccc" }}>Please check back later</p>
-          </div>
+        <div className="bg-dark-bg pt-20 pb-16">
+          <Container>
+            <div className="flex flex-col items-center justify-center py-20">
+              <h2 className="text-dark-text text-2xl font-bold mb-2">
+                No movies available
+              </h2>
+              <p className="text-dark-text-secondary">
+                Please check back later
+              </p>
+            </div>
+          </Container>
         </div>
       </>
     );
@@ -132,144 +139,79 @@ function HomePage() {
   return (
     <>
       <Navbar currentAccount={currentAccount} />
-      <div
-        className="div-container mt-4"
-        style={{
-          paddingTop: "56px",
-          minHeight: "100vh",
-          backgroundColor: "#000",
-          color: "#fff",
-        }}
-      >
-        {movies && movies.length > 0 && <BannerCarousel movies={movies} />}
-
-        <h1
-          className="mt-0"
-          style={{ color: "#fff", marginTop: "20px", marginBottom: "20px" }}
-        >
-          What to watch
-        </h1>
-
-        <div className="div-rcm">
-          <div>
-            <a href="#" style={{ color: "black" }}>
-              <h3 className="topic mb-0 mt-4">
-                | Recommend <i className="fas fa-chevron-right"></i>
-              </h3>
-            </a>
-          </div>
-
-          {!currentAccount && (
-            <div
-              id="no-login"
-              className="p-3"
-              style={{ textAlign: "center", display: "block", color: "#fff" }}
-            >
-              <a
-                href="/login"
-                style={{ color: "#4caf50", textDecoration: "none" }}
-              >
-                <h4 style={{ color: "#fff" }}>
-                  To recommend movies, you need to log in
-                </h4>
-              </a>
+      <div className="bg-dark-bg pt-20 pb-16">
+        <Container>
+          {/* Banner Carousel */}
+          {movies && movies.length > 0 && (
+            <div className="mb-12">
+              <BannerCarousel movies={movies} />
             </div>
           )}
 
-          {currentAccount &&
-            recommendedMovies &&
-            recommendedMovies.length > 0 && (
-              <div
-                id="div-recommend"
-                className="carousel slide"
-                data-ride="carousel"
-                style={{ display: "block" }}
-              >
-                <div className="carousel-inner">
-                  <div className="carousel-item active">
-                    <div className="row mt-4" id="listRecommend">
-                      {recommendedMovies.slice(0, 6).map((movie, index) => (
-                        <MovieCard
-                          key={String(movie.movie_id || movie.id || index)}
-                          movie={movie}
-                          onAddToList={handleAddToList}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  {recommendedMovies.length > 6 && (
-                    <div className="carousel-item">
-                      <div className="row mt-4" id="listRecommend-Carousel">
-                        {recommendedMovies.slice(6, 12).map((movie, index) => (
-                          <MovieCard
-                            key={String(
-                              movie.movie_id || movie.id || index + 6,
-                            )}
-                            movie={movie}
-                            onAddToList={handleAddToList}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                {recommendedMovies.length > 6 && (
-                  <>
-                    <a
-                      className="carousel-control-prev"
-                      href="#div-recommend"
-                      role="button"
-                      data-slide="prev"
-                      style={{ width: "30px" }}
-                    >
-                      <span
-                        className="carousel-control-prev-icon"
-                        aria-hidden="true"
-                      ></span>
-                      <span className="sr-only">Previous</span>
-                    </a>
-                    <a
-                      className="carousel-control-next"
-                      href="#div-recommend"
-                      role="button"
-                      data-slide="next"
-                      style={{ width: "30px" }}
-                    >
-                      <span
-                        className="carousel-control-next-icon"
-                        aria-hidden="true"
-                      ></span>
-                      <span className="sr-only">Next</span>
-                    </a>
-                  </>
-                )}
+          {/* Recommendations Section */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-dark-text">
+                Recommendations
+              </h2>
+            </div>
+            {!currentAccount && (
+              <div className="bg-dark-card rounded-card p-6 text-center mb-6">
+                <p className="text-dark-text-secondary mb-2">
+                  To get personalized recommendations, please log in
+                </p>
+                <a
+                  href="/login"
+                  className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
+                >
+                  Login →
+                </a>
               </div>
             )}
-        </div>
+            {currentAccount &&
+              recommendedMovies &&
+              recommendedMovies.length > 0 && (
+                <MovieCarousel
+                  movies={recommendedMovies.slice(0, 12)}
+                  title="For You"
+                  onAddToList={handleAddToList}
+                />
+              )}
+          </div>
 
-        {mostPopularMovies.length > 0 && (
-          <MovieCarousel
-            movies={mostPopularMovies}
-            title="Most Popular"
-            onAddToList={handleAddToList}
-          />
-        )}
+          {/* Most Popular */}
+          {mostPopularMovies.length > 0 && (
+            <div className="mb-12">
+              <MovieCarousel
+                movies={mostPopularMovies}
+                title="Most Popular"
+                onAddToList={handleAddToList}
+              />
+            </div>
+          )}
 
-        {mostFavouritesMovies.length > 0 && (
-          <MovieCarousel
-            movies={mostFavouritesMovies}
-            title="Most Favourites"
-            onAddToList={handleAddToList}
-          />
-        )}
+          {/* Most Favourites */}
+          {mostFavouritesMovies.length > 0 && (
+            <div className="mb-12">
+              <MovieCarousel
+                movies={mostFavouritesMovies}
+                title="Highest Rated"
+                onAddToList={handleAddToList}
+              />
+            </div>
+          )}
 
-        {highestRevenueMovies.length > 0 && (
-          <MovieCarousel
-            movies={highestRevenueMovies}
-            title="Highest Revenue"
-            onAddToList={handleAddToList}
-          />
-        )}
+          {/* Highest Revenue */}
+          {highestRevenueMovies.length > 0 && (
+            <div className="mb-0">
+              <MovieCarousel
+                movies={highestRevenueMovies}
+                title="Highest Revenue"
+                onAddToList={handleAddToList}
+              />
+            </div>
+          )}
+        </Container>
       </div>
     </>
   );

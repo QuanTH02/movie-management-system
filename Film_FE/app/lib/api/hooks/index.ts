@@ -20,3 +20,6 @@ export { default as useGetMovieCountry } from "./useGetMovieCountry";
 export { default as useGetMovieLanguage } from "./useGetMovieLanguage";
 export { default as useGetMovieLocations } from "./useGetMovieLocations";
 export { default as useGetMovieCompanies } from "./useGetMovieCompanies";
+export { default as useGetMovieImages } from "./useGetMovieImages";
+export { default as useGetLikedMovies } from "./useGetLikedMovies";
+export { default as useDeleteLikedMovie } from "./useDeleteLikedMovie";

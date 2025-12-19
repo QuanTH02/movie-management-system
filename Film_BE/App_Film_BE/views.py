@@ -1,102 +1,104 @@
+import csv
+
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import User
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
-from rest_framework import generics
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-from django.contrib.auth.models import User
-from .Reconmmendation.Collaborative.load_model import *
-from .Reconmmendation.Content_Based.load_model import *
+
 from .Func.link_trailer import *
-from rest_framework import status
-import csv
 from .models import (
-    Movieinformation,
+    AspectRatio,
     Awards,
-    MovieDirector,
-    Director,
     Camera,
     Cast,
-    MovieCast,
-    Cinematography,
-    MovieCinematography,
-    Editing,
-    MovieEditing,
-    Genres,
-    MovieGenres,
-    Music,
-    MovieMusic,
-    Produced,
-    MovieProduced,
-    Specialeffects,
-    MovieSpecialeffects,
-    Taglines,
-    MovieTaglines,
-    Writers,
-    MovieWriters,
-    AspectRatio,
     CinematographicProcess,
+    Cinematography,
     Color,
     CountryOrigin,
     DidYouKnow,
-    FilmReview,
+    Director,
+    Editing,
     FilmingLocations,
+    FilmReview,
+    Genres,
     Laboratory,
     Language,
+    LikeMovie,
+    LinkImg,
+    LinkTrailer,
+    MovieCast,
+    MovieCinematography,
+    MovieDirector,
+    MovieEditing,
+    MovieGenres,
+    MovieImg,
+    Movieinformation,
+    MovieMusic,
+    MovieProduced,
+    MovieSpecialeffects,
+    MovieTaglines,
+    MovieTrailer,
+    MovieWriters,
+    Music,
     NegativeFormat,
     OfficialSite,
     PrintedFilmFormat,
+    Produced,
     ProductionCompanies,
     RatingFilm,
     SoundMix,
+    Specialeffects,
+    Taglines,
     TicketRoom,
-    LinkTrailer,
-    MovieTrailer,
-    LinkImg,
-    MovieImg,
-    LikeMovie,
+    Writers,
 )
-from .serializers import (
-    # User
+from .Reconmmendation.Collaborative.load_model import *
+from .Reconmmendation.Content_Based.load_model import *
+from .serializers import (  # User
     AccountSerializer,
-    LoginSerializer,
-    RegisterSerializer,
-    ReviewSerializer,
-    FilmSerializer,
+    AspectRatiosSerializer,
     AwardsSerializer,
-    DirectorSerializer,
     CameraSerializer,
     CastSerializer,
-    CinematographySerializer,
-    EditingSerializer,
-    GenresSerializer,
-    MusicSerializer,
-    ProducedSerializer,
-    SpecialeffectsSerializer,
-    TaglinesSerializer,
-    WritersSerializer,
-    AspectRatiosSerializer,
     CinematographicProcessSerializer,
+    CinematographySerializer,
     ColorSerializer,
     CountryOriginSerializer,
     DidYouKnowSerializer,
-    FilmReviewSerializer,
+    DirectorSerializer,
+    EditingSerializer,
     FilmingLocationsSerializer,
+    FilmReviewSerializer,
+    FilmSerializer,
+    GenresSerializer,
     LaboratorySerializer,
     LanguageSerializer,
+    LikeMovieSerializer,
+    LinkImgSerializer,
+    LinkTrailerSerializer,
+    LoginSerializer,
+    MusicSerializer,
     NegativeFormatSerializer,
     OfficialSiteSerializer,
     PrintedFilmFormatSerializer,
+    ProducedSerializer,
     ProductionCompaniesSerializer,
     RatingFilmSerializer,
+    RegisterSerializer,
+    ReviewSerializer,
     SoundMixSerializer,
+    SpecialeffectsSerializer,
+    TaglinesSerializer,
     TicketRoomSerializer,
-    LinkTrailerSerializer,
-    LinkImgSerializer,
-    LikeMovieSerializer,
+    WritersSerializer,
 )
 
 
@@ -111,17 +113,11 @@ class LoginView(generics.ListAPIView):
 
             if user is not None:
                 login(request, user)
-                return Response(
-                    {"message": "Successfully logged in."}, status=status.HTTP_200_OK
-                )
+                return Response({"message": "Successfully logged in."}, status=status.HTTP_200_OK)
             else:
-                return Response(
-                    {"message": "Login failed"}, status=status.HTTP_401_UNAUTHORIZED
-                )
+                return Response({"message": "Login failed"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response(
-                {"message": "Invalid input."}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"message": "Invalid input."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterView(generics.ListAPIView):
@@ -149,12 +145,7 @@ class RegisterView(generics.ListAPIView):
                 )
 
             # Create a new user
-            user = User(
-                username=account, 
-                email=gmail, 
-                last_name=name,
-                last_login=timezone.now()
-            )
+            user = User(username=account, email=gmail, last_name=name, last_login=timezone.now())
             user.set_password(password)
             user.save()
 
@@ -177,20 +168,14 @@ class TicketListView(generics.ListAPIView):
         # Cập nhật giá trị gross_worldwide của từng ticket_room
         for ticket_room in queryset:
             if ticket_room.gross_worldwide:
-                ticket_room.gross_worldwide = self.convert_gross_to_number(
-                    ticket_room.gross_worldwide
-                )
+                ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
 
         return queryset
 
     def get_top_gross_worldwide(self):
         ticket_rooms = TicketRoom.objects.all()
         # Loại bỏ những phòng vé có giá trị gross_worldwide là None
-        ticket_rooms = [
-            tr
-            for tr in ticket_rooms
-            if self.convert_gross_to_number(tr.gross_worldwide) is not None
-        ]
+        ticket_rooms = [tr for tr in ticket_rooms if self.convert_gross_to_number(tr.gross_worldwide) is not None]
         # Sắp xếp theo giá trị gross_worldwide đã chuyển đổi
         ticket_rooms = sorted(
             ticket_rooms,
@@ -201,9 +186,7 @@ class TicketListView(generics.ListAPIView):
         # Lấy thông tin Movieinformation cho mỗi ticket_room
         movie_infos = []
         for ticket_room in ticket_rooms:
-            movie_info = Movieinformation.objects.get(
-                movie_id=ticket_room.movie.movie_id
-            )
+            movie_info = Movieinformation.objects.get(movie_id=ticket_room.movie.movie_id)
             movie_infos.append(movie_info)
 
         return movie_infos
@@ -292,9 +275,7 @@ class ReviewView(generics.CreateAPIView):
             )
             message = "Review created successfully."
 
-        with open(
-            "App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", "a", newline=""
-        ) as csvfile:
+        with open("App_Film_BE\\Reconmmendation\\Collaborative\\output.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([name_review, movie_id, star_review])
 
@@ -331,6 +312,7 @@ class ReviewView(generics.CreateAPIView):
             status=status.HTTP_204_NO_CONTENT,
         )
 
+
 class FilmListView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
@@ -339,9 +321,7 @@ class FilmListView(generics.ListAPIView):
 
         for movie_info in queryset:
             if movie_info.total_vote:
-                movie_info.total_vote = self.convert_vote_to_number(
-                    movie_info.total_vote
-                )
+                movie_info.total_vote = self.convert_vote_to_number(movie_info.total_vote)
 
             if movie_info.rating:
                 movie_info.rating = self.extract_rating(movie_info.rating)
@@ -518,23 +498,15 @@ class CinematographyListView(generics.ListAPIView):
 
     def get_cinematographys_by_movie_id(self, movie_id):
         movie_cinematography = MovieCinematography.objects.filter(movie_id=movie_id)
-        cinematography_ids = movie_cinematography.values_list(
-            "cinematography_id", flat=True
-        )
+        cinematography_ids = movie_cinematography.values_list("cinematography_id", flat=True)
         return Cinematography.objects.filter(cinematography_id__in=cinematography_ids)
 
     def get_cinematographys_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            movie_cinematography = MovieCinematography.objects.filter(
-                movie_id=movie_info.movie_id
-            )
-            cinematography_ids = movie_cinematography.values_list(
-                "cinematography_id", flat=True
-            )
-            return Cinematography.objects.filter(
-                cinematography_id__in=cinematography_ids
-            )
+            movie_cinematography = MovieCinematography.objects.filter(movie_id=movie_info.movie_id)
+            cinematography_ids = movie_cinematography.values_list("cinematography_id", flat=True)
+            return Cinematography.objects.filter(cinematography_id__in=cinematography_ids)
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
 
@@ -701,23 +673,15 @@ class SpecialeffectsListView(generics.ListAPIView):
 
     def get_specialeffects_by_movie_id(self, movie_id):
         movie_specialeffects = MovieSpecialeffects.objects.filter(movie_id=movie_id)
-        specialeffects_ids = movie_specialeffects.values_list(
-            "special_effect_id", flat=True
-        )
+        specialeffects_ids = movie_specialeffects.values_list("special_effect_id", flat=True)
         return Specialeffects.objects.filter(special_effect_id__in=specialeffects_ids)
 
     def get_specialeffects_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            movie_specialeffects = MovieSpecialeffects.objects.filter(
-                movie_id=movie_info.movie_id
-            )
-            specialeffects_ids = movie_specialeffects.values_list(
-                "special_effect_id", flat=True
-            )
-            return Specialeffects.objects.filter(
-                special_effect_id__in=specialeffects_ids
-            )
+            movie_specialeffects = MovieSpecialeffects.objects.filter(movie_id=movie_info.movie_id)
+            specialeffects_ids = movie_specialeffects.values_list("special_effect_id", flat=True)
+            return Specialeffects.objects.filter(special_effect_id__in=specialeffects_ids)
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
 
@@ -844,9 +808,7 @@ class AspectRatioListView(generics.ListAPIView):
     def get_aspect_ratios_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            aspect_ratios = AspectRatio.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            aspect_ratios = AspectRatio.objects.filter(movie__movie_id=movie_info.movie_id)
             return aspect_ratios
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -876,9 +838,7 @@ class CinematographicProcessListView(generics.ListAPIView):
     def get_cinematographic_processes_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            cinematographic_processes = CinematographicProcess.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            cinematographic_processes = CinematographicProcess.objects.filter(movie__movie_id=movie_info.movie_id)
             return cinematographic_processes
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -938,9 +898,7 @@ class CountryOriginListView(generics.ListAPIView):
     def get_country_origins_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            country_origins = CountryOrigin.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            country_origins = CountryOrigin.objects.filter(movie__movie_id=movie_info.movie_id)
             return country_origins
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -970,9 +928,7 @@ class DidYouKnowListView(generics.ListAPIView):
     def get_did_you_knows_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            did_you_knows = DidYouKnow.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            did_you_knows = DidYouKnow.objects.filter(movie__movie_id=movie_info.movie_id)
             return did_you_knows
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1002,9 +958,7 @@ class FilmReviewListView(generics.ListAPIView):
     def get_reviews_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            film_reviews = FilmReview.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            film_reviews = FilmReview.objects.filter(movie__movie_id=movie_info.movie_id)
             return film_reviews
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1034,9 +988,7 @@ class FilmingLocationsListView(generics.ListAPIView):
     def get_locations_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            filming_locations = FilmingLocations.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            filming_locations = FilmingLocations.objects.filter(movie__movie_id=movie_info.movie_id)
             return filming_locations
         except Movieinformation.DoesNotExist:
             raise generics.NotFound("Movie not found.")
@@ -1065,9 +1017,7 @@ class LaboratoryListView(generics.ListAPIView):
     def get_laboratories_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            laboratories = Laboratory.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            laboratories = Laboratory.objects.filter(movie__movie_id=movie_info.movie_id)
             return laboratories
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1127,9 +1077,7 @@ class NegativeFormatListView(generics.ListAPIView):
     def get_negative_formats_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            negative_formats = NegativeFormat.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            negative_formats = NegativeFormat.objects.filter(movie__movie_id=movie_info.movie_id)
             return negative_formats
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1159,9 +1107,7 @@ class OfficialSiteListView(generics.ListAPIView):
     def get_official_sites_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            official_sites = OfficialSite.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            official_sites = OfficialSite.objects.filter(movie__movie_id=movie_info.movie_id)
             return official_sites
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1191,9 +1137,7 @@ class PrintedFilmFormatListView(generics.ListAPIView):
     def get_printed_film_formats_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            printed_film_formats = PrintedFilmFormat.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            printed_film_formats = PrintedFilmFormat.objects.filter(movie__movie_id=movie_info.movie_id)
             return printed_film_formats
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1223,9 +1167,7 @@ class ProductionCompaniesListView(generics.ListAPIView):
     def get_production_companies_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            production_companies = ProductionCompanies.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            production_companies = ProductionCompanies.objects.filter(movie__movie_id=movie_info.movie_id)
             return production_companies
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1255,9 +1197,7 @@ class RatingFilmListView(generics.ListAPIView):
     def get_rating_films_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            rating_films = RatingFilm.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            rating_films = RatingFilm.objects.filter(movie__movie_id=movie_info.movie_id)
             return rating_films
         except Movieinformation.DoesNotExist:
             # Xử lý trường hợp không tìm thấy movie_name trong Movieinformation
@@ -1318,11 +1258,7 @@ class TicketRoomListView(generics.ListAPIView):
     def get_top_gross_worldwide(self):
         ticket_rooms = TicketRoom.objects.all()
         # Loại bỏ những phòng vé có giá trị gross_worldwide là None
-        ticket_rooms = [
-            tr
-            for tr in ticket_rooms
-            if self.convert_gross_to_number(tr.gross_worldwide) is not None
-        ]
+        ticket_rooms = [tr for tr in ticket_rooms if self.convert_gross_to_number(tr.gross_worldwide) is not None]
         # Sắp xếp theo giá trị gross_worldwide đã chuyển đổi
         ticket_rooms = sorted(
             ticket_rooms,
@@ -1333,9 +1269,7 @@ class TicketRoomListView(generics.ListAPIView):
         # Lấy thông tin Movieinformation cho mỗi ticket_room
         movie_infos = []
         for ticket_room in ticket_rooms:
-            movie_info = Movieinformation.objects.get(
-                movie_id=ticket_room.movie.movie_id
-            )
+            movie_info = Movieinformation.objects.get(movie_id=ticket_room.movie.movie_id)
             movie_infos.append(movie_info)
 
         return movie_infos
@@ -1343,16 +1277,12 @@ class TicketRoomListView(generics.ListAPIView):
     def get_ticket_rooms_by_movie_name(self, movie_name):
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
-            ticket_rooms = TicketRoom.objects.filter(
-                movie__movie_id=movie_info.movie_id
-            )
+            ticket_rooms = TicketRoom.objects.filter(movie__movie_id=movie_info.movie_id)
 
             # Cập nhật giá trị gross_worldwide của từng ticket_room
             for ticket_room in ticket_rooms:
                 if ticket_room.gross_worldwide:
-                    ticket_room.gross_worldwide = self.convert_gross_to_number(
-                        ticket_room.gross_worldwide
-                    )
+                    ticket_room.gross_worldwide = self.convert_gross_to_number(ticket_room.gross_worldwide)
 
             return ticket_rooms
         except Movieinformation.DoesNotExist:
@@ -1400,9 +1330,7 @@ class AccountListView(generics.ListAPIView):
                 user = User.objects.get(username=current_account)
                 serialized_user = self.serializer_class(user)  # Không sử dụng many=True
 
-                return Response(
-                    {"data": serialized_user.data}
-                )  # Trả về serialized data
+                return Response({"data": serialized_user.data})  # Trả về serialized data
             except User.DoesNotExist:
                 return Response({"message": "User not found"}, status=404)
         else:
@@ -1457,11 +1385,7 @@ class RecommendContentBasedView(generics.ListAPIView):
     def get_sorted_queryset(self, recommended_ids):
         queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
         movie_dict = {movie.movie_id: movie for movie in queryset}
-        sorted_queryset = [
-            movie_dict[movie_id]
-            for movie_id in recommended_ids
-            if movie_id in movie_dict
-        ]
+        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
         return sorted_queryset
 
 
@@ -1494,11 +1418,7 @@ class RecommendCollaborativeView(generics.ListAPIView):
     def get_sorted_queryset(self, recommended_ids):
         queryset = Movieinformation.objects.filter(movie_id__in=recommended_ids)
         movie_dict = {movie.movie_id: movie for movie in queryset}
-        sorted_queryset = [
-            movie_dict[movie_id]
-            for movie_id in recommended_ids
-            if movie_id in movie_dict
-        ]
+        sorted_queryset = [movie_dict[movie_id] for movie_id in recommended_ids if movie_id in movie_dict]
         return sorted_queryset
 
 
@@ -1569,14 +1489,22 @@ class TrailerMovieView(generics.ListAPIView):
             raise NotFound("Movie not found.")
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LikeMovieView(generics.ListAPIView):
     serializer_class = FilmSerializer
 
     def get_queryset(self):
         user_name = self.request.query_params.get("userName")
+        if not user_name:
+            return Movieinformation.objects.none()
         list_like_movie_ids = LikeMovie.objects.filter(user_name=user_name)
         list_movie_ids = list_like_movie_ids.values_list("movie_id", flat=True)
         return Movieinformation.objects.filter(movie_id__in=list_movie_ids)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         user_name = request.data.get("userName")
@@ -1591,20 +1519,14 @@ class LikeMovieView(generics.ListAPIView):
         try:
             user = User.objects.get(username=user_name)
         except User.DoesNotExist:
-            return Response(
-                {"message": "User not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
         except Movieinformation.DoesNotExist:
-            return Response(
-                {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        if LikeMovie.objects.filter(
-            user_name=user_name, movie_id=movie_info.movie_id
-        ).exists():
+        if LikeMovie.objects.filter(user_name=user_name, movie_id=movie_info.movie_id).exists():
             return Response(
                 {"message": "User has already liked this movie."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -1619,9 +1541,7 @@ class LikeMovieView(generics.ListAPIView):
                 writer.writerow([user_name, movie_info.movie_id, 10])
 
             LikeMovie.objects.create(user_name=user_name, movie_id=movie_info.movie_id)
-            return Response(
-                {"message": "Like movie successfully."}, status=status.HTTP_201_CREATED
-            )
+            return Response({"message": "Like movie successfully."}, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
         user_name = request.data.get("userName")
@@ -1636,21 +1556,15 @@ class LikeMovieView(generics.ListAPIView):
         try:
             user = User.objects.get(username=user_name)
         except User.DoesNotExist:
-            return Response(
-                {"message": "User not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             movie_info = Movieinformation.objects.get(movie_name=movie_name)
         except Movieinformation.DoesNotExist:
-            return Response(
-                {"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "Movie not found."}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            like_instance = LikeMovie.objects.get(
-                user_name=user_name, movie_id=movie_info.movie_id
-            )
+            like_instance = LikeMovie.objects.get(user_name=user_name, movie_id=movie_info.movie_id)
         except LikeMovie.DoesNotExist:
             return Response(
                 {"message": "User has not liked this movie."},
@@ -1658,6 +1572,4 @@ class LikeMovieView(generics.ListAPIView):
             )
 
         like_instance.delete()
-        return Response(
-            {"message": "Unlike movie successfully."}, status=status.HTTP_204_NO_CONTENT
-        )
+        return Response({"message": "Unlike movie successfully."}, status=status.HTTP_204_NO_CONTENT)

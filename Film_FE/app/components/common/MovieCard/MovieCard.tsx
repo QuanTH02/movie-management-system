@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import clsx from "clsx";
+import Card from "../Card";
+import Button from "../Button";
 import type { Movie } from "@/types/api.types";
 
 interface MovieCardProps {
@@ -18,13 +21,6 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
     }
   }, []);
 
-  const handleCardClick = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("movie_name", movie.movie_name);
-      window.location.href = "/detail";
-    }
-  };
-
   const handleAddToList = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onAddToList) {
@@ -37,56 +33,73 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
       ? String(movie.rating).split("/")[0]
       : movie.movie_rating || movie.rating || "N/A";
 
+  const detailUrl = `/detail?movie=${encodeURIComponent(movie.movie_name)}`;
+
   return (
-    <div
-      className="col-md-2 mb-4 mr-0 card-to-detail"
-      onClick={handleCardClick}
-      style={{ cursor: "pointer" }}
-    >
-      <div className="card">
-        <div className="img-container">
+    <Link href={detailUrl} className="group block">
+      <Card
+        hover
+        className="h-full flex flex-col overflow-hidden transform transition-all duration-hover group-hover:scale-105"
+      >
+        {/* Image */}
+        <div className="relative w-full pt-[150%] bg-dark-surface overflow-hidden">
           {movie.main_img ? (
             <img
               src={movie.main_img as string}
               alt={movie.movie_name}
-              className="card-img-top"
-              style={{ objectFit: "cover", width: "100%", height: "auto" }}
+              className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-hover group-hover:scale-110"
             />
           ) : (
-            <div
-              className="card-img-top bg-secondary"
-              style={{ height: "300px" }}
-            />
+            <div className="absolute inset-0 flex items-center justify-center bg-dark-card">
+              <i className="fas fa-image text-4xl text-dark-text-muted" />
+            </div>
           )}
+          {/* Rating Badge */}
+          <div className="absolute top-2 right-2 bg-dark-bg/80 backdrop-blur-sm px-2 py-1 rounded-badge flex items-center gap-1">
+            <i className="fas fa-star text-rating-DEFAULT text-sm" />
+            <span className="text-dark-text text-sm font-semibold">
+              {rating}
+            </span>
+          </div>
         </div>
-        <div className="card-body d-flex flex-column align-items-center">
-          <p className="card-text mr-auto mb-2">
-            <i className="fas fa-star" style={{ color: "yellow" }}></i> {rating}
-          </p>
-          <h6 className="card-title mt-0">{movie.movie_name}</h6>
-          <br />
-          <button
-            className="btn btn-primary add_to_list"
-            onClick={handleAddToList}
-          >
-            <i className="fas fa-plus"></i> Add to List
-          </button>
-          <a
-            href="/detail"
-            className="mt-2"
-            style={{ width: "150px", textAlign: "center" }}
-            onClick={(e) => {
-              e.preventDefault();
-              handleCardClick();
-            }}
-          >
-            <button className="btn btn-success p-2">
-              <i className="fa fa-play mr-1"></i> Watch Movie
-            </button>
-          </a>
+
+        {/* Content */}
+        <div className="p-4 flex flex-col flex-grow">
+          <h6 className="text-dark-text font-semibold text-base mb-3 line-clamp-2 min-h-[3rem]">
+            {movie.movie_name}
+          </h6>
+
+          <div className="mt-auto flex flex-col gap-2">
+            <Button
+              variant="primary"
+              size="sm"
+              fullWidth
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddToList(e);
+              }}
+            >
+              <i className="fas fa-plus mr-2" />
+              Add to List
+            </Button>
+            <Link href={detailUrl}>
+              <Button
+                variant="success"
+                size="sm"
+                fullWidth
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <i className="fa fa-play mr-2" />
+                Watch
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
-    </div>
+      </Card>
+    </Link>
   );
 }
 

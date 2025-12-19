@@ -1,0 +1,56 @@
+"use client";
+
+import Link from "next/link";
+import type { Movie } from "@/types/api.types";
+
+interface MovieHeaderProps {
+  movie: Movie;
+  movieName: string | null;
+}
+
+function MovieHeader({ movie, movieName }: MovieHeaderProps) {
+  return (
+    <div className="flex items-start justify-between mb-6">
+      <div className="flex-1">
+        <h1 className="text-4xl font-bold text-dark-text mb-3">
+          {movie.movie_name}
+        </h1>
+        <div className="flex items-center gap-2 text-dark-text-secondary">
+          {movie.year_manufacture && (
+            <>
+              <span>{String(movie.year_manufacture)}</span>
+              <span className="text-[2px]">•</span>
+            </>
+          )}
+          <span>T18</span>
+          <span className="text-[2px]">•</span>
+          <span>
+            {String((movie as any).time || movie.movie_time || "2h 38m")}
+          </span>
+        </div>
+      </div>
+      <div className="text-right">
+        <h6 className="text-dark-text-secondary text-xs uppercase mb-2">
+          IMDb RATING
+        </h6>
+        <Link
+          href={`/rating?movie=${encodeURIComponent(movieName || "")}`}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-card bg-dark-card hover:bg-dark-card-hover transition-colors duration-hover"
+        >
+          <i className="fas fa-star text-rating-DEFAULT text-xl" />
+          <div className="text-left">
+            <p className="m-0 text-dark-text font-semibold text-base">
+              {movie.rating || "N/A"}
+            </p>
+            <p className="m-0 text-dark-text-secondary text-xs">
+              {movie.total_vote || 0} votes
+            </p>
+          </div>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default MovieHeader;
+export type { MovieHeaderProps };

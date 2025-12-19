@@ -1,0 +1,11 @@
+export { default as MovieHeader } from "./MovieHeader";
+export { default as MovieMedia } from "./MovieMedia";
+export { default as MovieIntro } from "./MovieIntro";
+export { default as SectionTitle } from "./SectionTitle";
+export { default as TopCastSection } from "./TopCastSection";
+export { default as StorylineSection } from "./StorylineSection";
+export { default as DetailsSection } from "./DetailsSection";
+export { default as UserReviewsSection } from "./UserReviewsSection";
+export { default as BoxOfficeSection } from "./BoxOfficeSection";
+export { default as DidYouKnowSection } from "./DidYouKnowSection";
+export { default as RecommendationsSidebar } from "./RecommendationsSidebar";

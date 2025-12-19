@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
+import Button from "../Button";
+import Input from "../Input";
 
 interface NavbarProps {
   currentAccount?: string | null;
@@ -12,12 +15,14 @@ function Navbar({ currentAccount }: NavbarProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilter, setSearchFilter] = useState("0");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("currentAccount");
       router.push("/login");
     }
+    setShowDropdown(false);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -30,116 +35,113 @@ function Navbar({ currentAccount }: NavbarProps) {
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top all-page-navbar"
-      style={{ zIndex: 1000 }}
-    >
-      <Link
-        className="navbar-brand ml-5"
-        href="/"
-        style={{
-          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-          fontSize: "24px",
-          textDecoration: "none",
-          fontWeight: "bold",
-        }}
-      >
-        <span style={{ color: "#ff5722" }}>H</span>
-        <span style={{ color: "#1976d2" }}>Y</span>
-        <span style={{ color: "#4caf50" }}>F</span>
-        <span style={{ color: "#ff9800" }}>M</span>
-        <span style={{ color: "#e91e63" }}>o</span>
-        <span style={{ color: "#9c27b0" }}>v</span>
-        <span style={{ color: "#673ab7" }}>i</span>
-        <span style={{ color: "#ff5722" }}>e</span>
-      </Link>
-
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <form
-          className="search-box form-inline ml-auto"
-          onSubmit={handleSearch}
-        >
-          <select
-            id="filmFilter"
-            name="filmFilter"
-            className="d-inline-block mr-2"
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-            style={{ padding: "7px", borderRadius: "3px" }}
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-dark-bg border-b border-dark-border shadow-navbar">
+      <div className="w-container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center space-x-1 text-2xl font-display font-bold no-underline"
           >
-            <option value="0">Filter</option>
-            <option value="1">Movie Name</option>
-            <option value="2">Year</option>
-            <option value="3">Rating</option>
-          </select>
+            <span className="text-accent-orange">H</span>
+            <span className="text-accent-blue">Y</span>
+            <span className="text-accent-green">F</span>
+            <span className="text-accent-yellow">M</span>
+            <span className="text-accent-pink">o</span>
+            <span className="text-accent-purple">v</span>
+            <span className="text-accent-cyan">i</span>
+            <span className="text-accent-orange">e</span>
+          </Link>
 
-          <input
-            className="form-control mr-2"
-            type="search"
-            placeholder="Search"
-            id="searchInput"
-            aria-label="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: "500px" }}
-          />
-          <button
-            className="btn btn-outline-success my-2 my-sm-0"
-            type="submit"
+          {/* Search Form */}
+          <form
+            onSubmit={handleSearch}
+            className="hidden md:flex items-center gap-3 flex-1 max-w-2xl mx-8"
           >
-            Search
-          </button>
-        </form>
+            <select
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+              className="px-3 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="0">All</option>
+              <option value="1">Movie Name</option>
+              <option value="2">Year</option>
+              <option value="3">Rating</option>
+            </select>
+            <input
+              type="search"
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 px-4 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <Button type="submit" variant="primary" size="md">
+              Search
+            </Button>
+          </form>
 
-        <ul className="navbar-nav ml-auto mr-4">
-          <li className="nav-item">
-            <a className="nav-link mode-page" href="#">
-              Mode
-            </a>
-          </li>
+          {/* Right Menu */}
+          <div className="flex items-center gap-4">
+            <button
+              className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
+              aria-label="Toggle theme"
+            >
+              <i className="fas fa-moon text-lg" />
+            </button>
 
-          {currentAccount ? (
-            <li className="nav-item dropdown ml-4">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <div>
-                  <i className="fas fa-cog"></i> Setting
-                </div>
-              </a>
-              <div
-                className="dropdown-menu dropdown-menu-right"
-                aria-labelledby="navbarDropdown"
-              >
-                <a
-                  className="dropdown-item"
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    alert("Profile page coming soon");
-                  }}
+            {currentAccount ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-input bg-dark-card hover:bg-dark-card-hover text-dark-text transition-colors duration-hover"
+                  aria-expanded={showDropdown}
+                  aria-haspopup="true"
                 >
-                  Profile
-                </a>
-                <a className="dropdown-item" href="#" onClick={handleLogout}>
-                  Log out
-                </a>
+                  <i className="fas fa-cog" />
+                  <span className="hidden sm:inline">Settings</span>
+                  <i
+                    className={clsx(
+                      "fas fa-chevron-down text-xs transition-transform duration-hover",
+                      {
+                        "rotate-180": showDropdown,
+                      },
+                    )}
+                  />
+                </button>
+
+                {showDropdown && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowDropdown(false)}
+                    />
+                    <div className="absolute right-0 mt-2 w-48 bg-dark-card border border-dark-border rounded-card shadow-card z-20">
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-dark-text hover:bg-dark-card-hover transition-colors duration-hover first:rounded-t-card last:rounded-b-card"
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-            </li>
-          ) : (
-            <li className="nav-item dropdown ml-4">
-              <Link className="nav-link dropdown-toggle" href="/login">
-                <div>Login</div>
+            ) : (
+              <Link href="/login">
+                <Button variant="outline" size="md">
+                  Login
+                </Button>
               </Link>
-            </li>
-          )}
-        </ul>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );

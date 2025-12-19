@@ -43,7 +43,10 @@ services:
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
     volumes:
+      # Mount source code for hot reload
       - ./Film_BE:/app
     command: >
       sh -c "
@@ -57,14 +60,16 @@ services:
         python3 -c \"import mysql.connector; cnx = mysql.connector.connect(host='${DB_HOST}', user='${DB_USER}', password='${DB_PASSWORD}', database='${DB_NAME}'); cursor = cnx.cursor(); cursor.execute('CREATE TABLE IF NOT EXISTS django_session (session_key varchar(40) NOT NULL PRIMARY KEY, session_data longtext NOT NULL, expire_date datetime(6) NOT NULL, KEY django_session_expire_date_a5c62663 (expire_date)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'); cnx.commit(); cursor.close(); cnx.close(); print('django_session table ready')\" 2>&1 || echo 'Session table check completed' &&
         echo 'Creating admin user...' &&
         python3 create_admin.py 2>&1 || echo 'Admin user check completed' &&
-        echo 'Starting Django server...' &&
+        echo 'Starting Django development server with auto-reload...' &&
         exec python3 manage.py runserver 0.0.0.0:8000
       "
 
   frontend:
     build:
       context: ./Film_FE
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
     container_name: movie_frontend
     restart: unless-stopped
     depends_on:
@@ -72,8 +77,21 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000/api
-    # No volumes - use built image
+      - NODE_ENV=development
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+      - WATCHPACK_POLLING=true
+    volumes:
+      # Mount source code for hot reload
+      - ./Film_FE/app:/app/app
+      - ./Film_FE/public:/app/public
+      - ./Film_FE/next.config.js:/app/next.config.js
+      - ./Film_FE/tailwind.config.ts:/app/tailwind.config.ts
+      - ./Film_FE/tsconfig.json:/app/tsconfig.json
+      - ./Film_FE/postcss.config.js:/app/postcss.config.js
+      - ./Film_FE/package.json:/app/package.json
+      # Exclude node_modules and .next to use container's versions
+      - /app/node_modules
+      - /app/.next
 
 volumes:
   mysql_data:

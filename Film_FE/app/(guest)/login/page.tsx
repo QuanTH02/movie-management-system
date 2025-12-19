@@ -1,279 +1,191 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import clsx from "clsx";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "@/app/components/common/Navbar";
-import { useLogin, useRegister } from "@/app/lib/api/hooks";
-import type { RegisterRequest } from "@/types/api.types";
+import Input from "@/app/components/common/Input";
+import Button from "@/app/components/common/Button";
+import { useLogin } from "@/app/lib/api/hooks";
+import { useToast } from "@/app/components/common/Toast";
+import {
+  loginSchema,
+  type LoginFormData,
+} from "@/app/lib/validations/auth.schema";
 
 function LoginPage() {
   const router = useRouter();
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [registerData, setRegisterData] = useState<RegisterRequest>({
-    account: "",
-    name: "",
-    gmail: "",
-    password: "",
-    confirm_password: "",
-  });
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { trigger: loginTrigger, isMutating: isLoggingIn } = useLogin({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+  });
+
+  const { trigger: loginTrigger } = useLogin({
     onSuccess: (data) => {
       if (data?.message === "Successfully logged in.") {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("currentAccount", loginUsername);
+        const username = (
+          document.querySelector('input[name="username"]') as HTMLInputElement
+        )?.value;
+        if (typeof window !== "undefined" && username) {
+          localStorage.setItem("currentAccount", username);
         }
+        toast.success("Login successful! Welcome back.");
         router.push("/");
       }
     },
     onError: (error) => {
-      alert(error?.message || "Login failed, please try again!");
+      toast.error(
+        error?.message ||
+          "Login failed. Please check your credentials and try again.",
+      );
     },
   });
 
-  const { trigger: registerTrigger, isMutating: isRegistering } = useRegister({
-    onSuccess: (data) => {
-      alert(data?.message || "Registration successful!");
-      setIsSignUp(false);
-    },
-    onError: (error) => {
-      alert(error?.message || "Registration failed, please try again!");
-    },
-  });
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!loginUsername || !loginPassword) {
-      alert("Please fill in all fields");
-      return;
-    }
-    await loginTrigger({ username: loginUsername, password: loginPassword });
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (registerData.password !== registerData.confirm_password) {
-      alert("Password and Confirm Password must be the same!");
-      return;
-    }
-    if (registerData.password.length < 6) {
-      alert("Password must be at least 6 characters");
-      return;
-    }
-    await registerTrigger(registerData);
+  const onSubmit = async (data: LoginFormData) => {
+    await loginTrigger({ username: data.username, password: data.password });
   };
 
   return (
     <>
       <Navbar />
-      <div className="bg-login" style={{ paddingTop: "56px" }}>
-        <br />
-        <br />
-        <div className="cont">
-          <div className={`form ${isSignUp ? "sign-up" : "sign-in"}`}>
-            <h2 style={{ color: "black" }}>Welcome</h2>
-            <br />
-            {!isSignUp ? (
-              <form onSubmit={handleLogin}>
-                <label>
-                  <span>Account</span>
-                  <input
-                    className="input-login"
-                    id="login-account"
-                    type="text"
-                    placeholder="Enter your account"
-                    value={loginUsername}
-                    onChange={(e) => setLoginUsername(e.target.value)}
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Password</span>
-                  <div style={{ width: "100%" }}>
-                    <input
-                      className="input-login"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      id="passwordField1"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
-                    />
-                    <i
-                      className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        color: "black",
-                        fontSize: "16px",
-                        position: "absolute",
-                        marginTop: "-20px",
-                        marginLeft: "238px",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </div>
-                </label>
-                <p
-                  className="forgot-pass mt-2"
-                  style={{ fontStyle: "italic", marginTop: "0px" }}
-                >
-                  <a href="#" style={{ color: "black", fontSize: "14px" }}>
-                    Forgot password?
-                  </a>
-                </p>
-                <button
-                  type="submit"
-                  className="submit"
-                  id="btn-sign-in"
-                  disabled={isLoggingIn}
-                >
-                  {isLoggingIn ? "Signing In..." : "Sign In"}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleRegister}>
-                <label>
-                  <span>Account</span>
-                  <input
-                    className="input-login"
-                    id="register-account"
-                    type="text"
-                    placeholder="Enter your account"
-                    value={registerData.account}
-                    onChange={(e) =>
-                      setRegisterData({
-                        ...registerData,
-                        account: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Name</span>
-                  <input
-                    className="input-login"
-                    id="nameField"
-                    type="text"
-                    placeholder="Enter your name"
-                    value={registerData.name}
-                    onChange={(e) =>
-                      setRegisterData({ ...registerData, name: e.target.value })
-                    }
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Email</span>
-                  <input
-                    className="input-login"
-                    id="emailField"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={registerData.gmail}
-                    onChange={(e) =>
-                      setRegisterData({
-                        ...registerData,
-                        gmail: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Password</span>
-                  <div style={{ width: "100%" }}>
-                    <input
-                      className="input-login"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      id="passwordField2"
-                      value={registerData.password}
-                      onChange={(e) =>
-                        setRegisterData({
-                          ...registerData,
-                          password: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                    <i
-                      className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        color: "black",
-                        fontSize: "16px",
-                        position: "absolute",
-                        marginTop: "-20px",
-                        marginLeft: "238px",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </div>
-                </label>
-                <label>
-                  <span>Confirm Password</span>
-                  <div style={{ width: "100%" }}>
-                    <input
-                      className="input-login"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      id="confirmPasswordField"
-                      value={registerData.confirm_password}
-                      onChange={(e) =>
-                        setRegisterData({
-                          ...registerData,
-                          confirm_password: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                    <i
-                      className={`fa ${showConfirmPassword ? "fa-eye" : "fa-eye-slash"}`}
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      style={{
-                        color: "black",
-                        fontSize: "16px",
-                        position: "absolute",
-                        marginTop: "-20px",
-                        marginLeft: "238px",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </div>
-                </label>
-                <button
-                  type="submit"
-                  className="submit"
-                  id="btn-sign-up"
-                  disabled={isRegistering}
-                >
-                  {isRegistering ? "Signing Up..." : "Sign Up"}
-                </button>
-              </form>
-            )}
+      <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-surface to-dark-bg flex items-center justify-center py-12 px-4 pt-20">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-dark-text mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-dark-text-secondary">
+              Sign in to continue to your account
+            </p>
           </div>
-          <div className="sub-cont">
-            <div className="img">
-              <div className={`img__text m--${isSignUp ? "in" : "up"}`}>
-                <h3>
-                  {isSignUp
-                    ? "If you already has an account, just sign in."
-                    : "Don't have an account? Please Sign up!"}
-                </h3>
+
+          {/* Login Card */}
+          <div className="bg-dark-card border border-dark-border rounded-card p-8 shadow-lg">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <Input
+                  label="Account"
+                  type="text"
+                  placeholder="Enter your account"
+                  {...register("username")}
+                  error={errors.username?.message}
+                  className="w-full"
+                />
               </div>
-              <div className="img__btn" onClick={() => setIsSignUp(!isSignUp)}>
-                <span className={`m--${isSignUp ? "in" : "up"}`}>
-                  {isSignUp ? "Sign In" : "Sign Up"}
+
+              <div>
+                <Input
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  {...register("password")}
+                  error={errors.password?.message}
+                  rightIcon={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                    >
+                      <i
+                        className={clsx("fas", {
+                          "fa-eye": showPassword,
+                          "fa-eye-slash": !showPassword,
+                        })}
+                      />
+                    </button>
+                  }
+                  className="w-full"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-dark-border bg-dark-surface text-primary-600 focus:ring-primary-500 focus:ring-2"
+                  />
+                  <span className="text-sm text-dark-text-secondary">
+                    Remember me
+                  </span>
+                </label>
+                <a
+                  href="#"
+                  className="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-hover"
+                >
+                  Forgot password?
+                </a>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={isSubmitting}
+                className="mt-6"
+              >
+                {isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-dark-border" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-dark-card text-dark-text-secondary">
+                  New to HYFMovie?
                 </span>
               </div>
             </div>
+
+            {/* Sign Up Link */}
+            <div className="text-center">
+              <p className="text-sm text-dark-text-secondary">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/register"
+                  className="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-hover"
+                >
+                  Sign up now
+                </Link>
+              </p>
+            </div>
+          </div>
+
+          {/* Additional Info */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-dark-text-muted">
+              By signing in, you agree to our{" "}
+              <a
+                href="#"
+                className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
+              >
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a
+                href="#"
+                className="text-primary-600 hover:text-primary-700 transition-colors duration-hover"
+              >
+                Privacy Policy
+              </a>
+            </p>
           </div>
         </div>
       </div>

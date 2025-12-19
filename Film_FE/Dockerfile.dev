@@ -1,0 +1,24 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Build args for environment variables
+ARG NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including devDependencies for dev mode)
+RUN npm ci
+
+# Expose port
+EXPOSE 3000
+
+# Development mode - no build, just run dev server
+ENV NODE_ENV=development
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Start Next.js dev server with hot reload
+CMD ["npm", "run", "dev"]
