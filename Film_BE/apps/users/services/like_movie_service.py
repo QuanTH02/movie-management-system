@@ -3,6 +3,7 @@ Service for like movie operations.
 """
 
 import csv
+import logging
 from typing import List
 
 from django.contrib.auth.models import User
@@ -10,6 +11,8 @@ from django.contrib.auth.models import User
 from apps.core.exceptions import BusinessLogicException, ResourceNotFoundException
 from apps.movies.models import Movieinformation
 from apps.users.models import LikeMovie
+
+logger = logging.getLogger(__name__)
 
 
 class LikeMovieService:
@@ -69,9 +72,13 @@ class LikeMovieService:
             with open(LikeMovieService.CSV_FILE_PATH, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([username, movie_info.movie_id, 10])
-        except Exception:
+        except Exception as e:
             # Log error but don't fail the operation
-            pass
+            logger.warning(
+                f"Failed to write like to CSV: {str(e)}",
+                exc_info=True,
+                extra={"username": username, "movie_id": movie_info.movie_id},
+            )
 
     @staticmethod
     def unlike_movie(username: str, movie_name: str) -> None:

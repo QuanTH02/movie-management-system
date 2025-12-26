@@ -2,19 +2,24 @@
 Service for movie recommendation operations.
 """
 
+import logging
 from typing import List, Optional, Union
 
 from django.contrib.auth.models import User
 
-from apps.core.exceptions import ResourceNotFoundException
+from apps.core.exceptions import BusinessLogicException, ResourceNotFoundException
 from apps.movies.models import Movieinformation
 from apps.movies.services.movie_query_service import MovieQueryService
+
+logger = logging.getLogger(__name__)
 
 # Import recommendation functions
 try:
     from App_Film_BE.Reconmmendation.Collaborative.load_model import recommend_collaborative_by_user_id
     from App_Film_BE.Reconmmendation.Content_Based.load_model import recommend_content_based_by_movie_id
 except ImportError:
+    logger.warning("Recommendation modules not found. Using fallback functions.")
+
     # Fallback if imports fail
     def recommend_collaborative_by_user_id(user_id: int) -> List[int]:
         return []
@@ -51,8 +56,15 @@ class RecommendationService:
             if limit:
                 recommended_ids = recommended_ids[:limit]
             return MovieQueryService.get_movies_by_ids(recommended_ids, preserve_order=True)
+        except ResourceNotFoundException:
+            raise
         except Exception as e:
-            raise ResourceNotFoundException(f"Error getting recommendations: {str(e)}")
+            logger.error(
+                f"Error getting content-based recommendations for movie {movie_id}: {str(e)}",
+                exc_info=True,
+                extra={"movie_id": movie_id},
+            )
+            raise BusinessLogicException(f"Error getting content-based recommendations: {str(e)}")
 
     @staticmethod
     def get_collaborative_recommendations(user_identifier: Union[int, str], limit: int = 12) -> List[Movieinformation]:
@@ -83,5 +95,12 @@ class RecommendationService:
             recommended_ids = recommend_collaborative_by_user_id(user_id)
             recommended_ids = recommended_ids[:limit]
             return MovieQueryService.get_movies_by_ids(recommended_ids, preserve_order=True)
+        except ResourceNotFoundException:
+            raise
         except Exception as e:
-            raise ResourceNotFoundException(f"Error getting recommendations: {str(e)}")
+            logger.error(
+                f"Error getting collaborative recommendations for user {user_id}: {str(e)}",
+                exc_info=True,
+                extra={"user_id": user_id},
+            )
+            raise BusinessLogicException(f"Error getting collaborative recommendations: {str(e)}")

@@ -3,6 +3,7 @@ Service for review operations.
 """
 
 import csv
+import logging
 from typing import Optional
 
 from django.utils import timezone
@@ -10,6 +11,8 @@ from django.utils import timezone
 from apps.core.exceptions import BusinessLogicException, ResourceNotFoundException
 from apps.movies.models import Movieinformation
 from apps.reviews.models import FilmReview
+
+logger = logging.getLogger(__name__)
 
 
 class ReviewService:
@@ -85,9 +88,13 @@ class ReviewService:
             with open(ReviewService.CSV_FILE_PATH, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([name_review, movie_id, star_review])
-        except Exception:
+        except Exception as e:
             # Log error but don't fail the operation
-            pass
+            logger.warning(
+                f"Failed to write review to CSV: {str(e)}",
+                exc_info=True,
+                extra={"review_id": film_review_id, "movie_id": movie_id},
+            )
 
         return film_review
 
