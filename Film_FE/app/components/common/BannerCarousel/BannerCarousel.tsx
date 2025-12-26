@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useI18n, translate } from "@/app/lib/i18n";
 import Card from "../Card";
 import type { Movie } from "@/types/api.types";
+import {
+  BANNER_MOVIES_COUNT,
+  MOVIE_DESCRIPTION_SHORT_LENGTH,
+} from "@/app/lib/constants/ui";
 
 interface BannerCarouselProps {
   movies: Movie[];
@@ -13,7 +17,7 @@ interface BannerCarouselProps {
 function BannerCarousel({ movies }: BannerCarouselProps) {
   const { t } = useI18n();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const bannerMovies = movies.slice(0, 3);
+  const bannerMovies = movies.slice(0, BANNER_MOVIES_COUNT);
 
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : bannerMovies.length - 1));
@@ -141,8 +145,9 @@ function BannerCarousel({ movies }: BannerCarouselProps) {
                       </h5>
                       <p className="text-dark-text-secondary text-sm line-clamp-2">
                         {movie.describe_movie &&
-                        String(movie.describe_movie).length > 60
-                          ? `${String(movie.describe_movie).substring(0, 60)}...`
+                        String(movie.describe_movie).length >
+                          MOVIE_DESCRIPTION_SHORT_LENGTH
+                          ? `${String(movie.describe_movie).substring(0, MOVIE_DESCRIPTION_SHORT_LENGTH)}...`
                           : String(movie.describe_movie || "")}
                       </p>
                     </div>

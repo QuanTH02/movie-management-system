@@ -1,5 +1,15 @@
 import { z } from "zod";
 import type { Translations } from "@/app/lib/i18n";
+import {
+  ACCOUNT_MIN_LENGTH,
+  ACCOUNT_MAX_LENGTH,
+  ACCOUNT_REGEX,
+  NAME_MIN_LENGTH,
+  NAME_MAX_LENGTH,
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MAX_LENGTH,
+} from "@/app/lib/constants/validation";
 
 // Helper function to create localized schemas
 export function createLoginSchema(t: Translations) {
@@ -7,12 +17,12 @@ export function createLoginSchema(t: Translations) {
     username: z
       .string()
       .min(1, t.validation.accountRequired)
-      .min(3, t.validation.accountMinLength)
-      .max(50, t.validation.accountMaxLength),
+      .min(ACCOUNT_MIN_LENGTH, t.validation.accountMinLength)
+      .max(ACCOUNT_MAX_LENGTH, t.validation.accountMaxLength),
     password: z
       .string()
       .min(1, t.validation.passwordRequired)
-      .min(6, t.validation.passwordMinLength),
+      .min(PASSWORD_MIN_LENGTH, t.validation.passwordMinLength),
   });
 }
 
@@ -22,24 +32,24 @@ export function createRegisterSchema(t: Translations) {
       account: z
         .string()
         .min(1, t.validation.accountRequired)
-        .min(3, t.validation.accountMinLength)
-        .max(50, t.validation.accountMaxLength)
-        .regex(/^[a-zA-Z0-9_]+$/, t.validation.accountInvalid),
+        .min(ACCOUNT_MIN_LENGTH, t.validation.accountMinLength)
+        .max(ACCOUNT_MAX_LENGTH, t.validation.accountMaxLength)
+        .regex(ACCOUNT_REGEX, t.validation.accountInvalid),
       name: z
         .string()
         .min(1, t.validation.nameRequired)
-        .min(2, t.validation.nameMinLength)
-        .max(100, t.validation.nameMaxLength),
+        .min(NAME_MIN_LENGTH, t.validation.nameMinLength)
+        .max(NAME_MAX_LENGTH, t.validation.nameMaxLength),
       gmail: z
         .string()
         .min(1, t.validation.emailRequired)
         .email(t.validation.emailInvalid)
-        .max(255, t.validation.emailMaxLength),
+        .max(EMAIL_MAX_LENGTH, t.validation.emailMaxLength),
       password: z
         .string()
         .min(1, t.validation.passwordRequired)
-        .min(6, t.validation.passwordMinLength)
-        .max(100, t.validation.passwordMaxLength),
+        .min(PASSWORD_MIN_LENGTH, t.validation.passwordMinLength)
+        .max(PASSWORD_MAX_LENGTH, t.validation.passwordMaxLength),
       confirm_password: z.string().min(1, t.validation.confirmPasswordRequired),
     })
     .refine((data) => data.password === data.confirm_password, {

@@ -5,6 +5,7 @@ import { useI18n } from "@/app/lib/i18n";
 import SectionTitle from "../SectionTitle";
 import Card from "@/app/components/common/Card";
 import Button from "@/app/components/common/Button";
+import { TOP_REVIEWS_DISPLAY_COUNT } from "@/app/lib/constants/ui";
 
 interface Review {
   film_review_id?: number;
@@ -24,7 +25,7 @@ function UserReviewsSection({ reviews, movieName }: UserReviewsSectionProps) {
   const { t } = useI18n();
   if (!reviews || reviews.length === 0) return null;
 
-  const topReviews = reviews.slice(0, 3);
+  const topReviews = reviews.slice(0, TOP_REVIEWS_DISPLAY_COUNT);
 
   return (
     <div className="mb-8">

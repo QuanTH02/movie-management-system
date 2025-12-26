@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "@/app/components/common/Navbar";
-import Input from "@/app/components/common/Input";
+import Input, { InputController } from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import { useRegister } from "@/app/lib/api/hooks";
 import { useToast } from "@/app/components/common/Toast";
@@ -27,12 +27,19 @@ function RegisterPage() {
   const registerSchema = createRegisterSchema(t);
 
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    mode: "onBlur",
+    mode: "onChange",
+    defaultValues: {
+      account: "",
+      name: "",
+      gmail: "",
+      password: "",
+      confirm_password: "",
+    },
   });
 
   const { trigger: registerTrigger } = useRegister({
@@ -73,102 +80,90 @@ function RegisterPage() {
           {/* Register Card */}
           <div className="bg-dark-card border border-dark-border rounded-card p-8 shadow-lg">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div>
-                <Input
-                  label={t.register.account}
-                  type="text"
-                  placeholder={t.register.chooseUsername}
-                  {...register("account")}
-                  error={errors.account?.message}
-                  helperText={t.register.accountHelper}
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="account"
+                control={control}
+                label={t.register.account}
+                type="text"
+                placeholder={t.register.chooseUsername}
+                helperText={t.register.accountHelper}
+                className="w-full"
+              />
 
-              <div>
-                <Input
-                  label={t.register.fullName}
-                  type="text"
-                  placeholder={t.register.enterFullName}
-                  {...register("name")}
-                  error={errors.name?.message}
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="name"
+                control={control}
+                label={t.register.fullName}
+                type="text"
+                placeholder={t.register.enterFullName}
+                className="w-full"
+              />
 
-              <div>
-                <Input
-                  label={t.register.email}
-                  type="email"
-                  placeholder={t.register.enterEmail}
-                  {...register("gmail")}
-                  error={errors.gmail?.message}
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="gmail"
+                control={control}
+                label={t.register.email}
+                type="email"
+                placeholder={t.register.enterEmail}
+                className="w-full"
+              />
 
-              <div>
-                <Input
-                  label={t.register.password}
-                  type={showPassword ? "text" : "password"}
-                  placeholder={t.register.createPassword}
-                  {...register("password")}
-                  error={errors.password?.message}
-                  helperText={t.register.passwordHelper}
-                  rightIcon={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
-                      aria-label={
-                        showPassword
-                          ? t.register.hidePassword
-                          : t.register.showPassword
-                      }
-                    >
-                      <i
-                        className={clsx("fas", {
-                          "fa-eye": showPassword,
-                          "fa-eye-slash": !showPassword,
-                        })}
-                      />
-                    </button>
-                  }
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="password"
+                control={control}
+                label={t.register.password}
+                type={showPassword ? "text" : "password"}
+                placeholder={t.register.createPassword}
+                helperText={t.register.passwordHelper}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
+                    aria-label={
+                      showPassword
+                        ? t.register.hidePassword
+                        : t.register.showPassword
+                    }
+                  >
+                    <i
+                      className={clsx("fas", {
+                        "fa-eye": showPassword,
+                        "fa-eye-slash": !showPassword,
+                      })}
+                    />
+                  </button>
+                }
+                className="w-full"
+              />
 
-              <div>
-                <Input
-                  label={t.register.confirmPassword}
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder={t.register.confirmPasswordPlaceholder}
-                  {...register("confirm_password")}
-                  error={errors.confirm_password?.message}
-                  rightIcon={
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
-                      aria-label={
-                        showConfirmPassword
-                          ? t.register.hidePassword
-                          : t.register.showPassword
-                      }
-                    >
-                      <i
-                        className={clsx("fas", {
-                          "fa-eye": showConfirmPassword,
-                          "fa-eye-slash": !showConfirmPassword,
-                        })}
-                      />
-                    </button>
-                  }
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="confirm_password"
+                control={control}
+                label={t.register.confirmPassword}
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder={t.register.confirmPasswordPlaceholder}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="text-dark-text-secondary hover:text-dark-text transition-colors duration-hover"
+                    aria-label={
+                      showConfirmPassword
+                        ? t.register.hidePassword
+                        : t.register.showPassword
+                    }
+                  >
+                    <i
+                      className={clsx("fas", {
+                        "fa-eye": showConfirmPassword,
+                        "fa-eye-slash": !showConfirmPassword,
+                      })}
+                    />
+                  </button>
+                }
+                className="w-full"
+              />
 
               <Button
                 type="submit"

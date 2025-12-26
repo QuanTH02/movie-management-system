@@ -16,6 +16,13 @@
   }
 }
 
+/* Ensure error text is always red */
+@layer utilities {
+  .text-error-DEFAULT {
+    color: #ef4444 !important;
+  }
+}
+
 /* Toast Animation */
 @keyframes slideIn {
   from {

@@ -5,6 +5,7 @@ import MovieCard from "../MovieCard";
 import SectionTitle from "@/app/components/detail/SectionTitle";
 import type { Movie } from "@/types/api.types";
 import { useI18n, translate } from "@/app/lib/i18n";
+import { MOVIE_CAROUSEL_ITEMS_PER_SLIDE } from "@/app/lib/constants/ui";
 
 interface MovieCarouselProps {
   movies: Movie[];
@@ -15,7 +16,7 @@ interface MovieCarouselProps {
 function MovieCarousel({ movies, title, onAddToList }: MovieCarouselProps) {
   const { t } = useI18n();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const itemsPerSlide = 6;
+  const itemsPerSlide = MOVIE_CAROUSEL_ITEMS_PER_SLIDE;
   const totalSlides = Math.ceil(movies.length / itemsPerSlide);
 
   const handlePrev = useCallback(() => {

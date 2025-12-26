@@ -5,6 +5,8 @@ import Navbar from "@/app/components/common/Navbar";
 import Container from "@/app/components/common/Container";
 import Card from "@/app/components/common/Card";
 import Button from "@/app/components/common/Button";
+import Select from "@/app/components/common/Select";
+import Checkbox from "@/app/components/common/Checkbox";
 import { useI18n } from "@/app/lib/i18n";
 
 function SettingPage() {
@@ -34,21 +36,15 @@ function SettingPage() {
                 {t.pages.setting.appearance}
               </h2>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-dark-text font-semibold mb-2">
-                    {t.pages.setting.theme}
-                  </label>
-                  <select
-                    value={theme}
-                    onChange={(e) =>
-                      setTheme(e.target.value as "dark" | "light")
-                    }
-                    className="w-full px-3 py-2 rounded-input bg-dark-card border border-dark-border text-dark-text focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  >
-                    <option value="dark">{t.pages.setting.dark}</option>
-                    <option value="light">{t.pages.setting.light}</option>
-                  </select>
-                </div>
+                <Select
+                  label={t.pages.setting.theme}
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value as "dark" | "light")}
+                  options={[
+                    { value: "dark", label: t.pages.setting.dark },
+                    { value: "light", label: t.pages.setting.light },
+                  ]}
+                />
               </div>
             </Card>
 
@@ -57,17 +53,11 @@ function SettingPage() {
                 {t.pages.setting.notifications}
               </h2>
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-dark-text font-semibold">
-                    {t.pages.setting.enableNotifications}
-                  </label>
-                  <input
-                    type="checkbox"
-                    checked={notifications}
-                    onChange={(e) => setNotifications(e.target.checked)}
-                    className="w-5 h-5 rounded bg-dark-card border-dark-border text-primary-600 focus:ring-primary-500"
-                  />
-                </div>
+                <Checkbox
+                  label={t.pages.setting.enableNotifications}
+                  checked={notifications}
+                  onChange={(e) => setNotifications(e.target.checked)}
+                />
               </div>
             </Card>
 

@@ -5,6 +5,7 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
+import { I18nProvider } from '@/app/lib/i18n';
 
 // Mock SWR config for tests (disable revalidation)
 const swrTestConfig = {
@@ -21,7 +22,11 @@ interface AllTheProvidersProps {
 }
 
 const AllTheProviders = ({ children }: AllTheProvidersProps) => {
-  return <SWRConfig value={swrTestConfig}>{children}</SWRConfig>;
+  return (
+    <I18nProvider>
+      <SWRConfig value={swrTestConfig}>{children}</SWRConfig>
+    </I18nProvider>
+  );
 };
 
 const customRender = (
@@ -46,4 +51,3 @@ export const createMockResponse = (data: any, status = 200) => {
     headers: new Headers(),
   } as Response);
 };
-

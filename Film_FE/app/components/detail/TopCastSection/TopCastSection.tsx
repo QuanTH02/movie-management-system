@@ -2,6 +2,7 @@
 
 import { useI18n } from "@/app/lib/i18n";
 import SectionTitle from "../SectionTitle";
+import { TOP_CAST_DISPLAY_COUNT } from "@/app/lib/constants/ui";
 
 interface Cast {
   cast_id?: number;
@@ -18,7 +19,7 @@ function TopCastSection({ cast }: TopCastSectionProps) {
   const { t } = useI18n();
   if (!cast || cast.length === 0) return null;
 
-  const topCast = cast.slice(0, 10);
+  const topCast = cast.slice(0, TOP_CAST_DISPLAY_COUNT);
 
   return (
     <div className="mb-8">

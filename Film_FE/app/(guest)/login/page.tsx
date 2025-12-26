@@ -7,8 +7,9 @@ import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "@/app/components/common/Navbar";
-import Input from "@/app/components/common/Input";
+import Input, { InputController } from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
+import Checkbox from "@/app/components/common/Checkbox";
 import { useLogin } from "@/app/lib/api/hooks";
 import { useToast } from "@/app/components/common/Toast";
 import { useI18n } from "@/app/lib/i18n";
@@ -22,27 +23,26 @@ function LoginPage() {
   const toast = useToast();
   const { t } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const loginSchema = createLoginSchema(t);
 
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: "onBlur",
+    mode: "onChange",
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
   const { trigger: loginTrigger } = useLogin({
     onSuccess: (data) => {
       if (data?.message === "Successfully logged in.") {
-        const username = (
-          document.querySelector('input[name="username"]') as HTMLInputElement
-        )?.value;
-        if (typeof window !== "undefined" && username) {
-          localStorage.setItem("currentAccount", username);
-        }
         toast.success(t.login.loginSuccessful);
         router.push("/");
       }
@@ -53,7 +53,15 @@ function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    await loginTrigger({ username: data.username, password: data.password });
+    const result = await loginTrigger({
+      username: data.username,
+      password: data.password,
+    });
+    if (result?.message === "Successfully logged in.") {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("currentAccount", data.username);
+      }
+    }
   };
 
   return (
@@ -72,24 +80,22 @@ function LoginPage() {
           {/* Login Card */}
           <div className="bg-dark-card border border-dark-border rounded-card p-8 shadow-lg">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div>
-                <Input
-                  label={t.login.account}
-                  type="text"
-                  placeholder={t.login.enterAccount}
-                  {...register("username")}
-                  error={errors.username?.message}
-                  className="w-full"
-                />
-              </div>
+              <InputController
+                name="username"
+                control={control}
+                label={t.login.account}
+                type="text"
+                placeholder={t.login.enterAccount}
+                className="w-full"
+              />
 
               <div>
-                <Input
+                <InputController
+                  name="password"
+                  control={control}
                   label={t.login.password}
                   type={showPassword ? "text" : "password"}
                   placeholder={t.login.enterPassword}
-                  {...register("password")}
-                  error={errors.password?.message}
                   rightIcon={
                     <button
                       type="button"
@@ -114,15 +120,12 @@ function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-dark-border bg-dark-surface text-primary-600 focus:ring-primary-500 focus:ring-2"
-                  />
-                  <span className="text-sm text-dark-text-secondary">
-                    {t.login.rememberMe}
-                  </span>
-                </label>
+                <Checkbox
+                  label={t.login.rememberMe}
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="mb-0"
+                />
                 <a
                   href="#"
                   className="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-hover"

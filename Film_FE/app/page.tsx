@@ -14,6 +14,7 @@ import {
 import { useI18n } from "@/app/lib/i18n";
 import { useToast } from "@/app/components/common/Toast";
 import type { Movie } from "@/types/api.types";
+import { MOVIE_LIST_DISPLAY_COUNT } from "@/app/lib/constants/ui";
 
 function HomePage() {
   const { t } = useI18n();
@@ -53,7 +54,7 @@ function HomePage() {
     if (!movies) return [];
     return [...movies]
       .sort((a, b) => (b.total_vote || 0) - (a.total_vote || 0))
-      .slice(0, 12);
+      .slice(0, MOVIE_LIST_DISPLAY_COUNT);
   }, [movies]);
 
   const mostFavouritesMovies = useMemo(() => {
@@ -72,12 +73,12 @@ function HomePage() {
           : 0;
         return ratingB - ratingA;
       })
-      .slice(0, 12);
+      .slice(0, MOVIE_LIST_DISPLAY_COUNT);
   }, [movies]);
 
   const highestRevenueMovies = useMemo(() => {
     if (!topRevenueData?.data_top) return [];
-    return topRevenueData.data_top.slice(0, 12);
+    return topRevenueData.data_top.slice(0, MOVIE_LIST_DISPLAY_COUNT);
   }, [topRevenueData]);
 
   if (isLoading) {

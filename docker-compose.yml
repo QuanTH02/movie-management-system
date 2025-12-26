@@ -89,6 +89,7 @@ services:
       - ./Film_FE/tsconfig.json:/app/tsconfig.json
       - ./Film_FE/postcss.config.js:/app/postcss.config.js
       - ./Film_FE/package.json:/app/package.json
+      - ./Film_FE/package-lock.json:/app/package-lock.json
       # Exclude node_modules and .next to use container's versions
       - /app/node_modules
       - /app/.next

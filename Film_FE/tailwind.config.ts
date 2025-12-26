@@ -57,7 +57,7 @@ const config: Config = {
           light: '#fbbf24',
         },
         error: {
-          DEFAULT: '#ef4444',
+          DEFAULT: '#ef4444', // Red color for errors
           dark: '#dc2626',
           light: '#f87171',
         },

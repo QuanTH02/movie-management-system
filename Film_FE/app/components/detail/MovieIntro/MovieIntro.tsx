@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import { useI18n } from "@/app/lib/i18n";
+import {
+  WRITERS_DISPLAY_COUNT,
+  CAST_DISPLAY_COUNT,
+} from "@/app/lib/constants/ui";
 
 interface Genre {
   genres_id?: number;
@@ -99,19 +103,22 @@ function MovieIntro({
                 <span className="text-dark-text font-semibold mr-2">
                   {t.detail.writer}
                 </span>
-                {writers.slice(0, 3).map((writer, index) => (
-                  <span key={writer.writers_id || index}>
-                    <Link
-                      href="#"
-                      className="text-link hover:text-link-hover transition-colors duration-hover"
-                    >
-                      {writer.name}
-                    </Link>
-                    {index < Math.min(writers.length, 3) - 1 && (
-                      <span className="mx-2 text-dark-text">•</span>
-                    )}
-                  </span>
-                ))}
+                {writers
+                  .slice(0, WRITERS_DISPLAY_COUNT)
+                  .map((writer, index) => (
+                    <span key={writer.writers_id || index}>
+                      <Link
+                        href="#"
+                        className="text-link hover:text-link-hover transition-colors duration-hover"
+                      >
+                        {writer.name}
+                      </Link>
+                      {index <
+                        Math.min(writers.length, WRITERS_DISPLAY_COUNT) - 1 && (
+                        <span className="mx-2 text-dark-text">•</span>
+                      )}
+                    </span>
+                  ))}
               </div>
             )}
 
@@ -120,7 +127,7 @@ function MovieIntro({
                 <span className="text-dark-text font-semibold mr-2">
                   {t.detail.stars}
                 </span>
-                {cast.slice(0, 3).map((star, index) => (
+                {cast.slice(0, CAST_DISPLAY_COUNT).map((star, index) => (
                   <span key={star.cast_id || index}>
                     <Link
                       href="#"
@@ -128,7 +135,7 @@ function MovieIntro({
                     >
                       {star.name}
                     </Link>
-                    {index < Math.min(cast.length, 3) - 1 && (
+                    {index < Math.min(cast.length, CAST_DISPLAY_COUNT) - 1 && (
                       <span className="mx-2 text-dark-text">•</span>
                     )}
                   </span>
