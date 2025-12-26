@@ -23,20 +23,26 @@ import { useI18n } from "@/app/lib/i18n";
 function RatingContent() {
   const { t } = useI18n();
   const searchParams = useSearchParams();
-  const [movieName, setMovieName] = useState<string | null>(null);
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+
+  // Get movieName directly from searchParams to avoid hydration mismatch
+  const movieParam = searchParams.get("movie");
+  const movieName = movieParam ? decodeURIComponent(movieParam) : null;
 
   useEffect(() => {
     setIsMounted(true);
     if (typeof window !== "undefined") {
-      setCurrentAccount(localStorage.getItem("currentAccount"));
-      const movie = searchParams.get("movie");
-      if (movie) {
-        setMovieName(decodeURIComponent(movie));
+      const account = localStorage.getItem("currentAccount");
+      const token = sessionStorage.getItem("access_token");
+      // Only set account if token exists (user is authenticated)
+      if (token && account) {
+        setCurrentAccount(account);
+      } else {
+        setCurrentAccount(null);
       }
     }
-  }, [searchParams]);
+  }, []);
 
   const { data: movieResponse, isLoading: isLoadingMovie } =
     useGetMovieDetail(movieName);
