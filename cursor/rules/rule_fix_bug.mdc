@@ -1,0 +1,894 @@
+---
+alwaysApply: false
+---
+
+# 🛠️ AI Development Rules: Bug Fixing Workflow (Vietnamese Context)
+
+## 🎯 Mục Tiêu
+
+Thực hiện chu trình sửa lỗi (bug fix) nghiêm ngặt nhằm:
+
+1. Tái hiện chính xác lỗi (bug).
+2. Sửa lỗi triệt để, không gây ra lỗi mới (no regressions).
+3. Đảm bảo code sạch, tuân thủ convention, và pass toàn bộ kiểm thử.
+
+## 📚 Tham Chiếu Standards (BẮT BUỘC ĐỌC TRƯỚC KHI BẮT ĐẦU)
+
+**BẮT BUỘC** tham khảo và tuân thủ các standards sau khi fix bug:
+
+- **Frontend Standards:** [frontend_standards.mdc](mdc:frontend_standards.mdc)
+
+  - Tất cả quy tắc về component structure, hooks, TypeScript, styling, API communication
+  - Quy tắc về error handling, cleanup, performance optimization
+  - PR Review Checklist cho Frontend
+
+- **Django Backend Standards:** [django_backend_standards.mdc](mdc:django_backend_standards.mdc)
+  - Tất cả quy tắc về project structure, models, API design, service layer
+  - Quy tắc về testing, error handling, code style
+  - Các file rules chi tiết trong `backend/docs/rules/`
+
+**LƯU Ý:** Không tự viết lại các quy tắc đã có trong 2 file standards trên. Chỉ tham chiếu và áp dụng.
+
+## 📥 INPUT - Dữ Liệu Đầu Vào (Context & Requirement)
+
+(Phần này sẽ được điền bởi User trong mỗi lần sử dụng)
+
+**LƯU Ý:** Nếu thiếu thông tin, AI vẫn có thể fix bug nhưng sẽ phải thực hiện thêm bước **Discovery** để tìm kiếm thông tin thiếu (xem Bước 0.5 bên dưới).
+
+- **Loại Bug:** ${FE | BE | Full-stack} (Frontend/Backend/Full-stack) - **BẮT BUỘC**
+- **File đang code:** ${đường dẫn file, ví dụ: `frontend/app/components/Button.tsx` hoặc `backend/apps/users/views.py`} - **Khuyến nghị có**
+- **Chức năng:** ${mô tả chức năng đang làm việc} - **Khuyến nghị có**
+- **Tình trạng hiện tại:** ${mô tả behavior hiện tại} - **Khuyến nghị có**
+- **Vấn đề gặp phải (Bug):** ${mô tả chi tiết bug và cách tái hiện} - **BẮT BUỘC**
+- **Yêu cầu sau fix:** ${mô tả yêu cầu cụ thể cần đạt được} - **Khuyến nghị có**
+- **Environment:** ${development | staging | production} (nếu có) - **Tùy chọn**
+
+## 📤 OUTPUT - Kết Quả Đầu Ra
+
+Sau khi hoàn thành workflow, OUTPUT phải bao gồm:
+
+1. **Code đã fix:** Chỉ code cuối cùng đã được fix và pass test
+2. **Test results:** Kết quả chạy test (PASS/FAIL)
+3. **Impact summary:** Tóm tắt các thay đổi và ảnh hưởng
+4. **Files modified:** Danh sách các file đã sửa đổi
+
+**LƯU Ý:** Không giải thích dài dòng, không viết README, chỉ xuất code và kết quả test.
+
+## ⚙️ Luồng Thực Hiện (Strict Workflow - KHÔNG ĐƯỢC THAY ĐỔI)
+
+Thực hiện tuần tự các bước sau. Nếu bước nào không thể thực hiện, phải báo cáo lại với User.
+
+### Bước 0: Xác Định Loại Bug và Phạm Vi
+
+**BẮT BUỘC** xác định loại bug trước khi bắt đầu:
+
+1. **Frontend Bug (FE):**
+
+   - Bug liên quan đến UI/UX, component rendering, state management
+   - Bug trong React components, hooks, client-side logic
+   - Bug trong API calls từ frontend (nhưng không phải logic backend)
+   - File nằm trong `frontend/` directory
+
+2. **Backend Bug (BE):**
+
+   - Bug liên quan đến API logic, database, business logic
+   - Bug trong Django views, serializers, services, models
+   - Bug trong authentication/authorization
+   - File nằm trong `backend/` directory
+
+3. **Full-stack Bug:**
+   - Bug liên quan đến integration giữa FE và BE
+   - Bug trong API contract (request/response format)
+   - Bug trong data flow từ FE → BE → Database
+   - Cần fix cả FE và BE
+
+**Sau khi xác định, áp dụng workflow tương ứng bên dưới.**
+
+### Bước 0.5: Discovery - Tìm Kiếm Thông Tin Thiếu (Nếu Cần)
+
+**Nếu INPUT thiếu thông tin quan trọng (file path, chức năng, v.v.), BẮT BUỘC thực hiện bước Discovery trước khi vào workflow chính:**
+
+1. **Tìm File Liên Quan:**
+
+   - Sử dụng `codebase_search` để tìm file liên quan đến bug description
+   - Sử dụng `grep` để tìm keywords trong bug description
+   - Sử dụng `glob_file_search` để tìm file theo pattern
+   - Ví dụ: Nếu bug về "paste ảnh vào editor", tìm file có chứa "paste", "image", "editor", "clipboard"
+
+2. **Xác Định Chức Năng:**
+
+   - Đọc code trong file đã tìm để hiểu chức năng
+   - Xác định component/hook/service nào đang xử lý logic liên quan
+
+3. **Tái Hiện Bug:**
+
+   - Nếu không có cách tái hiện cụ thể, phân tích code để suy luận cách bug có thể xảy ra
+   - Tạo test case dựa trên phân tích code
+
+4. **Xác Định Yêu Cầu:**
+   - Nếu không có yêu cầu cụ thể, suy luận từ bug description và behavior mong muốn
+   - Ví dụ: "ảnh bị x2 lên" → yêu cầu: "ảnh chỉ xuất hiện 1 lần"
+
+**Sau khi Discovery xong, tiếp tục với workflow chính bên dưới.**
+
+---
+
+## 🔵 WORKFLOW CHO FRONTEND BUG (FE)
+
+### Pha 0: Setup Test Framework (BẮT BUỘC)
+
+**BẮT BUỘC** kiểm tra và setup test framework trước khi bắt đầu. Nếu chưa có, phải install và config:
+
+1. **Kiểm tra Test Framework:**
+
+   ```bash
+   cd frontend
+   # Kiểm tra package.json xem có test dependencies chưa
+   cat package.json | grep -E "(jest|vitest|@testing-library|playwright|cypress)"
+   ```
+
+2. **Setup Test Framework (Nếu Chưa Có):**
+
+   **BẮT BUỘC** install các packages sau:
+
+   **Unit & Integration Tests:**
+
+   - `jest` hoặc `vitest` (test runner)
+   - `@testing-library/react` (React component testing)
+   - `@testing-library/jest-dom` (DOM matchers)
+   - `@testing-library/user-event` (user interaction simulation)
+   - `@testing-library/react-hooks` (nếu cần test hooks riêng)
+
+   **E2E Tests (BẮT BUỘC cho UI bugs):**
+
+   - `playwright` hoặc `cypress` (E2E testing framework)
+   - `@playwright/test` (nếu chọn Playwright)
+
+   **Install commands:**
+
+   ```bash
+   cd frontend
+
+   # Option 1: Jest (recommended cho Next.js)
+   npm install --save-dev jest @testing-library/react @testing-library/jest-dom @testing-library/user-event jest-environment-jsdom @types/jest
+
+   # Option 2: Vitest (modern alternative)
+   npm install --save-dev vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom @vitest/ui
+
+   # E2E Testing (BẮT BUỘC)
+   npm install --save-dev @playwright/test
+   # hoặc
+   npm install --save-dev cypress
+   ```
+
+3. **Config Test Framework:**
+
+   **Jest Config (`jest.config.js` hoặc trong `package.json`):**
+
+   ```javascript
+   module.exports = {
+     testEnvironment: "jsdom",
+     setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+     moduleNameMapper: {
+       "^@/(.*)$": "<rootDir>/$1",
+     },
+     testMatch: ["**/__tests__/**/*.test.[jt]s?(x)", "**/*.test.[jt]s?(x)"],
+   };
+   ```
+
+   **Jest Setup (`jest.setup.js`):**
+
+   ```javascript
+   import "@testing-library/jest-dom";
+   ```
+
+   **Playwright Config (`playwright.config.ts`):**
+
+   ```typescript
+   import { defineConfig } from "@playwright/test";
+
+   export default defineConfig({
+     testDir: "./e2e",
+     use: {
+       baseURL: "http://localhost:3000",
+     },
+     webServer: {
+       command: "npm run dev",
+       url: "http://localhost:3000",
+     },
+   });
+   ```
+
+4. **Update package.json scripts:**
+
+   ```json
+   {
+     "scripts": {
+       "test": "jest",
+       "test:watch": "jest --watch",
+       "test:coverage": "jest --coverage",
+       "test:e2e": "playwright test",
+       "test:e2e:ui": "playwright test --ui"
+     }
+   }
+   ```
+
+5. **Verify Setup:**
+
+   ```bash
+   cd frontend
+   npm test -- --version  # Verify Jest/Vitest works
+   npx playwright install  # Install Playwright browsers (nếu dùng Playwright)
+   ```
+
+### Pha 1: Phân Tích & Lập Kế Hoạch
+
+1. **Đọc/Hiểu Logic và Impact:**
+
+   - Đọc toàn bộ file component/hook liên quan trong `frontend/` để nắm vững logic.
+   - Đọc các file liên quan:
+     - Component file (`.tsx`)
+     - Custom hooks (`.ts` trong `app/lib/`)
+     - API hooks (`.ts` trong `app/lib/api/hooks/`)
+     - Utils functions (`.ts` trong `app/lib/utils/`)
+     - Types/interfaces (`.ts` trong `types/` hoặc cùng thư mục)
+   - **Khoanh vùng** chính xác nơi có thể gây bug:
+     - Component nào đang có vấn đề?
+     - Hook nào đang được sử dụng?
+     - State management có vấn đề gì?
+     - API call có vấn đề gì?
+   - **Xác định Impact Assessment:**
+     - Components nào khác sử dụng component/hook này?
+     - Có route/page nào khác bị ảnh hưởng không?
+     - Có API hook nào khác bị ảnh hưởng không?
+     - Có utility function nào khác bị ảnh hưởng không?
+
+2. **Tạo Test Set (Verification Test Set):**
+
+   **BẮT BUỘC** tạo đầy đủ 3 loại test: Unit, Integration, và E2E.
+
+   **Cấu trúc test files:**
+
+   - **Unit Tests (Logic & Utils):**
+
+     - **Location:** `frontend/__tests__/unit/bug_fix_${feature_name}.test.ts` hoặc `frontend/test/unit/bug_fix_${feature_name}.test.ts`
+     - **Naming:** `bug_fix_${component_name}_${bug_description}.test.ts`
+     - Test utility functions, hooks logic, pure functions
+
+   - **Integration Tests (Components & Hooks):**
+
+     - **Location:** `frontend/__tests__/integration/bug_fix_${feature_name}.test.tsx` hoặc `frontend/test/integration/bug_fix_${feature_name}.test.tsx`
+     - **Naming:** `bug_fix_${component_name}_${bug_description}.test.tsx`
+     - Test component rendering, state management, API integration
+
+   - **E2E Tests (User Interactions & Full Flow):**
+     - **Location:** `frontend/e2e/bug_fix_${feature_name}.spec.ts` (Playwright) hoặc `frontend/cypress/e2e/bug_fix_${feature_name}.cy.ts` (Cypress)
+     - **Naming:** `bug_fix_${feature_name}.spec.ts` hoặc `bug_fix_${feature_name}.cy.ts`
+     - Test real user interactions: click, type, navigate, etc.
+
+   **Test cases cần có cho MỖI loại test:**
+
+   - **Bug Reproduction Test:**
+
+     - Test case **bắt buộc phải tái hiện được bug** đã mô tả
+     - Unit: Test logic function với input gây bug
+     - Integration: Test component behavior với props/state gây bug
+     - E2E: Test user flow thực tế gây bug (click, type, navigate như người dùng thật)
+     - Test này phải **FAIL** trước khi sửa code
+     - Ví dụ:
+       - Unit: "formatDate should handle invalid date correctly"
+       - Integration: "Component should display error message when API returns 401"
+       - E2E: "User should see error when submitting invalid form"
+
+   - **Impact Test (Non-Regression):**
+
+     - Test case cho tất cả các components/hooks đã xác định trong Impact Assessment
+     - Đảm bảo behavior hiện tại không bị thay đổi
+     - Test các edge cases hiện có
+     - Ví dụ:
+       - Unit: "formatDate should still work with valid dates"
+       - Integration: "Component should still render correctly with existing props"
+       - E2E: "Existing user flow should still work correctly"
+
+   - **Positive Test (New Requirement):**
+     - Test case đảm bảo yêu cầu sau khi fix được đáp ứng
+     - Test happy path và edge cases mới
+     - Ví dụ:
+       - Unit: "formatDate should return correct format after fix"
+       - Integration: "Component should handle loading state correctly"
+       - E2E: "User should successfully complete the flow after fix"
+
+### Pha 2: Thực Thi & Kiểm Thử
+
+3. **Chạy Test Xác Định Bug (Pre-fix Execution):**
+
+   **BẮT BUỘC** chạy tất cả 3 loại test: Unit, Integration, và E2E.
+
+   ```bash
+   cd frontend
+
+   # Unit Tests
+   npm test -- __tests__/unit/bug_fix_${feature_name}.test.ts
+
+   # Integration Tests
+   npm test -- __tests__/integration/bug_fix_${feature_name}.test.tsx
+
+   # E2E Tests
+   npm run test:e2e -- bug_fix_${feature_name}.spec.ts
+   # hoặc với Playwright UI
+   npm run test:e2e:ui
+   ```
+
+   **Yêu cầu:**
+
+   - `Bug Reproduction Test` phải **FAIL** ở tất cả 3 loại test (Unit, Integration, E2E)
+   - Các test còn lại (Impact, Positive) phải phản ánh đúng behavior hiện tại
+   - **E2E test phải tái hiện được bug như người dùng thật:** click, type, navigate, etc.
+   - _Nếu Test không fail như mong đợi, phải chỉnh sửa Test trước, không sửa Code._
+
+4. **Sửa Code (Fixing):**
+
+   **Các bước sửa code:**
+
+   - Xác định root cause của bug
+   - Áp dụng fix theo [Frontend Coding Standards](mdc:frontend_standards.mdc):
+     - **BẮT BUỘC** đọc và tuân thủ tất cả quy tắc trong file standards
+     - Không tự viết lại quy tắc, chỉ tham chiếu và áp dụng
+     - Không break existing functionality
+   - Kiểm tra code quality:
+     - ESLint errors: `cd frontend && npm run lint`
+     - TypeScript errors: `cd frontend && npx tsc --noEmit`
+     - Build success: `cd frontend && npm run build` (nếu cần)
+
+5. **Chạy Test Kiểm Tra Fix (Post-fix Execution):**
+
+   **BẮT BUỘC** chạy lại tất cả 3 loại test và đảm bảo PASS:
+
+   ```bash
+   cd frontend
+
+   # Unit Tests
+   npm test -- __tests__/unit/bug_fix_${feature_name}.test.ts
+
+   # Integration Tests
+   npm test -- __tests__/integration/bug_fix_${feature_name}.test.tsx
+
+   # E2E Tests (BẮT BUỘC - test như người dùng thật)
+   npm run test:e2e -- bug_fix_${feature_name}.spec.ts
+
+   # Chạy tất cả tests cùng lúc
+   npm test && npm run test:e2e
+   ```
+
+   **Yêu cầu:**
+
+   - Toàn bộ Test Case phải **PASS** ở cả 3 loại test (Unit, Integration, E2E)
+   - **E2E test phải verify được fix hoạt động như người dùng thật:** click, type, navigate, etc.
+   - _Nếu không PASS, phải tiếp tục sửa code và chạy lại test cho đến khi PASS._
+   - **Không được skip bất kỳ test nào.**
+
+### Pha 3: Hoàn Thiện & Kết Quả
+
+6. **Clean Code:**
+
+   - Đảm bảo code clean, đúng định dạng:
+     - Format code: `cd frontend && npm run lint -- --fix` (nếu có Prettier)
+     - Kiểm tra ESLint: `cd frontend && npm run lint`
+     - Kiểm tra TypeScript: `cd frontend && npx tsc --noEmit`
+   - **BẮT BUỘC** tuân thủ [Frontend Coding Standards](mdc:frontend_standards.mdc):
+     - Xem lại toàn bộ quy tắc trong file standards
+     - Đảm bảo code đáp ứng tất cả requirements trong PR Review Checklist (Section 7)
+     - Sử dụng checklist trong standards để verify
+   - Comment tiếng Anh ngắn gọn cho hàm/logic quan trọng (theo standards)
+
+7. **Kết Quả Cuối Cùng:**
+   - **Xóa file test** đã tạo trong các thư mục:
+     - `frontend/__tests__/unit/bug_fix_*.test.ts`
+     - `frontend/__tests__/integration/bug_fix_*.test.tsx`
+     - `frontend/e2e/bug_fix_*.spec.ts` hoặc `frontend/cypress/e2e/bug_fix_*.cy.ts`
+   - Xuất ra **CHỈ CODE CUỐI CÙNG** đã được fix và pass test
+   - **Không giải thích, không viết README**
+
+---
+
+## 🟢 WORKFLOW CHO BACKEND BUG (BE)
+
+### Pha 0: Setup Test Framework (BẮT BUỘC)
+
+**BẮT BUỘC** kiểm tra và setup test framework trước khi bắt đầu. Nếu chưa có, phải install và config:
+
+1. **Kiểm tra Test Framework:**
+
+   ```bash
+   cd backend
+   # Kiểm tra requirements.txt hoặc pyproject.toml xem có test dependencies chưa
+   cat requirements.txt | grep -E "(pytest|factory-boy|faker|coverage)"
+   # hoặc
+   python manage.py test --version  # Kiểm tra Django test framework
+   ```
+
+2. **Setup Test Framework (Nếu Chưa Có):**
+
+   **BẮT BUỘC** install các packages sau:
+
+   **Django TestCase (Built-in) hoặc pytest:**
+
+   - `pytest` hoặc sử dụng Django TestCase (built-in)
+   - `pytest-django` (nếu chọn pytest)
+   - `factory-boy` (test data factories)
+   - `faker` (fake data generation)
+   - `coverage` (test coverage)
+   - `pytest-cov` (coverage cho pytest)
+
+   **Install commands:**
+
+   ```bash
+   cd backend
+
+   # Option 1: Django TestCase (built-in, không cần install thêm)
+   # Chỉ cần đảm bảo có factory-boy và faker cho test data
+   pip install factory-boy faker coverage
+
+   # Option 2: pytest (recommended cho advanced testing)
+   pip install pytest pytest-django factory-boy faker coverage pytest-cov
+   ```
+
+3. **Config Test Framework:**
+
+   **pytest.ini hoặc setup.cfg (nếu dùng pytest):**
+
+   ```ini
+   [pytest]
+   DJANGO_SETTINGS_MODULE = config.settings.test
+   python_files = tests.py test_*.py *_tests.py
+   python_classes = Test*
+   python_functions = test_*
+   addopts = --reuse-db --nomigrations
+   ```
+
+   **conftest.py (nếu dùng pytest):**
+
+   ```python
+   import pytest
+   from django.conf import settings
+
+   @pytest.fixture(scope='session')
+   def django_db_setup():
+       settings.DATABASES['default'] = {
+           'ENGINE': 'django.db.backends.sqlite3',
+           'NAME': ':memory:'
+       }
+   ```
+
+4. **Verify Setup:**
+
+   ```bash
+   cd backend
+   # Test Django TestCase
+   python manage.py test --version
+
+   # Hoặc test pytest
+   pytest --version
+   ```
+
+### Pha 1: Phân Tích & Lập Kế Hoạch
+
+1. **Đọc/Hiểu Logic và Impact:**
+
+   - Đọc toàn bộ file liên quan trong `backend/` để nắm vững logic:
+     - Model file (`models.py`)
+     - View file (`views.py`)
+     - Serializer file (`serializers.py`)
+     - Service file (`services/*.py`)
+     - URL routing (`urls.py`)
+     - Related models/services
+   - **Khoanh vùng** chính xác nơi có thể gây bug:
+     - API endpoint nào đang có vấn đề?
+     - Business logic nào đang sai?
+     - Database query nào đang có vấn đề?
+     - Validation nào đang thiếu?
+   - **Xác định Impact Assessment:**
+     - API endpoints nào khác sử dụng service/model này?
+     - Có migration nào cần thiết không?
+     - Có serializers nào khác bị ảnh hưởng không?
+     - Có tests nào khác cần update không?
+
+2. **Tạo Test Set (Verification Test Set):**
+
+   **BẮT BUỘC** tạo đầy đủ test cho: Unit (services/models), Integration (API endpoints), và Database tests.
+
+   **Cấu trúc test files:**
+
+   - **Unit Tests (Services & Models):**
+
+     - **Location:** `backend/apps/{app_name}/tests/unit/test_bug_fix_{feature_name}.py`
+     - **Naming:** `test_bug_fix_{service/model}_{bug_description}.py`
+     - Test service methods, model methods, business logic
+
+   - **Integration Tests (API Endpoints):**
+
+     - **Location:** `backend/apps/{app_name}/tests/integration/test_bug_fix_{feature_name}.py`
+     - **Naming:** `test_bug_fix_{view/endpoint}_{bug_description}.py`
+     - Test API endpoints với request/response, authentication, authorization
+
+   - **Database Tests (Models & Queries):**
+     - **Location:** `backend/apps/{app_name}/tests/db/test_bug_fix_{feature_name}.py`
+     - **Naming:** `test_bug_fix_{model}_{bug_description}.py`
+     - Test database queries, relationships, migrations
+
+   **Format:** Django TestCase hoặc pytest
+
+   **Test cases cần có cho MỖI loại test:**
+
+   - **Bug Reproduction Test:**
+
+     - Test case **bắt buộc phải tái hiện được bug** đã mô tả
+     - Unit: Test service method với input gây bug
+     - Integration: Test API endpoint với request gây bug
+     - Database: Test query/model với data gây bug
+     - Test này phải **FAIL** trước khi sửa code
+     - Sử dụng factory classes để tạo test data
+     - Ví dụ:
+       - Unit: `def test_service_raises_error_when_invalid_data_provided(self):`
+       - Integration: `def test_api_returns_500_when_invalid_data_provided(self):`
+       - Database: `def test_query_returns_incorrect_results(self):`
+
+   - **Impact Test (Non-Regression):**
+
+     - Test case cho tất cả các endpoints/services đã xác định trong Impact Assessment
+     - Đảm bảo behavior hiện tại không bị thay đổi
+     - Test các edge cases hiện có
+     - Ví dụ:
+       - Unit: `def test_existing_service_still_works_correctly(self):`
+       - Integration: `def test_existing_api_still_works_correctly(self):`
+       - Database: `def test_existing_queries_still_work_correctly(self):`
+
+   - **Positive Test (New Requirement):**
+     - Test case đảm bảo yêu cầu sau khi fix được đáp ứng
+     - Test happy path và edge cases mới
+     - Ví dụ:
+       - Unit: `def test_service_returns_correct_result_after_fix(self):`
+       - Integration: `def test_api_returns_correct_response_after_fix(self):`
+       - Database: `def test_query_returns_correct_results_after_fix(self):`
+
+### Pha 2: Thực Thi & Kiểm Thử
+
+3. **Chạy Test Xác Định Bug (Pre-fix Execution):**
+
+   **BẮT BUỘC** chạy tất cả 3 loại test: Unit, Integration, và Database.
+
+   **Với Django TestCase:**
+
+   ```bash
+   cd backend
+
+   # Unit Tests
+   python manage.py test apps.{app_name}.tests.unit.test_bug_fix_{feature_name}
+
+   # Integration Tests
+   python manage.py test apps.{app_name}.tests.integration.test_bug_fix_{feature_name}
+
+   # Database Tests
+   python manage.py test apps.{app_name}.tests.db.test_bug_fix_{feature_name}
+
+   # Chạy tất cả tests trong app
+   python manage.py test apps.{app_name}.tests
+   ```
+
+   **Với pytest:**
+
+   ```bash
+   cd backend
+
+   # Unit Tests
+   pytest apps/{app_name}/tests/unit/test_bug_fix_{feature_name}.py
+
+   # Integration Tests
+   pytest apps/{app_name}/tests/integration/test_bug_fix_{feature_name}.py
+
+   # Database Tests
+   pytest apps/{app_name}/tests/db/test_bug_fix_{feature_name}.py
+
+   # Chạy tất cả tests với coverage
+   pytest apps/{app_name}/tests/ --cov=apps/{app_name} --cov-report=term-missing
+   ```
+
+   **Yêu cầu:**
+
+   - `Bug Reproduction Test` phải **FAIL** ở tất cả 3 loại test (Unit, Integration, Database)
+   - Các test còn lại (Impact, Positive) phải phản ánh đúng behavior hiện tại
+   - _Nếu Test không fail như mong đợi, phải chỉnh sửa Test trước, không sửa Code._
+
+4. **Sửa Code (Fixing):**
+
+   **Các bước sửa code:**
+
+   - Xác định root cause của bug
+   - Áp dụng fix theo [Django Backend Coding Standards](mdc:django_backend_standards.mdc):
+     - **BẮT BUỘC** đọc và tuân thủ tất cả quy tắc trong file standards
+     - Tham khảo các file rules chi tiết trong `backend/docs/rules/` khi cần
+     - Không tự viết lại quy tắc, chỉ tham chiếu và áp dụng
+     - Không break existing functionality
+   - Kiểm tra code quality:
+     - Linter: `flake8`, `black`, `isort` (nếu có)
+     - Type checking: `mypy` (nếu có)
+     - Migration: `python manage.py makemigrations` (nếu thay đổi model)
+
+5. **Chạy Test Kiểm Tra Fix (Post-fix Execution):**
+
+   **BẮT BUỘC** chạy lại tất cả 3 loại test và đảm bảo PASS:
+
+   **Với Django TestCase:**
+
+   ```bash
+   cd backend
+
+   # Unit Tests
+   python manage.py test apps.{app_name}.tests.unit.test_bug_fix_{feature_name}
+
+   # Integration Tests
+   python manage.py test apps.{app_name}.tests.integration.test_bug_fix_{feature_name}
+
+   # Database Tests
+   python manage.py test apps.{app_name}.tests.db.test_bug_fix_{feature_name}
+
+   # Chạy tất cả tests
+   python manage.py test apps.{app_name}.tests
+   ```
+
+   **Với pytest:**
+
+   ```bash
+   cd backend
+
+   # Chạy tất cả tests với coverage
+   pytest apps/{app_name}/tests/ --cov=apps/{app_name} --cov-report=term-missing
+   ```
+
+   **Yêu cầu:**
+
+   - Toàn bộ Test Case phải **PASS** ở cả 3 loại test (Unit, Integration, Database)
+   - _Nếu không PASS, phải tiếp tục sửa code và chạy lại test cho đến khi PASS._
+   - **Không được skip bất kỳ test nào.**
+
+### Pha 3: Hoàn Thiện & Kết Quả
+
+6. **Clean Code:**
+
+   - Đảm bảo code clean, đúng định dạng:
+     - Format code: `black .` (nếu có)
+     - Sort imports: `isort .` (nếu có)
+     - Lint: `flake8 .` (nếu có)
+   - **BẮT BUỘC** tuân thủ [Django Backend Coding Standards](mdc:django_backend_standards.mdc):
+     - Xem lại toàn bộ quy tắc trong file standards
+     - Tham khảo các file rules chi tiết trong `backend/docs/rules/` khi cần
+     - Đảm bảo code đáp ứng tất cả requirements trong các standards documents
+   - Comment tiếng Anh ngắn gọn cho hàm/logic quan trọng (theo standards)
+
+7. **Kết Quả Cuối Cùng:**
+   - **Xóa file test** đã tạo trong các thư mục:
+     - `backend/apps/{app_name}/tests/unit/test_bug_fix_*.py`
+     - `backend/apps/{app_name}/tests/integration/test_bug_fix_*.py`
+     - `backend/apps/{app_name}/tests/db/test_bug_fix_*.py`
+   - Xuất ra **CHỈ CODE CUỐI CÙNG** đã được fix và pass test
+   - **Không giải thích, không viết README**
+
+---
+
+## 🟣 WORKFLOW CHO FULL-STACK BUG
+
+### Pha 0: Setup Test Framework (BẮT BUỘC)
+
+**BẮT BUỘC** setup test framework cho cả FE và BE theo hướng dẫn ở:
+
+- Frontend: Xem **Pha 0** trong **WORKFLOW CHO FRONTEND BUG (FE)**
+- Backend: Xem **Pha 0** trong **WORKFLOW CHO BACKEND BUG (BE)**
+
+**Đảm bảo có:**
+
+- Frontend: Jest/Vitest + React Testing Library + Playwright/Cypress
+- Backend: Django TestCase hoặc pytest + factory-boy + coverage
+
+### Pha 1: Phân Tích & Lập Kế Hoạch
+
+1. **Đọc/Hiểu Logic và Impact:**
+
+   - Đọc toàn bộ file liên quan cả FE và BE:
+     - Frontend: Component, API hooks, types
+     - Backend: API endpoint, serializer, service
+   - **Khoanh vùng** chính xác nơi có thể gây bug:
+     - API contract có vấn đề gì? (request/response format)
+     - Data flow có vấn đề gì? (FE → BE → DB)
+     - Integration point nào đang có vấn đề?
+   - **Xác định Impact Assessment:**
+     - Các API endpoints nào khác bị ảnh hưởng?
+     - Các components nào khác sử dụng API này?
+     - Có breaking changes không?
+
+2. **Tạo Test Set (Verification Test Set):**
+
+   **BẮT BUỘC** tạo test cho cả FE và BE với đầy đủ coverage:
+
+   **Backend Tests:**
+
+   - Unit Tests: `backend/apps/{app_name}/tests/unit/test_bug_fix_{feature_name}.py`
+   - Integration Tests: `backend/apps/{app_name}/tests/integration/test_bug_fix_{feature_name}.py`
+   - Database Tests: `backend/apps/{app_name}/tests/db/test_bug_fix_{feature_name}.py`
+   - Test API endpoint với request/response format, authentication, authorization
+
+   **Frontend Tests:**
+
+   - Unit Tests: `frontend/__tests__/unit/bug_fix_${feature_name}.test.ts`
+   - Integration Tests: `frontend/__tests__/integration/bug_fix_${feature_name}.test.tsx`
+   - E2E Tests: `frontend/e2e/bug_fix_${feature_name}.spec.ts` (Playwright) hoặc `frontend/cypress/e2e/bug_fix_${feature_name}.cy.ts` (Cypress)
+   - Test API hook, component integration, full user flow
+
+   **Integration Tests (FE + BE):**
+
+   - E2E Tests: Test end-to-end flow từ FE → BE → Database
+   - Test real API calls, authentication flow, data persistence
+   - Location: `frontend/e2e/integration/bug_fix_${feature_name}.spec.ts`
+
+### Pha 2: Thực Thi & Kiểm Thử
+
+3. **Chạy Test Xác Định Bug (Pre-fix Execution):**
+
+   **BẮT BUỘC** chạy tất cả tests cho cả FE và BE:
+
+   ```bash
+   # Backend - Unit, Integration, Database Tests
+   cd backend
+   python manage.py test apps.{app_name}.tests.unit.test_bug_fix_{feature_name}
+   python manage.py test apps.{app_name}.tests.integration.test_bug_fix_{feature_name}
+   python manage.py test apps.{app_name}.tests.db.test_bug_fix_{feature_name}
+   # hoặc với pytest
+   pytest apps/{app_name}/tests/ --cov=apps/{app_name}
+
+   # Frontend - Unit, Integration, E2E Tests
+   cd frontend
+   npm test -- __tests__/unit/bug_fix_${feature_name}.test.ts
+   npm test -- __tests__/integration/bug_fix_${feature_name}.test.tsx
+   npm run test:e2e -- bug_fix_${feature_name}.spec.ts
+
+   # Integration E2E Tests (FE + BE)
+   cd frontend
+   npm run test:e2e -- e2e/integration/bug_fix_${feature_name}.spec.ts
+   ```
+
+   **Yêu cầu:**
+
+   - `Bug Reproduction Test` phải **FAIL** ở cả FE và BE (tất cả loại test)
+   - **E2E Integration test phải tái hiện được bug trong flow thực tế:** FE → API → BE → Database
+   - _Nếu Test không fail như mong đợi, phải chỉnh sửa Test trước, không sửa Code._
+
+4. **Sửa Code (Fixing):**
+
+   **Sửa cả FE và BE:**
+
+   - Xác định root cause (có thể ở FE, BE, hoặc cả hai)
+   - Fix Backend trước (nếu cần thay đổi API contract)
+   - Fix Frontend sau (update để match với API mới)
+   - Đảm bảo không break existing functionality
+   - Tuân thủ cả 2 standards:
+     - Frontend: [Frontend Coding Standards](mdc:frontend_standards.mdc)
+     - Backend: [Django Backend Coding Standards](mdc:django_backend_standards.mdc)
+
+5. **Chạy Test Kiểm Tra Fix (Post-fix Execution):**
+
+   **BẮT BUỘC** chạy lại tất cả tests cho cả FE và BE:
+
+   ```bash
+   # Backend - Tất cả loại test
+   cd backend
+   python manage.py test apps.{app_name}.tests
+   # hoặc với pytest
+   pytest apps/{app_name}/tests/ --cov=apps/{app_name} --cov-report=term-missing
+
+   # Frontend - Tất cả loại test
+   cd frontend
+   npm test && npm run test:e2e
+
+   # Integration E2E Tests (FE + BE) - BẮT BUỘC
+   cd frontend
+   npm run test:e2e -- e2e/integration/bug_fix_${feature_name}.spec.ts
+   ```
+
+   **Yêu cầu:**
+
+   - Toàn bộ Test Case phải **PASS** ở cả FE và BE (tất cả loại test)
+   - **E2E Integration test phải verify được fix hoạt động trong flow thực tế:** FE → API → BE → Database
+   - _Nếu không PASS, phải tiếp tục sửa code và chạy lại test cho đến khi PASS._
+   - **Không được skip bất kỳ test nào.**
+
+### Pha 3: Hoàn Thiện & Kết Quả
+
+6. **Clean Code:**
+
+   - **BẮT BUỘC** tuân thủ cả 2 standards:
+     - Frontend: [Frontend Coding Standards](mdc:frontend_standards.mdc)
+     - Backend: [Django Backend Coding Standards](mdc:django_backend_standards.mdc)
+   - Đảm bảo API contract nhất quán giữa FE và BE
+   - Sử dụng checklists trong các file standards để verify
+
+7. **Kết Quả Cuối Cùng:**
+   - **Xóa file test** đã tạo trong các thư mục:
+     - `backend/apps/{app_name}/tests/unit/test_bug_fix_*.py`
+     - `backend/apps/{app_name}/tests/integration/test_bug_fix_*.py`
+     - `backend/apps/{app_name}/tests/db/test_bug_fix_*.py`
+     - `frontend/__tests__/unit/bug_fix_*.test.ts`
+     - `frontend/__tests__/integration/bug_fix_*.test.tsx`
+     - `frontend/e2e/bug_fix_*.spec.ts` hoặc `frontend/cypress/e2e/bug_fix_*.cy.ts`
+     - `frontend/e2e/integration/bug_fix_*.spec.ts`
+   - Xuất ra **CHỈ CODE CUỐI CÙNG** đã được fix và pass test
+   - **Không giải thích, không viết README**
+
+---
+
+## 🔒 Ràng Buộc Bắt Buộc (Constraints)
+
+- **Quy trình:** KHÔNG được thay đổi Luồng Thực Hiện nếu chưa có xác nhận từ User.
+- **Code Integrity:** Code không được gây bug, không ảnh hưởng hệ thống cũ.
+- **Chất lượng:** Code phải clean, đúng convention repo, hiệu năng tốt, tối ưu nhất có thể.
+- **Công cụ:** Được phép dùng `{py, python3, npm, docker exec -it ... bash}` để chạy code.
+- **Phạm vi đọc:** Được phép đọc toàn bộ repo, kể cả các file bảo mật như `.env`.
+- **Test Framework:** **BẮT BUỘC** phải có test framework. Nếu chưa có, phải install và config trước khi bắt đầu fix bug.
+- **Test Coverage:** **BẮT BUỘC** phải tạo và chạy đầy đủ 3 loại test:
+  - **Frontend:** Unit, Integration, E2E (với Playwright/Cypress - test như người dùng thật)
+  - **Backend:** Unit, Integration, Database
+  - **Full-stack:** Tất cả loại test ở cả FE và BE + Integration E2E tests
+- **Test Execution:** **BẮT BUỘC** chạy test trước và sau khi fix. Không được skip bất kỳ test nào.
+- **Test Results:** Test bắt buộc phải chạy được và có kết quả rõ ràng (PASS/FAIL). Khi Test PASS, BẮT BUỘC phải XÓA file test.
+- **E2E Testing:** **BẮT BUỘC** test như người dùng thật: click, type, navigate, submit form, etc. Không được dùng manual testing.
+- **Ngôn ngữ giao tiếp:** Dùng tiếng Việt khi tương tác với User.
+- **Standards:** **BẮT BUỘC** tuân thủ nghiêm ngặt:
+  - [Frontend Coding Standards](mdc:frontend_standards.mdc) cho FE bugs
+  - [Django Backend Coding Standards](mdc:django_backend_standards.mdc) cho BE bugs
+  - Cả 2 standards cho Full-stack bugs
+  - Không tự viết lại quy tắc đã có trong standards, chỉ tham chiếu và áp dụng.
+
+## 📋 Checklist Tổng Hợp
+
+Trước khi kết thúc, đảm bảo:
+
+### Frontend Checklist:
+
+**BẮT BUỘC** sử dụng [Frontend Coding Standards - PR Review Checklist](mdc:frontend_standards.mdc) (Section 7) để verify:
+
+- [ ] Đã setup test framework (Jest/Vitest + React Testing Library + Playwright/Cypress)
+- [ ] Đã tạo đầy đủ 3 loại test: Unit, Integration, E2E
+- [ ] Unit tests đã pass
+- [ ] Integration tests đã pass
+- [ ] E2E tests đã pass (test như người dùng thật: click, type, navigate)
+- [ ] Đã đọc và áp dụng tất cả quy tắc trong [Frontend Coding Standards](mdc:frontend_standards.mdc)
+- [ ] Code đã format với ESLint/Prettier
+- [ ] TypeScript không có errors
+- [ ] Đã check tất cả items trong PR Review Checklist (Section 7.2)
+- [ ] Tất cả test files đã pass và đã xóa
+
+### Backend Checklist:
+
+**BẮT BUỘC** sử dụng [Django Backend Coding Standards](mdc:django_backend_standards.mdc) và các file rules chi tiết để verify:
+
+- [ ] Đã setup test framework (Django TestCase hoặc pytest + factory-boy + coverage)
+- [ ] Đã tạo đầy đủ 3 loại test: Unit, Integration, Database
+- [ ] Unit tests đã pass
+- [ ] Integration tests đã pass
+- [ ] Database tests đã pass
+- [ ] Đã đọc và áp dụng tất cả quy tắc trong [Django Backend Coding Standards](mdc:django_backend_standards.mdc)
+- [ ] Đã tham khảo các file rules chi tiết trong `backend/docs/rules/` khi cần
+- [ ] Code đã format với Black/isort
+- [ ] Linter không có errors
+- [ ] Migration đã tạo (nếu thay đổi model)
+- [ ] Tất cả test files đã pass và đã xóa
+
+### Full-stack Checklist:
+
+- [ ] Đã setup test framework cho cả FE và BE
+- [ ] Đã tạo đầy đủ tất cả loại test (FE: Unit, Integration, E2E; BE: Unit, Integration, Database)
+- [ ] Đã tạo Integration E2E tests (FE + BE)
+- [ ] Tất cả FE tests đã pass (Unit, Integration, E2E)
+- [ ] Tất cả BE tests đã pass (Unit, Integration, Database)
+- [ ] Integration E2E tests đã pass (test flow thực tế: FE → API → BE → Database)
+- [ ] Đã đọc và áp dụng cả 2 standards (FE và BE)
+- [ ] API contract nhất quán
+- [ ] Tất cả test files đã pass và đã xóa

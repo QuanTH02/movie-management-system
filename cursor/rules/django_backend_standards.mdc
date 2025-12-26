@@ -1,0 +1,98 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Django Backend Coding Standards
+
+## Overview
+
+This file defines the coding standards and conventions that must be followed when developing the Django backend of this project. All developers are required to adhere to these standards without exception.
+
+## Required Standards
+
+All backend development must adhere to the comprehensive standards documented in the following files:
+
+1. **Project Structure** - [backend/docs/rules/01_project_structure.md](mdc:../Film_BE/docs/rules/01_project_structure.md)
+
+   - Follow the established directory structure and naming conventions
+   - Organize components according to the documented patterns
+   - Maintain separation of concerns as outlined
+
+2. **Models and Database** - [backend/docs/rules/02_models_and_database.md](mdc:../Film_BE/docs/rules/02_models_and_database.md)
+
+   - All models must inherit from BaseModel
+   - Follow field type, relationship, and migration best practices
+   - Implement proper model methods and querying practices
+
+3. **API Design** - [backend/docs/rules/03_api_design.md](mdc:../Film_BE/docs/rules/03_api_design.md)
+
+   - Maintain consistent URL structure and HTTP method usage
+   - Follow status code and response format standards
+   - Use proper serializer and view implementations
+
+4. **Service Layer** - [backend/docs/rules/04_service_layer.md](mdc:../Film_BE/docs/rules/04_service_layer.md)
+
+   - Separate business logic into service classes
+   - Maintain clear service responsibilities
+   - Follow service implementation patterns
+
+5. **Authentication and Authorization** - [backend/docs/rules/05_authentication_and_authorization.md](mdc:../Film_BE/docs/rules/05_authentication_and_authorization.md)
+
+   - Use JWT authentication as specified
+   - Implement proper permission classes
+   - Follow role-based access control patterns
+
+6. **Testing** - [backend/docs/rules/06_testing_guidelines.md](mdc:../Film_BE/docs/rules/06_testing_guidelines.md)
+
+   - Write comprehensive tests for all components
+   - Use factory classes for test data
+   - Maintain proper test organization and coverage
+
+7. **Error Handling** - [backend/docs/rules/07_error_handling.md](mdc:../Film_BE/docs/rules/07_error_handling.md)
+
+   - Use the custom exception handler
+   - Define and use appropriate custom exceptions
+   - Follow consistent error response formats
+
+8. **Asynchronous Task Processing** - [backend/docs/rules/08_async_task_processing.md](mdc:../Film_BE/docs/rules/08_async_task_processing.md)
+
+   - Use Celery for asynchronous tasks
+   - Follow task implementation and organization patterns
+   - Implement proper task tracking and error handling
+
+9. **Environment Variables and Configuration** - [backend/docs/rules/09_environment_variables_and_config.md](mdc:../Film_BE/docs/rules/09_environment_variables_and_config.md)
+
+   - Use python-dotenv for environment variable management
+   - Follow the configuration hierarchy
+   - Properly handle sensitive information
+
+10. **Code Style and Conventions** - [backend/docs/rules/10_code_style_and_conventions.md](mdc:../Film_BE/docs/rules/10_code_style_and_conventions.md)
+    - Follow PEP 8 with our specific customizations
+    - Organize imports and use type hints
+    - Use appropriate docstrings and comments
+
+## Enforcement
+
+These standards are enforced through:
+
+- Code reviews
+- Pre-commit hooks (Black, isort, Flake8, mypy)
+- CI/CD pipeline checks
+- Development team accountability
+
+## Exceptions
+
+Any deviation from these standards requires:
+
+1. Prior discussion with the development team
+2. Documented justification
+3. Approval from the lead developer
+
+## Questions and Clarifications
+
+If you have questions about these standards or need clarification, please:
+
+1. Consult the detailed rule documents
+2. Discuss with the development team
+3. Propose improvements or clarifications if needed

@@ -1,0 +1,65 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Coding Standards Index
+
+This document serves as an index to all coding standards defined for this project.
+
+## Backend Standards
+
+Our Django backend follows a comprehensive set of guidelines documented in:
+
+- [Django Backend Standards](mdc:django_backend_standards.mdc) - Main reference file for all Django backend developers
+
+These standards point to 10 detailed rule documents:
+
+1. [Project Structure](mdc:../backend/docs/rules/01_project_structure.md)
+2. [Models and Database](mdc:../backend/docs/rules/02_models_and_database.md)
+3. [API Design](mdc:../backend/docs/rules/03_api_design.md)
+4. [Service Layer](mdc:../backend/docs/rules/04_service_layer.md)
+5. [Authentication and Authorization](mdc:../backend/docs/rules/05_authentication_and_authorization.md)
+6. [Testing Guidelines](mdc:../backend/docs/rules/06_testing_guidelines.md)
+7. [Error Handling](mdc:../backend/docs/rules/07_error_handling.md)
+8. [Asynchronous Task Processing](mdc:../backend/docs/rules/08_async_task_processing.md)
+9. [Environment Variables and Configuration](mdc:../backend/docs/rules/09_environment_variables_and_config.md)
+10. [Code Style and Conventions](mdc:../backend/docs/rules/10_code_style_and_conventions.md)
+
+## Frontend Standards
+
+Our Next.js + TypeScript + React frontend follows comprehensive guidelines documented in:
+
+- [Frontend Standards](mdc:frontend_standards.mdc) - Main reference file for all frontend developers
+
+This document covers:
+
+1. **Project Structure** - Directory organization, naming conventions, barrel files
+2. **Component Rules** - Functional components, props, styling, memoization
+3. **Coding Standards** - TypeScript, naming conventions, error handling
+4. **API Communication** - SWR hooks, loading/error states, data caching
+5. **Optimization & Refactoring** - Code cleanup, ES6+ features, performance best practices
+6. **Testing Guidelines** - [Frontend Testing Guidelines](mdc:../frontend/docs/rules/01_testing_guidelines.md) - Comprehensive testing standards for unit, integration, and E2E tests
+
+## How to Use These Standards
+
+1. **For new developers**: Start by reviewing these standards before contributing any code
+2. **During development**: Regularly reference these standards as you write code
+3. **In code reviews**: Use these standards as a checklist for reviewing others' code
+4. **For proposals**: Reference these standards when proposing changes or extensions to the codebase
+
+## Enforcing Standards
+
+Cursor's built-in linting and formatting tools help enforce these standards automatically. The configuration is defined in:
+
+- [Django Backend Standards YAML](mdc:django_backend_standards.yaml) - Configuration for Cursor's enforcement
+
+## Updating Standards
+
+If you identify a need to update or extend these standards:
+
+1. Discuss with the development team
+2. Create a proposal with clear justification
+3. Update the relevant documentation after approval
+4. Communicate changes to the team
