@@ -4,7 +4,7 @@ Handles film review operations.
 """
 
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -39,7 +39,7 @@ class ReviewView(APIView):
     - 404 Not Found: Review or movie not found
     """
 
-    permission_classes = [AllowAny]  # Will be updated with proper auth later
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         movie_name = request.data.get("movie")
@@ -119,7 +119,7 @@ class FilmReviewListView(generics.ListAPIView):
     """
 
     serializer_class = FilmReviewSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny]  # Allow anyone to read reviews
 
     def get_queryset(self):
         movie_id = self.kwargs["movie_id"]

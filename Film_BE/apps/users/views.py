@@ -5,10 +5,11 @@ Handles authentication, account management, and like movie operations.
 
 from django.contrib.auth import login
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.core.exceptions import BusinessLogicException, ResourceNotFoundException
 from apps.movies.serializers import FilmSerializer
@@ -28,7 +29,7 @@ class LoginView(APIView):
     - password (required): User password
 
     Returns:
-    - 200 OK: Login successful
+    - 200 OK: Login successful with JWT tokens
     - 400 Bad Request: Invalid input
     - 401 Unauthorized: Login failed
     """
@@ -46,17 +47,32 @@ class LoginView(APIView):
         username = serializer.validated_data["username"]
         password = serializer.validated_data["password"]
 
-        user = AuthenticationService.authenticate_user(username, password)
+        try:
+            user = AuthenticationService.authenticate_user(username, password)
 
-        if user is not None:
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
             login(request, user)
+
             return Response(
-                {"message": "Successfully logged in."},
+                {
+                    "message": "Successfully logged in.",
+                    "access": access_token,
+                    "refresh": refresh_token,
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                    },
+                },
                 status=status.HTTP_200_OK,
             )
-        else:
+        except BusinessLogicException as e:
             return Response(
-                {"message": "Login failed"},
+                {"message": str(e)},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
@@ -74,7 +90,7 @@ class RegisterView(APIView):
     - confirm_password (required): Password confirmation
 
     Returns:
-    - 201 Created: User registered successfully
+    - 201 Created: User registered successfully with JWT tokens
     - 400 Bad Request: Validation error or account already exists
     """
 
@@ -101,8 +117,22 @@ class RegisterView(APIView):
                 password=password,
             )
 
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
             return Response(
-                {"message": "User successfully registered."},
+                {
+                    "message": "User successfully registered.",
+                    "access": access_token,
+                    "refresh": refresh_token,
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                    },
+                },
                 status=status.HTTP_201_CREATED,
             )
         except BusinessLogicException as e:
@@ -110,6 +140,22 @@ class RegisterView(APIView):
                 {"message": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class TokenRefreshView(TokenRefreshView):
+    """
+    Token refresh endpoint.
+
+    POST:
+    Request body:
+    - refresh (required): Refresh token
+
+    Returns:
+    - 200 OK: New access token
+    - 401 Unauthorized: Invalid refresh token
+    """
+
+    permission_classes = [AllowAny]
 
 
 class AccountView(APIView):
@@ -133,14 +179,16 @@ class AccountView(APIView):
     - 404 Not Found: User not found
     """
 
-    permission_classes = [AllowAny]  # Will be updated with proper auth later
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         current_account = request.query_params.get("currentAccount")
         if not current_account:
+            # If no currentAccount provided, return current user's account
+            serializer = AccountSerializer(request.user)
             return Response(
-                {"message": "currentAccount parameter is required."},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"message": "Successfully", "data": serializer.data},
+                status=status.HTTP_200_OK,
             )
 
         try:
@@ -159,10 +207,8 @@ class AccountView(APIView):
     def post(self, request):
         user_id = request.data.get("pfId")
         if not user_id:
-            return Response(
-                {"message": "pfId is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            # If no pfId provided, update current user
+            user_id = request.user.id
 
         try:
             user = AccountService.update_user_profile(
@@ -188,16 +234,14 @@ class LikeMovieView(APIView):
 
     GET: Get liked movies for a user
     Query parameters:
-    - userName (required): Username
+    - userName (optional): Username (defaults to current user)
 
     POST: Like a movie
     Request body:
-    - userName (required): Username
     - movieName (required): Movie name
 
     DELETE: Unlike a movie
     Request body:
-    - userName (required): Username
     - movieName (required): Movie name
 
     Returns:
@@ -208,15 +252,13 @@ class LikeMovieView(APIView):
     - 404 Not Found: User or movie not found
     """
 
-    permission_classes = [AllowAny]  # Will be updated with proper auth later
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user_name = request.query_params.get("userName")
         if not user_name:
-            return Response(
-                {"message": "userName parameter is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            # Default to current user
+            user_name = request.user.username
 
         try:
             movies = LikeMovieService.get_liked_movies_by_username(user_name)
@@ -232,14 +274,15 @@ class LikeMovieView(APIView):
             )
 
     def post(self, request):
-        user_name = request.data.get("userName")
         movie_name = request.data.get("movieName")
-
-        if not user_name or not movie_name:
+        if not movie_name:
             return Response(
-                {"message": "User name and movie name are required."},
+                {"message": "Movie name is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # Use current user's username
+        user_name = request.user.username
 
         try:
             LikeMovieService.like_movie(user_name, movie_name)
@@ -257,14 +300,15 @@ class LikeMovieView(APIView):
             )
 
     def delete(self, request):
-        user_name = request.data.get("userName")
         movie_name = request.data.get("movieName")
-
-        if not user_name or not movie_name:
+        if not movie_name:
             return Response(
-                {"message": "User name and movie name are required."},
+                {"message": "Movie name is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # Use current user's username
+        user_name = request.user.username
 
         try:
             LikeMovieService.unlike_movie(user_name, movie_name)
