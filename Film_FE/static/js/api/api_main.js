@@ -13,7 +13,7 @@ $(function () {
         // PAGE LOGIN
         // ##############################################################################################################
         // ##############################################################################################################
-        // Login 
+        // Login
         // ##############################################################################################################
         $("#btn-sign-in").on("click", function () {
             var username = document.getElementById("login-account").value;
@@ -45,10 +45,10 @@ $(function () {
                     alert('Error fetching data. See console for details.');
                 });
 
-            // 
+            //
         });
         // ##############################################################################################################
-        // Register 
+        // Register
         // ##############################################################################################################
         $("#btn-sign-up").on("click", function () {
             var username = document.getElementById("register-account").value;
@@ -301,7 +301,7 @@ $(function () {
     if (document.getElementById('page_film')) {
         var movieName = localStorage.getItem('movie_name');
 
-        fetch(`/api/movie/${encodeURIComponent(movieName)}/genres`)
+        fetch(`/api/movie/${encodeURIComponent(movieName)}/genres/`)
             .then(response => {
                 return response.json();
             })
@@ -783,7 +783,7 @@ $(function () {
     }
 
     // ##############################################################################################################
-    // Submit Review 
+    // Submit Review
     // ##############################################################################################################
     var submitReview = document.getElementById('submit-review');
 
@@ -803,7 +803,7 @@ $(function () {
                 return;
             }
 
-            // Gửi Review 
+            // Gửi Review
             fetch('/api/review/', {
                 method: 'POST',
                 headers: {

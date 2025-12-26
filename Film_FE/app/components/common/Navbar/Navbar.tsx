@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import clsx from "clsx";
 import Button from "../Button";
 import Input from "../Input";
@@ -12,17 +12,99 @@ interface NavbarProps {
   currentAccount?: string | null;
 }
 
-function Navbar({ currentAccount }: NavbarProps) {
+function Navbar({ currentAccount: propCurrentAccount }: NavbarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { t, language, setLanguage } = useI18n();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilter, setSearchFilter] = useState("0");
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [currentAccount, setCurrentAccount] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const account = localStorage.getItem("currentAccount");
+      const token = sessionStorage.getItem("access_token");
+      // Only set account if token exists (user is authenticated)
+      return token && account ? account : null;
+    }
+    return propCurrentAccount || null;
+  });
+
+  // Sync with localStorage and prop changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const checkAuth = () => {
+        const account = localStorage.getItem("currentAccount");
+        const token = sessionStorage.getItem("access_token");
+        // Only set account if token exists (user is authenticated)
+        if (token && account) {
+          setCurrentAccount(account);
+        } else {
+          setCurrentAccount(null);
+        }
+      };
+
+      // Check immediately
+      checkAuth();
+
+      // Also check when pathname changes (navigation)
+      if (pathname) {
+        checkAuth();
+      }
+    }
+  }, [propCurrentAccount, pathname]);
+
+  // Also listen for custom storage events (for same-tab updates)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const checkAndUpdate = () => {
+        const account = localStorage.getItem("currentAccount");
+        const token = sessionStorage.getItem("access_token");
+        // Only set account if token exists (user is authenticated)
+        if (token && account) {
+          setCurrentAccount(account);
+        } else {
+          setCurrentAccount(null);
+        }
+      };
+
+      const handleCustomStorageChange = () => {
+        // Small delay to ensure storage is updated
+        setTimeout(checkAndUpdate, 50);
+      };
+
+      // Listen for custom event
+      window.addEventListener("localStorageChange", handleCustomStorageChange);
+
+      // Also check on focus
+      const handleFocus = () => {
+        checkAndUpdate();
+      };
+
+      window.addEventListener("focus", handleFocus);
+
+      // Polling check every second (as fallback)
+      const intervalId = setInterval(checkAndUpdate, 1000);
+
+      return () => {
+        window.removeEventListener(
+          "localStorageChange",
+          handleCustomStorageChange,
+        );
+        window.removeEventListener("focus", handleFocus);
+        clearInterval(intervalId);
+      };
+    }
+  }, []);
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("currentAccount");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("refresh_token");
+      setCurrentAccount(null);
+      // Trigger event to update other components
+      window.dispatchEvent(new Event("localStorageChange"));
       router.push("/login");
     }
     setShowDropdown(false);

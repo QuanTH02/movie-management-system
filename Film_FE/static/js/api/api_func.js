@@ -1,5 +1,19 @@
 // ##############################################################################################################
-// Login 
+// Helper function to get auth headers
+// ##############################################################################################################
+function getAuthHeaders() {
+    const token = sessionStorage.getItem('access_token');
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
+}
+
+// ##############################################################################################################
+// Login
 // ##############################################################################################################
 async function apiLogin(username, password) {
     try {
@@ -19,6 +33,13 @@ async function apiLogin(username, password) {
         }
 
         const data = await response.json();
+        // Save JWT tokens to sessionStorage
+        if (data.access) {
+            sessionStorage.setItem('access_token', data.access);
+        }
+        if (data.refresh) {
+            sessionStorage.setItem('refresh_token', data.refresh);
+        }
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -28,7 +49,7 @@ async function apiLogin(username, password) {
 }
 
 // ##############################################################################################################
-// Register 
+// Register
 // ##############################################################################################################
 async function apiRegister(data_inp) {
     try {
@@ -45,6 +66,13 @@ async function apiRegister(data_inp) {
         }
 
         const data = await response.json();
+        // Save JWT tokens to sessionStorage
+        if (data.access) {
+            sessionStorage.setItem('access_token', data.access);
+        }
+        if (data.refresh) {
+            sessionStorage.setItem('refresh_token', data.refresh);
+        }
         return data;
     } catch (error) {
         console.error('Error:', error);
@@ -76,9 +104,7 @@ async function apiAllAccount(currentAccount) {
     try {
         const response = await fetch(`/api/account/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 currentAccount: currentAccount,
             }),
@@ -102,9 +128,7 @@ async function apiChangeProfile(pfFName, pfLName, pfEmail, pfId) {
     try {
         const response = await fetch(`/api/account/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 pfFName: pfFName,
                 pfLName: pfLName,
@@ -134,7 +158,7 @@ async function apiDetailMovie(movieName) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            
+
         });
         if (!response.ok) {
             throw new Error('Failed to fetch movie detail');
@@ -152,7 +176,7 @@ async function apiDetailMovie(movieName) {
 // ##############################################################################################################
 async function apiGenresMovie(movieName) {
     try {
-        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/genres`);
+        const response = await fetch(`/api/movie/${encodeURIComponent(movieName)}/genres/`);
         if (!response.ok) {
             throw new Error('Failed to fetch genres data');
         }
@@ -184,7 +208,7 @@ async function apiDirectorMovie(movieName) {
 
 
 // ##############################################################################################################
-// Api Return All Writers Movie 
+// Api Return All Writers Movie
 // ##############################################################################################################
 async function apiWritersMovie(movieName) {
     try {
@@ -292,7 +316,7 @@ async function apiCountryOriginMovie(movieName) {
 
 
 // ##############################################################################################################
-// Api Return All Official Sites Movie 
+// Api Return All Official Sites Movie
 // ##############################################################################################################
 async function apiOfficialSitesMovie(movieName) {
     try {
@@ -327,7 +351,7 @@ async function apiLanguageMovie(movieName) {
 }
 
 // ##############################################################################################################
-// Api Return All Filming locations Movie 
+// Api Return All Filming locations Movie
 // ##############################################################################################################
 async function apiFilmingLocationsMovie(movieName) {
     try {
@@ -345,7 +369,7 @@ async function apiFilmingLocationsMovie(movieName) {
 
 
 // ##############################################################################################################
-// Api Return All Production Companies Movie  
+// Api Return All Production Companies Movie
 // ##############################################################################################################
 async function apiProductionCompaniesMovie(movieName) {
     try {
@@ -363,7 +387,7 @@ async function apiProductionCompaniesMovie(movieName) {
 
 
 // ##############################################################################################################
-// Api Return All Box Office Movie  
+// Api Return All Box Office Movie
 // ##############################################################################################################
 async function apiBoxOfficeMovie(movieName) {
     try {
@@ -530,9 +554,7 @@ async function apiSubmitReviewMovie(movieName, currentAccount, starReview, title
     try {
         const response = await fetch('/api/review/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 name_review: currentAccount,
                 star_review: starReview,
@@ -564,9 +586,7 @@ async function apiUpdateReviewMovie(movieName, currentAccount, starReview, title
     try {
         const response = await fetch('/api/review/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 film_review_id: film_review_id,
                 name_review: currentAccount,
@@ -599,9 +619,7 @@ async function apiDeleteReviewMovie(film_review_id) {
     try {
         const response = await fetch('/api/review/', {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 film_review_id: film_review_id,
             }),
@@ -662,9 +680,7 @@ async function apiAddToList(movieName, userName) {
     try {
         const response = await fetch('/api/likemovie/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 userName: userName,
                 movieName: movieName,
@@ -687,9 +703,7 @@ async function apiDeleteMovieLike(movieName, userName) {
     try {
         const response = await fetch('/api/likemovie/', {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 userName: userName,
                 movieName: movieName,
@@ -712,9 +726,7 @@ async function apiGetMovieLikes(userName) {
     try {
         const response = await fetch(`/api/likemovie/?userName=${userName}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         });
 
         if (!response.ok) {

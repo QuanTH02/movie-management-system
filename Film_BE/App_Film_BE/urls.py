@@ -43,6 +43,7 @@ from App_Film_BE.views import (
     SpecialeffectsListView,
     TaglinesListView,
     TicketListView,
+    TicketRoomDetailView,
     TicketRoomListView,
     TrailerMovieView,
     WritersListView,
@@ -96,7 +97,7 @@ urlpatterns = [
     ),
     path("movie/<str:movie_id>/ratingfilm/", RatingFilmListView.as_view(), name="ratingfilm-list"),
     path("movie/<str:movie_id>/soundmix/", SoundMixListView.as_view(), name="soundmix-list"),
-    path("movie/<str:movie_id>/ticketroom/", TicketRoomListView.as_view(), name="ticketroom-list"),
+    path("movie/<str:movie_id>/ticketroom/", TicketRoomDetailView.as_view(), name="ticketroom-detail"),
     # Recommend
     path(
         "recommend/contentbased/<str:movie_id>/",

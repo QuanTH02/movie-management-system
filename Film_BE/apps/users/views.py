@@ -4,6 +4,8 @@ Handles authentication, account management, and like movie operations.
 """
 
 from django.contrib.auth import login
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -19,6 +21,7 @@ from apps.users.services.authentication_service import AuthenticationService
 from apps.users.services.like_movie_service import LikeMovieService
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LoginView(APIView):
     """
     User login endpoint.
@@ -50,6 +53,13 @@ class LoginView(APIView):
         try:
             user = AuthenticationService.authenticate_user(username, password)
 
+            # Check if user is None (authentication failed)
+            if user is None:
+                return Response(
+                    {"message": "Invalid username or password."},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
@@ -77,6 +87,7 @@ class LoginView(APIView):
             )
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RegisterView(APIView):
     """
     User registration endpoint.

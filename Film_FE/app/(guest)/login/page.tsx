@@ -43,8 +43,32 @@ function LoginPage() {
   const { trigger: loginTrigger } = useLogin({
     onSuccess: (data) => {
       if (data?.message === "Successfully logged in.") {
-        toast.success(t.login.loginSuccessful);
-        router.push("/");
+        // Save JWT tokens to sessionStorage
+        if (typeof window !== "undefined") {
+          if (data.access) {
+            sessionStorage.setItem("access_token", data.access);
+          }
+          if (data.refresh) {
+            sessionStorage.setItem("refresh_token", data.refresh);
+          }
+          // Get username from user object or directly from data
+          const username = data.user?.username || data.username || "";
+          if (username) {
+            localStorage.setItem("currentAccount", username);
+          }
+
+          // Force immediate update
+          toast.success(t.login.loginSuccessful);
+
+          // Trigger custom event to update components in same tab
+          window.dispatchEvent(new Event("localStorageChange"));
+
+          // Small delay to ensure state is updated, then navigate
+          setTimeout(() => {
+            router.push("/");
+            router.refresh();
+          }, 100);
+        }
       }
     },
     onError: (error) => {
@@ -53,15 +77,10 @@ function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await loginTrigger({
+    await loginTrigger({
       username: data.username,
       password: data.password,
     });
-    if (result?.message === "Successfully logged in.") {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("currentAccount", data.username);
-      }
-    }
   };
 
   return (

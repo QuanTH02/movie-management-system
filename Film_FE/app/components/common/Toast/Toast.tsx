@@ -39,31 +39,31 @@ function Toast({ toast, onRemove }: ToastProps) {
     switch (toast.type) {
       case "success":
         return {
-          bg: "bg-success-DEFAULT/10",
-          border: "border-success-DEFAULT/30",
-          text: "text-success-DEFAULT",
-          icon: "text-success-DEFAULT",
+          bg: "bg-[#10b981]/10",
+          border: "border-[#10b981]/30",
+          text: "text-[#10b981]",
+          icon: "text-[#10b981]",
         };
       case "error":
         return {
-          bg: "bg-error-DEFAULT/10",
-          border: "border-error-DEFAULT/30",
-          text: "text-error-DEFAULT",
-          icon: "text-error-DEFAULT",
+          bg: "bg-[#ef4444]/10",
+          border: "border-[#ef4444]/30",
+          text: "text-[#ef4444]",
+          icon: "text-[#ef4444]",
         };
       case "warning":
         return {
-          bg: "bg-warning-DEFAULT/10",
-          border: "border-warning-DEFAULT/30",
-          text: "text-warning-DEFAULT",
-          icon: "text-warning-DEFAULT",
+          bg: "bg-[#f59e0b]/10",
+          border: "border-[#f59e0b]/30",
+          text: "text-[#f59e0b]",
+          icon: "text-[#f59e0b]",
         };
       case "info":
         return {
-          bg: "bg-primary-600/10",
-          border: "border-primary-600/30",
-          text: "text-primary-600",
-          icon: "text-primary-600",
+          bg: "bg-[#3b82f6]/10",
+          border: "border-[#3b82f6]/30",
+          text: "text-[#3b82f6]",
+          icon: "text-[#3b82f6]",
         };
       default:
         return {

@@ -30,6 +30,14 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   message: string;
+  access?: string;
+  refresh?: string;
+  user?: {
+    id: number;
+    username: string;
+    email: string;
+  };
+  username?: string; // For backward compatibility
 }
 
 export interface RegisterRequest {
@@ -42,6 +50,8 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   message: string;
+  access?: string;
+  refresh?: string;
 }
 
 export interface ApiResponse<T> {
@@ -67,4 +77,3 @@ export interface LikeMovieRequest {
   userName: string;
   movieName: string;
 }
-

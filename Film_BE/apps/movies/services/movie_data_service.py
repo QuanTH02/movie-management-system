@@ -128,11 +128,13 @@ class MovieDataService:
         # Sort by gross value descending
         ticket_rooms_with_gross.sort(key=lambda x: x[1], reverse=True)
 
-        # Get top movies
+        # Get top movies (with error handling for None movie)
         top_ticket_rooms = ticket_rooms_with_gross[:limit]
-        movie_ids = [tr[0].movie.movie_id for tr in top_ticket_rooms if tr[0].movie]
+        movie_ids = [tr[0].movie.movie_id for tr in top_ticket_rooms if tr[0].movie and tr[0].movie.movie_id]
 
         # Return movies in order
+        if not movie_ids:
+            return []
         movies = Movieinformation.objects.filter(movie_id__in=movie_ids)
         movie_dict = {movie.movie_id: movie for movie in movies}
         return [movie_dict[mid] for mid in movie_ids if mid in movie_dict]

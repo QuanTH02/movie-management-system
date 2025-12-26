@@ -123,6 +123,10 @@ class MovieDetailView(APIView):
     """
     Get movie detail by ID or name.
 
+    GET:
+    URL parameter:
+    - movie_id: Movie ID or name (from URL)
+
     POST:
     Request body:
     - movie_id (optional): Movie ID or name
@@ -137,7 +141,24 @@ class MovieDetailView(APIView):
 
     permission_classes = [AllowAny]
 
+    def get(self, request, movie_id):
+        """GET method to retrieve movie detail by ID or name from URL."""
+        try:
+            movie = MovieQueryService.get_movie_by_id_or_name(movie_id)
+            processed_movie = MovieDataService.process_movie_votes_and_rating(movie)
+            serializer = FilmSerializer(processed_movie)
+            return Response(
+                {"message": "Successfully", "data": [serializer.data]},
+                status=status.HTTP_200_OK,
+            )
+        except ResourceNotFoundException as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
     def post(self, request, movie_id=None):
+        """POST method for backward compatibility."""
         movie_identifier = movie_id or request.data.get("movie_id")
         if not movie_identifier:
             return Response(
@@ -150,7 +171,7 @@ class MovieDetailView(APIView):
             processed_movie = MovieDataService.process_movie_votes_and_rating(movie)
             serializer = FilmSerializer(processed_movie)
             return Response(
-                {"message": "Successfully", "data": serializer.data},
+                {"message": "Successfully", "data": [serializer.data]},
                 status=status.HTTP_200_OK,
             )
         except ResourceNotFoundException as e:
@@ -219,8 +240,16 @@ class TicketRoomDetailView(APIView):
             ticket_rooms = TicketRoom.objects.filter(movie__movie_id=movie.movie_id)
             processed_ticket_rooms = [MovieDataService.process_ticket_room_gross(tr) for tr in ticket_rooms]
 
-            # Get top grossing movies
-            top_movies = MovieDataService.get_top_grossing_movies(limit=12)
+            # Get top grossing movies (with error handling)
+            try:
+                top_movies = MovieDataService.get_top_grossing_movies(limit=12)
+            except Exception as e:
+                # Log error but don't fail the request
+                import logging
+
+                logger = logging.getLogger(__name__)
+                logger.warning(f"Error getting top grossing movies: {str(e)}")
+                top_movies = []
 
             ticket_serializer = TicketRoomSerializer(processed_ticket_rooms, many=True)
             movie_serializer = FilmSerializer(top_movies, many=True)
@@ -237,6 +266,15 @@ class TicketRoomDetailView(APIView):
             return Response(
                 {"message": str(e)},
                 status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in TicketRoomDetailView: {str(e)}", exc_info=True)
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 

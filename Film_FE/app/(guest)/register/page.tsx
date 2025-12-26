@@ -44,6 +44,15 @@ function RegisterPage() {
 
   const { trigger: registerTrigger } = useRegister({
     onSuccess: (data) => {
+      // Save JWT tokens to sessionStorage if provided
+      if (typeof window !== "undefined") {
+        if (data.access) {
+          sessionStorage.setItem("access_token", data.access);
+        }
+        if (data.refresh) {
+          sessionStorage.setItem("refresh_token", data.refresh);
+        }
+      }
       toast.success(data?.message || t.register.registrationSuccessful);
       setTimeout(() => {
         router.push("/login");

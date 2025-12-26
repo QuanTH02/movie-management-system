@@ -35,11 +35,18 @@ export default function useApi() {
     }
 
     try {
+      // Get JWT token from sessionStorage (client-side only)
+      const token =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("access_token")
+          : null;
+
       // Call backend directly - no Next.js proxy
       const response = await fetch(apiUrl, {
         ...options,
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
           ...options?.headers,
         },
         credentials: "include",

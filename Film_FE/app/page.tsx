@@ -35,7 +35,65 @@ function HomePage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setCurrentAccount(localStorage.getItem("currentAccount"));
+      const account = localStorage.getItem("currentAccount");
+      const token = sessionStorage.getItem("access_token");
+      // Only set account if token exists (user is authenticated)
+      if (token && account) {
+        setCurrentAccount(account);
+      } else {
+        setCurrentAccount(null);
+      }
+
+      // Listen for storage changes (e.g., after login on another tab)
+      const handleStorageChange = () => {
+        const account = localStorage.getItem("currentAccount");
+        const token = sessionStorage.getItem("access_token");
+        // Only set account if token exists (user is authenticated)
+        if (token && account) {
+          setCurrentAccount(account);
+        } else {
+          setCurrentAccount(null);
+        }
+      };
+
+      window.addEventListener("storage", handleStorageChange);
+
+      // Listen for custom event (same-tab updates)
+      const handleCustomStorageChange = () => {
+        const account = localStorage.getItem("currentAccount");
+        const token = sessionStorage.getItem("access_token");
+        // Only set account if token exists (user is authenticated)
+        if (token && account) {
+          setCurrentAccount(account);
+        } else {
+          setCurrentAccount(null);
+        }
+      };
+
+      window.addEventListener("localStorageChange", handleCustomStorageChange);
+
+      // Also check on focus (when user comes back to tab)
+      const handleFocus = () => {
+        const account = localStorage.getItem("currentAccount");
+        const token = sessionStorage.getItem("access_token");
+        // Only set account if token exists (user is authenticated)
+        if (token && account) {
+          setCurrentAccount(account);
+        } else {
+          setCurrentAccount(null);
+        }
+      };
+
+      window.addEventListener("focus", handleFocus);
+
+      return () => {
+        window.removeEventListener("storage", handleStorageChange);
+        window.removeEventListener(
+          "localStorageChange",
+          handleCustomStorageChange,
+        );
+        window.removeEventListener("focus", handleFocus);
+      };
     }
   }, []);
 
