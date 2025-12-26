@@ -9,9 +9,12 @@ from apps.users.views import AccountView, LikeMovieView, LoginView, RegisterView
 app_name = "users"
 
 urlpatterns = [
+    # Authentication endpoints
     path("login/", LoginView.as_view(), name="login"),
     path("register/", RegisterView.as_view(), name="register"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
+    # User account endpoints
     path("account/", AccountView.as_view(), name="account"),
-    path("like-movie/", LikeMovieView.as_view(), name="like-movie"),
+    # User likes endpoints
+    path("liked-movies/", LikeMovieView.as_view(), name="liked-movies"),
 ]

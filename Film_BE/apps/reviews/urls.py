@@ -9,6 +9,8 @@ from apps.reviews.views import FilmReviewListView, ReviewView
 app_name = "reviews"
 
 urlpatterns = [
-    path("", ReviewView.as_view(), name="review"),
-    path("movie/<str:movie_id>/", FilmReviewListView.as_view(), name="film-review-list"),
+    # Review management endpoints
+    path("", ReviewView.as_view(), name="review-list"),
+    # Movie reviews endpoints
+    path("movies/<str:movie_id>/", FilmReviewListView.as_view(), name="movie-reviews"),
 ]

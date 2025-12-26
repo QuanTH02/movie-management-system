@@ -111,6 +111,6 @@ urlpatterns = [
     # Trailer and Img
     path("movie/<str:movie_id>/linktrailer/", TrailerMovieView.as_view(), name="link_trailer_movie"),
     path("movie/<str:movie_id>/linkimg/", ImgMovieView.as_view(), name="link_img_movie"),
-    # Like movie
+    # Like movie (backward compatibility - also available at /api/v1/users/liked-movies/)
     path("likemovie/", LikeMovieView.as_view(), name="like_movie"),
 ]
