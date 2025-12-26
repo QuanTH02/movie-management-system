@@ -100,22 +100,137 @@ class ProjectSerializer(serializers.ModelSerializer):
 - Implement appropriate permissions
 - Document with docstrings
 - Include proper error handling
+- **Views handle all request/response logic**: Views are responsible for:
+  - Parsing and validating request data
+  - Calling service methods with extracted parameters
+  - Handling service exceptions and converting to appropriate HTTP responses
+  - Formatting response data using serializers
+  - Setting appropriate HTTP status codes
+- **Services handle business logic only**: Services should not depend on request objects
+- **Schema generation**: Views should use proper serializers and docstrings to enable automatic schema generation for frontend
+
+### View Responsibilities
+
+Views are responsible for:
+1. **Request handling**: Parse request data, validate with serializers, extract parameters
+2. **Service invocation**: Call service methods with extracted parameters (not request objects)
+3. **Response formatting**: Use serializers to format response data
+4. **Error handling**: Catch service exceptions and return appropriate HTTP responses
+5. **Status codes**: Set correct HTTP status codes
+6. **Documentation**: Include docstrings for API documentation and schema generation
+
+### Example View with Service:
 
 ```python
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+from apps.projects.models import Project
+from apps.projects.serializers import ProjectSerializer, ProjectMemberSerializer
+from apps.projects.services.project_service import ProjectService
+from apps.core.exceptions import ResourceNotFoundException, BusinessLogicException
+
+
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     API endpoint for managing projects.
+    
+    list:
+    Return a list of all projects for the authenticated user.
+    
+    retrieve:
+    Return the given project.
+    
+    create:
+    Create a new project.
+    
+    update:
+    Update an existing project.
+    
+    destroy:
+    Delete a project.
     """
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsProjectMemberOrOwner]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        """Get queryset of projects for the current user."""
         return Project.objects.filter(
             members=self.request.user
         ).order_by('-created_at')
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, created_by=self.request.user)
+    def create(self, request, *args, **kwargs):
+        """
+        Create a new project.
+        
+        Request body:
+        - name (required): Project name
+        - description (optional): Project description
+        - is_active (optional): Whether project is active
+        
+        Returns:
+        - 201 Created: Project created successfully
+        - 400 Bad Request: Validation error
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            data = serializer.validated_data
+            project = ProjectService.create_project(
+                name=data['name'],
+                description=data.get('description', ''),
+                owner=request.user,
+                is_active=data.get('is_active', True)
+            )
+            response_serializer = self.get_serializer(project)
+            return Response(
+                {"message": "Project created successfully", "data": response_serializer.data},
+                status=status.HTTP_201_CREATED
+            )
+        except BusinessLogicException as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @action(detail=True, methods=['post'], serializer_class=ProjectMemberSerializer)
+    def add_member(self, request, pk=None):
+        """
+        Add a member to the project.
+        
+        Request body:
+        - user_id (required): ID of user to add
+        
+        Returns:
+        - 200 OK: Member added successfully
+        - 400 Bad Request: Validation error or business logic error
+        - 404 Not Found: Project or user not found
+        """
+        project = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            user_id = serializer.validated_data['user_id']
+            user = User.objects.get(id=user_id)
+            ProjectService.add_member(project, user, request.user)
+            return Response(
+                {"message": "Member added successfully"},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except BusinessLogicException as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 ```
 
 ## Authentication

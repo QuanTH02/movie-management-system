@@ -115,9 +115,17 @@ class ProjectService:
 ## Using Services in Views
 
 - Import and use services in view classes
-- Pass explicit parameters to service methods
+- **Pass explicit parameters to service methods** (never pass request objects)
 - Handle service exceptions and return appropriate responses
 - Keep view logic focused on request/response handling
+- **Views extract data from request, services process business logic**
+
+### Key Principles
+
+1. **Views extract data from requests**: Views parse request.data, validate with serializers, extract parameters
+2. **Services receive explicit parameters**: Services methods take specific parameters (strings, integers, model instances), not request objects
+3. **Views format responses**: Views use serializers to format response data and set HTTP status codes
+4. **Services return domain objects**: Services return model instances or domain objects, not HTTP responses
 
 ### Example View Using a Service:
 
