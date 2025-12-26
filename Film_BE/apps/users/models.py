@@ -17,6 +17,9 @@ class FollowFilmUser(models.Model):
     movie = models.ForeignKey("movies.Movieinformation", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_view = models.IntegerField(default=0)
+    aggregate_rating = models.IntegerField(
+        default=0, help_text="Aggregate rating from user activities (max rating from all activities)"
+    )
 
     class Meta:
         db_table = "follow_film_user"

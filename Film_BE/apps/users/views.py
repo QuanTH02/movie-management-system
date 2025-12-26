@@ -15,10 +15,11 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.core.exceptions import BusinessLogicException, ResourceNotFoundException
 from apps.movies.serializers import FilmSerializer
-from apps.users.serializers import AccountSerializer, LoginSerializer, RegisterSerializer
+from apps.users.serializers import AccountSerializer, LoginSerializer, RegisterSerializer, TrackActivitySerializer
 from apps.users.services.account_service import AccountService
 from apps.users.services.authentication_service import AuthenticationService
 from apps.users.services.like_movie_service import LikeMovieService
+from apps.users.services.user_activity_tracking_service import UserActivityTrackingService
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -334,4 +335,48 @@ class LikeMovieView(APIView):
             return Response(
                 {"message": str(e)},
                 status=status_code,
+            )
+
+
+class TrackActivityView(APIView):
+    """
+    Track user activity endpoint.
+
+    POST: Track user activity
+    Request body:
+    - movieName (required): Movie name
+    - activityType (required): Activity type (VIEW_DETAIL, CLICK_CARD, VIEW_TRAILER, SEARCH_CLICK)
+
+    Returns:
+    - 201 Created: Activity tracked successfully
+    - 400 Bad Request: Validation error
+    - 404 Not Found: User or movie not found
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = TrackActivitySerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {"message": "Invalid input.", "errors": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        movie_name = serializer.validated_data["movieName"]
+        activity_type = serializer.validated_data["activityType"]
+
+        # Use current user's username
+        username = request.user.username
+
+        try:
+            UserActivityTrackingService.track_activity(username, movie_name, activity_type)
+            return Response(
+                {"message": "Activity tracked successfully."},
+                status=status.HTTP_201_CREATED,
+            )
+        except ResourceNotFoundException as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_404_NOT_FOUND,
             )

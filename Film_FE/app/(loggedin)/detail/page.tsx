@@ -33,6 +33,7 @@ import {
   useGetMovieLocations,
   useGetMovieCompanies,
   useGetRecommendContentBased,
+  useTrackActivity,
 } from "@/app/lib/api/hooks";
 import { useI18n, translate } from "@/app/lib/i18n";
 import type { Movie } from "@/types/api.types";
@@ -63,6 +64,7 @@ function DetailContent() {
     isLoading: isLoadingDetail,
     error: detailError,
   } = useGetMovieDetail(movieName);
+  const { trigger: trackActivity } = useTrackActivity();
   const { data: genres } = useGetMovieGenres(movieName);
   const { data: directors } = useGetMovieDirectors(movieName);
   const { data: trailers } = useGetMovieTrailers(movieName);
@@ -98,6 +100,13 @@ function DetailContent() {
 
     return null;
   }, [movieDetail]);
+
+  // Track VIEW_DETAIL activity when movie is loaded and user is logged in
+  useEffect(() => {
+    if (movie && movieName && currentAccount) {
+      trackActivity({ movieName, activityType: "VIEW_DETAIL" });
+    }
+  }, [movie, movieName, currentAccount, trackActivity]);
 
   const mainTrailer = useMemo(() => {
     if (trailers && trailers.length > 0) {

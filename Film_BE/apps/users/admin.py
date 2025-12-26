@@ -11,9 +11,9 @@ from apps.users.models import FollowFilmUser, LikeMovie
 class FollowFilmUserAdmin(admin.ModelAdmin):
     """Admin for FollowFilmUser model."""
 
-    list_display = ["follow_id", "user", "movie", "total_view"]
+    list_display = ["follow_id", "user", "movie", "total_view", "aggregate_rating"]
     search_fields = ["user__username", "movie__movie_name"]
-    list_filter = ["total_view"]
+    list_filter = ["total_view", "aggregate_rating"]
 
 
 @admin.register(LikeMovie)

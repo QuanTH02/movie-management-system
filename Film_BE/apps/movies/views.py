@@ -338,6 +338,50 @@ class RecommendCollaborativeView(APIView):
             )
 
 
+class RecommendRealtimeView(APIView):
+    """
+    Get realtime movie recommendations based on user activity tracking.
+    No model training required - uses simple content-based matching.
+
+    GET:
+    URL parameter:
+    - user_id: User ID or username
+
+    Query parameters:
+    - limit: Maximum number of recommendations (default: 12)
+    - min_rating: Minimum aggregate_rating to consider (default: 3)
+
+    Returns:
+    - 200 OK: List of recommended movies
+    - 404 Not Found: User not found or recommendation error
+    """
+
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        try:
+            limit = int(request.query_params.get("limit", 12))
+            min_rating = int(request.query_params.get("min_rating", 3))
+            recommended_movies = RecommendationService.get_realtime_recommendations(
+                user_id, limit=limit, min_rating=min_rating
+            )
+            serializer = FilmSerializer(recommended_movies, many=True)
+            return Response(
+                {"message": "Successfully", "data": serializer.data},
+                status=status.HTTP_200_OK,
+            )
+        except ValueError:
+            return Response(
+                {"message": "Invalid limit or min_rating parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except ResourceNotFoundException as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+
 class TrailerLinkView(APIView):
     """
     Get trailer link from page URL.

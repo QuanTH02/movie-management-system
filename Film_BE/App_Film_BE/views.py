@@ -35,6 +35,7 @@ from apps.movies.views import (
     ProductionCompaniesListView,
     RecommendCollaborativeView,
     RecommendContentBasedView,
+    RecommendRealtimeView,
     SoundMixListView,
     SpecialeffectsListView,
     TaglinesListView,
@@ -47,7 +48,7 @@ from apps.reviews.views import FilmReviewListView, ReviewView
 
 # Import views from new apps for backward compatibility
 from apps.users.views import AccountView as AccountListView
-from apps.users.views import LikeMovieView, LoginView, RegisterView
+from apps.users.views import LikeMovieView, LoginView, RegisterView, TrackActivityView
 
 # Alias for backward compatibility - TicketListView is the same as TicketRoomListView
 TicketListView = TicketRoomListView

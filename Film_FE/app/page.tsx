@@ -8,6 +8,7 @@ import Container from "@/app/components/common/Container";
 import {
   useGetAllMovies,
   useGetRecommendCollaborative,
+  useGetRecommendRealtime,
   useGetTopRevenue,
   useAddToList,
 } from "@/app/lib/api/hooks";
@@ -21,8 +22,10 @@ function HomePage() {
   const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const { data: movies, error, isLoading } = useGetAllMovies();
-  const { data: recommendedMovies } =
+  const { data: recommendedMoviesCollaborative } =
     useGetRecommendCollaborative(currentAccount);
+  const { data: recommendedMoviesRealtime } =
+    useGetRecommendRealtime(currentAccount);
   const { data: topRevenueData } = useGetTopRevenue();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
@@ -229,15 +232,40 @@ function HomePage() {
                 </a>
               </div>
             )}
-            {currentAccount &&
-              recommendedMovies &&
-              recommendedMovies.length > 0 && (
-                <MovieCarousel
-                  movies={recommendedMovies.slice(0, 12)}
-                  title={t.home.forYou}
-                  onAddToList={handleAddToList}
-                />
-              )}
+            {currentAccount && (
+              <>
+                {/* Realtime recommendations (prioritized) */}
+                {recommendedMoviesRealtime &&
+                  recommendedMoviesRealtime.length > 0 && (
+                    <div key="realtime-recommendations">
+                      <MovieCarousel
+                        movies={recommendedMoviesRealtime.slice(0, 12)}
+                        title={t.home.basedOnYourActivity}
+                        onAddToList={handleAddToList}
+                      />
+                    </div>
+                  )}
+                {/* Collaborative recommendations (fallback or additional) */}
+                {recommendedMoviesCollaborative &&
+                  recommendedMoviesCollaborative.length > 0 && (
+                    <div
+                      key="collaborative-recommendations"
+                      className={
+                        recommendedMoviesRealtime &&
+                        recommendedMoviesRealtime.length > 0
+                          ? "mt-8"
+                          : ""
+                      }
+                    >
+                      <MovieCarousel
+                        movies={recommendedMoviesCollaborative.slice(0, 12)}
+                        title={t.home.forYou}
+                        onAddToList={handleAddToList}
+                      />
+                    </div>
+                  )}
+              </>
+            )}
           </div>
 
           {/* Most Popular */}

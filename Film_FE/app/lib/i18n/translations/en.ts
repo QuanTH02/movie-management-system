@@ -78,6 +78,7 @@ export const en = {
       "To get personalized recommendations, please log in",
     login: "Login",
     forYou: "For You",
+    basedOnYourActivity: "Based on Your Activity",
     mostPopular: "Most Popular",
     highestRated: "Highest Rated",
     highestRevenue: "Highest Revenue",

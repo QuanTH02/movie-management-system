@@ -32,6 +32,7 @@ from apps.movies.views import (
     ProductionCompaniesListView,
     RecommendCollaborativeView,
     RecommendContentBasedView,
+    RecommendRealtimeView,
     SoundMixListView,
     SpecialeffectsListView,
     TaglinesListView,
@@ -57,6 +58,7 @@ urlpatterns = [
     path(
         "recommend/collaborative/<str:user_id>/", RecommendCollaborativeView.as_view(), name="recommend-collaborative"
     ),
+    path("recommend/realtime/<str:user_id>/", RecommendRealtimeView.as_view(), name="recommend-realtime"),
     # Media
     path("trailer-link/<path:link_page_trailer>/", TrailerLinkView.as_view(), name="trailer-link"),
     path("<str:movie_id>/trailer/", MovieTrailerView.as_view(), name="movie-trailer"),

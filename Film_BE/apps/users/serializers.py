@@ -57,3 +57,10 @@ class LikeMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = LikeMovie
         fields = "__all__"
+
+
+class TrackActivitySerializer(serializers.Serializer):
+    """Serializer for tracking user activity."""
+
+    movieName = serializers.CharField()
+    activityType = serializers.ChoiceField(choices=["VIEW_DETAIL", "CLICK_CARD", "VIEW_TRAILER", "SEARCH_CLICK"])

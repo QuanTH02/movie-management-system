@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/app/lib/i18n";
+import { useTrackActivity } from "@/app/lib/api/hooks";
 import Card from "../Card";
 import Button from "../Button";
 import type { Movie } from "@/types/api.types";
@@ -15,12 +16,22 @@ interface MovieCardProps {
 function MovieCard({ movie, onAddToList }: MovieCardProps) {
   const { t } = useI18n();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+  const { trigger: trackActivity } = useTrackActivity();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentAccount(localStorage.getItem("currentAccount"));
     }
   }, []);
+
+  const handleCardClick = () => {
+    if (currentAccount && movie.movie_name) {
+      trackActivity({
+        movieName: movie.movie_name,
+        activityType: "CLICK_CARD",
+      });
+    }
+  };
 
   const handleAddToList = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,7 +48,7 @@ function MovieCard({ movie, onAddToList }: MovieCardProps) {
   const detailUrl = `/detail?movie=${encodeURIComponent(movie.movie_name)}`;
 
   return (
-    <Link href={detailUrl} className="group block">
+    <Link href={detailUrl} className="group block" onClick={handleCardClick}>
       <Card
         hover
         className="h-full flex flex-col overflow-hidden transform transition-all duration-hover group-hover:scale-105"

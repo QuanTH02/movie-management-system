@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/app/lib/i18n";
+import { useTrackActivity } from "@/app/lib/api/hooks";
 import type { Movie } from "@/types/api.types";
 
 interface MovieMediaProps {
@@ -12,6 +14,21 @@ interface MovieMediaProps {
 
 function MovieMedia({ movie, mainTrailer, movieName }: MovieMediaProps) {
   const { t } = useI18n();
+  const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+  const { trigger: trackActivity } = useTrackActivity();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentAccount(localStorage.getItem("currentAccount"));
+    }
+  }, []);
+
+  const handleVideoPlay = () => {
+    if (currentAccount && movieName) {
+      trackActivity({ movieName, activityType: "VIEW_TRAILER" });
+    }
+  };
+
   return (
     <div className="grid grid-cols-12 gap-4 mb-6">
       {/* Movie Poster */}
@@ -57,7 +74,11 @@ function MovieMedia({ movie, mainTrailer, movieName }: MovieMediaProps) {
       {/* Trailer */}
       <div className="col-span-12 md:col-span-7">
         {mainTrailer && (
-          <video controls className="w-full h-auto rounded-card">
+          <video
+            controls
+            className="w-full h-auto rounded-card"
+            onPlay={handleVideoPlay}
+          >
             <source src={mainTrailer} type="video/mp4" />
             {t.detail.videoNotSupported}
           </video>

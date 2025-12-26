@@ -4,7 +4,7 @@ URL configuration for users app.
 
 from django.urls import path
 
-from apps.users.views import AccountView, LikeMovieView, LoginView, RegisterView, TokenRefreshView
+from apps.users.views import AccountView, LikeMovieView, LoginView, RegisterView, TokenRefreshView, TrackActivityView
 
 app_name = "users"
 
@@ -17,4 +17,6 @@ urlpatterns = [
     path("account/", AccountView.as_view(), name="account"),
     # User likes endpoints
     path("liked-movies/", LikeMovieView.as_view(), name="liked-movies"),
+    # User activity tracking endpoints
+    path("track-activity/", TrackActivityView.as_view(), name="track-activity"),
 ]

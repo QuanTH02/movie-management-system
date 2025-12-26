@@ -77,3 +77,8 @@ export interface LikeMovieRequest {
   userName: string;
   movieName: string;
 }
+
+export interface TrackActivityRequest {
+  movieName: string;
+  activityType: "VIEW_DETAIL" | "CLICK_CARD" | "VIEW_TRAILER" | "SEARCH_CLICK";
+}

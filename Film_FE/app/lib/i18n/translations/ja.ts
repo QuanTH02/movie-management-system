@@ -78,6 +78,7 @@ export const ja = {
       "パーソナライズされたおすすめを取得するには、ログインしてください",
     login: "ログイン",
     forYou: "あなたへのおすすめ",
+    basedOnYourActivity: "あなたの行動に基づく",
     mostPopular: "最も人気",
     highestRated: "最高評価",
     highestRevenue: "最高収益",
