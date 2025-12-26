@@ -306,6 +306,22 @@ export const en = {
       loadingReviews: "Loading reviews...",
       by: "by",
     },
+    rating: {
+      backToMovie: "← Back to Movie",
+      rating: "Rating",
+      ratingTitle: "Rating",
+      loading: "Loading...",
+      ratingLabel: "RATING",
+      notAvailable: "N/A",
+      votes: "votes",
+      ratingDistribution: "Rating Distribution",
+      ratingDistributionDescription:
+        "Distribution of votes across different star ratings",
+      starRating: "Star Rating",
+      numberOfVotes: "Number of Votes",
+      stars: "stars",
+      noRatingData: "No rating data available for this movie.",
+    },
     setting: {
       settings: "Settings",
       appearance: "Appearance",

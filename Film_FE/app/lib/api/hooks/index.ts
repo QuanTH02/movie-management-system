@@ -12,6 +12,7 @@ export { default as useGetTopRevenue } from "./useGetTopRevenue";
 export { default as useAddToList } from "./useAddToList";
 export { default as useGetMovieCast } from "./useGetMovieCast";
 export { default as useGetMovieWriters } from "./useGetMovieWriters";
+export { default as useGetMovieRating } from "./useGetMovieRating";
 export { default as useGetMovieTaglines } from "./useGetMovieTaglines";
 export { default as useGetMovieDidYouKnow } from "./useGetMovieDidYouKnow";
 export { default as useGetMovieReviews } from "./useGetMovieReviews";
