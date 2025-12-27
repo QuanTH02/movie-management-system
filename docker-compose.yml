@@ -48,6 +48,7 @@ services:
     volumes:
       # Mount source code for hot reload
       - ./Film_BE:/app
+    entrypoint: ["/app/docker-entrypoint.sh"]
     command: >
       sh -c "
         echo 'Waiting for MySQL...' &&

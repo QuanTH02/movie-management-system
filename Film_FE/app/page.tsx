@@ -21,11 +21,14 @@ function HomePage() {
   const { t } = useI18n();
   const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const { data: movies, error, isLoading } = useGetAllMovies();
-  const { data: recommendedMoviesCollaborative } =
-    useGetRecommendCollaborative(currentAccount);
-  const { data: recommendedMoviesRealtime } =
-    useGetRecommendRealtime(currentAccount);
+  const { data: recommendedMoviesCollaborative } = useGetRecommendCollaborative(
+    isMounted ? currentAccount : null,
+  );
+  const { data: recommendedMoviesRealtime } = useGetRecommendRealtime(
+    isMounted ? currentAccount : null,
+  );
   const { data: topRevenueData } = useGetTopRevenue();
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
@@ -37,6 +40,7 @@ function HomePage() {
   });
 
   useEffect(() => {
+    setIsMounted(true);
     if (typeof window !== "undefined") {
       const account = localStorage.getItem("currentAccount");
       const token = sessionStorage.getItem("access_token");
@@ -145,7 +149,7 @@ function HomePage() {
   if (isLoading) {
     return (
       <>
-        <Navbar currentAccount={currentAccount} />
+        <Navbar />
         <div className="bg-dark-bg pt-20 pb-16">
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
@@ -163,7 +167,7 @@ function HomePage() {
   if (error) {
     return (
       <>
-        <Navbar currentAccount={currentAccount} />
+        <Navbar />
         <div className="bg-dark-bg pt-20 pb-16">
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
@@ -183,7 +187,7 @@ function HomePage() {
   if (!movies || movies.length === 0) {
     return (
       <>
-        <Navbar currentAccount={currentAccount} />
+        <Navbar />
         <div className="bg-dark-bg pt-20 pb-16">
           <Container>
             <div className="flex flex-col items-center justify-center py-20">
@@ -202,7 +206,7 @@ function HomePage() {
 
   return (
     <>
-      <Navbar currentAccount={currentAccount} />
+      <Navbar />
       <div className="bg-dark-bg pt-20 pb-16">
         <Container>
           {/* Banner Carousel */}
@@ -212,61 +216,61 @@ function HomePage() {
             </div>
           )}
 
-          {/* Recommendations Section */}
-          <div className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-dark-text">
-                {t.home.recommendations}
-              </h2>
-            </div>
-            {!currentAccount && (
-              <div className="bg-dark-card rounded-card p-6 text-center mb-6">
-                <p className="text-dark-text-secondary mb-2">
-                  {t.home.loginForRecommendations}
-                </p>
-                <a
-                  href="/login"
-                  className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
-                >
-                  {t.home.login} →
-                </a>
+          {/* Recommendations Section - Only render after mount */}
+          {isMounted ? (
+            <div className="mb-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-dark-text">
+                  {t.home.recommendations}
+                </h2>
               </div>
-            )}
-            {currentAccount && (
-              <>
-                {/* Realtime recommendations (prioritized) */}
-                {recommendedMoviesRealtime &&
-                  recommendedMoviesRealtime.length > 0 && (
-                    <div key="realtime-recommendations">
+              {!currentAccount ? (
+                <div className="bg-dark-card rounded-card p-6 text-center mb-6">
+                  <p className="text-dark-text-secondary mb-2">
+                    {t.home.loginForRecommendations}
+                  </p>
+                  <a
+                    href="/login"
+                    className="text-primary-600 hover:text-primary-700 transition-colors duration-hover font-semibold"
+                  >
+                    {t.home.login} →
+                  </a>
+                </div>
+              ) : (
+                <>
+                  {/* Realtime recommendations (prioritized) */}
+                  {recommendedMoviesRealtime &&
+                    recommendedMoviesRealtime.length > 0 && (
                       <MovieCarousel
+                        key="realtime-recommendations"
                         movies={recommendedMoviesRealtime.slice(0, 12)}
                         title={t.home.basedOnYourActivity}
                         onAddToList={handleAddToList}
                       />
-                    </div>
-                  )}
-                {/* Collaborative recommendations (fallback or additional) */}
-                {recommendedMoviesCollaborative &&
-                  recommendedMoviesCollaborative.length > 0 && (
-                    <div
-                      key="collaborative-recommendations"
-                      className={
-                        recommendedMoviesRealtime &&
-                        recommendedMoviesRealtime.length > 0
-                          ? "mt-8"
-                          : ""
-                      }
-                    >
-                      <MovieCarousel
-                        movies={recommendedMoviesCollaborative.slice(0, 12)}
-                        title={t.home.forYou}
-                        onAddToList={handleAddToList}
-                      />
-                    </div>
-                  )}
-              </>
-            )}
-          </div>
+                    )}
+                  {/* Collaborative recommendations (fallback or additional) */}
+                  {recommendedMoviesCollaborative &&
+                    recommendedMoviesCollaborative.length > 0 && (
+                      <div
+                        className={
+                          recommendedMoviesRealtime &&
+                          recommendedMoviesRealtime.length > 0
+                            ? "mt-8"
+                            : ""
+                        }
+                      >
+                        <MovieCarousel
+                          key="collaborative-recommendations"
+                          movies={recommendedMoviesCollaborative.slice(0, 12)}
+                          title={t.home.forYou}
+                          onAddToList={handleAddToList}
+                        />
+                      </div>
+                    )}
+                </>
+              )}
+            </div>
+          ) : null}
 
           {/* Most Popular */}
           {mostPopularMovies.length > 0 && (

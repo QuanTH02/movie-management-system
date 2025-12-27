@@ -10,8 +10,9 @@ ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 COPY package*.json ./
 
 # Install all dependencies (including devDependencies for dev mode)
-# Use npm install for dev mode to be more flexible with lock file
-RUN npm install
+# Use npm install for dev mode to handle lock file sync issues
+RUN npm install --no-audit && \
+    npm list recharts >/dev/null 2>&1 && echo "recharts verified" || (echo "recharts not found, installing..." && npm install recharts --no-audit)
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/

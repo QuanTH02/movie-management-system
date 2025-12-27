@@ -20,18 +20,14 @@ function Navbar({ currentAccount: propCurrentAccount }: NavbarProps) {
   const [searchFilter, setSearchFilter] = useState("0");
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
-  const [currentAccount, setCurrentAccount] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      const account = localStorage.getItem("currentAccount");
-      const token = sessionStorage.getItem("access_token");
-      // Only set account if token exists (user is authenticated)
-      return token && account ? account : null;
-    }
-    return propCurrentAccount || null;
-  });
+  const [currentAccount, setCurrentAccount] = useState<string | null>(
+    propCurrentAccount || null,
+  );
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Sync with localStorage and prop changes
+  // Mount check and sync with localStorage
   useEffect(() => {
+    setIsMounted(true);
     if (typeof window !== "undefined") {
       const checkAuth = () => {
         const account = localStorage.getItem("currentAccount");
@@ -244,7 +240,7 @@ function Navbar({ currentAccount: propCurrentAccount }: NavbarProps) {
               <i className="fas fa-moon text-lg" />
             </button>
 
-            {currentAccount ? (
+            {isMounted && currentAccount ? (
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}

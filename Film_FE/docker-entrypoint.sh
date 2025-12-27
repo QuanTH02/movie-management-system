@@ -1,22 +1,30 @@
 #!/bin/sh
 set -e
 
-echo "Checking node_modules..."
+echo "Checking node_modules and dependencies..."
 
-# Check if node_modules exists and has react-hook-form
-if [ ! -d "node_modules" ] || [ ! -d "node_modules/react-hook-form" ]; then
-  echo "node_modules missing or incomplete, installing dependencies..."
-  npm install
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+  echo "node_modules not found, installing all dependencies..."
+  npm install --no-audit
 else
-  echo "node_modules exists, checking for missing packages..."
-  # Check if react-hook-form is installed
-  if ! npm list react-hook-form >/dev/null 2>&1; then
-    echo "react-hook-form not found, installing dependencies..."
-    npm install
+  # Verify critical packages are installed
+  MISSING_PACKAGES=""
+  for pkg in react react-dom next recharts swr; do
+    if ! npm list "$pkg" >/dev/null 2>&1; then
+      MISSING_PACKAGES="$MISSING_PACKAGES $pkg"
+    fi
+  done
+
+  if [ -n "$MISSING_PACKAGES" ]; then
+    echo "Missing packages detected: $MISSING_PACKAGES"
+    echo "Installing missing dependencies..."
+    npm install --no-audit
   else
-    echo "All dependencies are installed."
+    echo "All critical dependencies are installed."
   fi
 fi
 
+echo "Dependencies check completed."
 echo "Starting Next.js dev server..."
 exec "$@"
