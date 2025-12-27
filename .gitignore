@@ -22,6 +22,7 @@ venv/
 .venv/
 ENV/
 env/
+.env
 
 # Node
 node_modules/
@@ -46,3 +47,7 @@ Thumbs.db
 
 # Husky
 .husky/_
+
+# Embeddings
+Film_BE/embeddings/
+*.pkl

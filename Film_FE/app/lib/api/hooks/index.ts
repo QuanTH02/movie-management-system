@@ -26,3 +26,4 @@ export { default as useGetMovieImages } from "./useGetMovieImages";
 export { default as useGetLikedMovies } from "./useGetLikedMovies";
 export { default as useDeleteLikedMovie } from "./useDeleteLikedMovie";
 export { default as useTrackActivity } from "./useTrackActivity";
+export { default as useNaturalLanguageSearch } from "./useNaturalLanguageSearch";

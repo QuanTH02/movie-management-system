@@ -17,7 +17,17 @@ function BrowsePage() {
     "name",
   );
   const [filterGenre, setFilterGenre] = useState<string>("all");
-  const { data: movies, isLoading, error } = useGetAllMovies();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 50;
+  const {
+    data: moviesResponse,
+    isLoading,
+    error,
+  } = useGetAllMovies(currentPage, pageSize);
+
+  // Extract movies and pagination from response
+  const movies = moviesResponse?.data || [];
+  const pagination = moviesResponse?.pagination;
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
       toast.success(t.home.movieAddedToList);
@@ -169,15 +179,59 @@ function BrowsePage() {
 
           {/* Movies Grid */}
           {sortedAndFilteredMovies.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {sortedAndFilteredMovies.map((movie) => (
-                <MovieCard
-                  key={movie.movie_id}
-                  movie={movie}
-                  onAddToList={handleAddToList}
-                />
-              ))}
-            </div>
+            <>
+              <div className="mb-4 text-dark-text-secondary">
+                {pagination
+                  ? `Showing ${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, pagination.total_count)} of ${pagination.total_count} movies`
+                  : `Showing ${sortedAndFilteredMovies.length} movies`}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-8">
+                {sortedAndFilteredMovies.map((movie) => (
+                  <MovieCard
+                    key={movie.movie_id}
+                    movie={movie}
+                    onAddToList={handleAddToList}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {pagination && pagination.total_pages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-8">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={!pagination.has_previous}
+                    className={`px-4 py-2 rounded-input text-sm font-medium transition-colors ${
+                      pagination.has_previous
+                        ? "bg-primary-600 text-white hover:bg-primary-700"
+                        : "bg-dark-card text-dark-text-secondary cursor-not-allowed"
+                    }`}
+                  >
+                    Previous
+                  </button>
+                  <span className="text-dark-text-secondary">
+                    Page {pagination.page} of {pagination.total_pages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCurrentPage((p) =>
+                        Math.min(pagination.total_pages, p + 1),
+                      )
+                    }
+                    disabled={!pagination.has_next}
+                    className={`px-4 py-2 rounded-input text-sm font-medium transition-colors ${
+                      pagination.has_next
+                        ? "bg-primary-600 text-white hover:bg-primary-700"
+                        : "bg-dark-card text-dark-text-secondary cursor-not-allowed"
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-20">
               <p className="text-dark-text-secondary text-lg">

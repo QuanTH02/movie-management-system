@@ -28,6 +28,7 @@ from apps.movies.views import MovieImageView as ImgMovieView
 from apps.movies.views import MovieTrailerView as TrailerMovieView
 from apps.movies.views import (
     MusicListView,
+    NaturalLanguageSearchView,
     NegativeFormatListView,
     OfficialSiteListView,
     PrintedFilmFormatListView,

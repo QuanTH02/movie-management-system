@@ -29,6 +29,7 @@ from App_Film_BE.views import (
     LoginView,
     MovieListView,
     MusicListView,
+    NaturalLanguageSearchView,
     NegativeFormatListView,
     OfficialSiteListView,
     PrintedFilmFormatListView,
@@ -60,6 +61,7 @@ urlpatterns = [
     path("ticketroom/", TicketListView.as_view(), name="ticketroom-list"),
     path("review/", ReviewView.as_view(), name="review"),
     path("film/", FilmListView.as_view(), name="film-list"),
+    path("film/search/natural/", NaturalLanguageSearchView.as_view(), name="natural-search"),
     path("account/", AccountListView.as_view(), name="account-list"),
     # Bảng trung gian
     path("movie/<str:movie_id>/award/", AwardsListView.as_view(), name="award-list"),

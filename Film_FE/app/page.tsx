@@ -22,7 +22,8 @@ function HomePage() {
   const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const { data: movies, error, isLoading } = useGetAllMovies();
+  const { data: moviesResponse, error, isLoading } = useGetAllMovies(1, 50);
+  const movies = moviesResponse?.data || [];
   const { data: recommendedMoviesCollaborative } = useGetRecommendCollaborative(
     isMounted ? currentAccount : null,
   );

@@ -13,7 +13,8 @@ function ContentPage() {
   const { t } = useI18n();
   const toast = useToast();
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
-  const { data: movies, isLoading } = useGetAllMovies();
+  const { data: moviesResponse, isLoading } = useGetAllMovies(1, 50);
+  const movies = moviesResponse?.data || [];
   const { trigger: addToListTrigger } = useAddToList({
     onSuccess: () => {
       toast.success(t.home.movieAddedToList);

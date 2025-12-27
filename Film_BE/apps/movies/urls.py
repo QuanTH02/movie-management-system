@@ -1,6 +1,4 @@
-"""
-URL configuration for movies app.
-"""
+"""URL configuration for movies app."""
 
 from django.urls import path
 
@@ -25,6 +23,7 @@ from apps.movies.views import (
     MovieImageView,
     MovieTrailerView,
     MusicListView,
+    NaturalLanguageSearchView,
     NegativeFormatListView,
     OfficialSiteListView,
     PrintedFilmFormatListView,
@@ -47,6 +46,7 @@ app_name = "movies"
 urlpatterns = [
     # Movie list and detail
     path("", FilmListView.as_view(), name="film-list"),
+    path("search/natural/", NaturalLanguageSearchView.as_view(), name="natural-search"),
     path("<str:movie_id>/", MovieDetailView.as_view(), name="movie-detail"),
     # Ticket room
     path("ticket-room/", TicketRoomListView.as_view(), name="ticket-room-list"),

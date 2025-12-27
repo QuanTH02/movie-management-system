@@ -85,36 +85,64 @@ from apps.movies.serializers import (
     TicketRoomSerializer,
     WritersSerializer,
 )
+from apps.movies.services.ai_query_service import AIQueryService
 from apps.movies.services.movie_data_service import MovieDataService
+from apps.movies.services.movie_filter_service import MovieFilterService
 from apps.movies.services.movie_query_service import MovieQueryService
 from apps.movies.services.recommendation_service import RecommendationService
+from apps.movies.services.vector_search_service import VectorSearchService
 
 
 class FilmListView(APIView):
     """
-    List all movies endpoint.
+    List all movies endpoint with pagination.
 
     GET:
-    Returns a list of all movies with processed votes and ratings.
+    Query parameters:
+    - page: Page number (default: 1)
+    - page_size: Items per page (default: 50, max: 50)
 
     Returns:
-    - 200 OK: List of movies
+    - 200 OK: Paginated list of movies
     """
 
     permission_classes = [AllowAny]
 
     def get(self, request):
+        page = int(request.query_params.get("page", 1))
+        page_size = min(int(request.query_params.get("page_size", 50)), 50)  # Max 50 per page
+
         queryset = Movieinformation.objects.all()
+
+        # Calculate pagination
+        total_count = queryset.count()
+        total_pages = (total_count + page_size - 1) // page_size if total_count > 0 else 0
+        start_index = (page - 1) * page_size
+        end_index = start_index + page_size
+
+        # Get paginated movies
+        paginated_movies = queryset[start_index:end_index]
 
         # Process votes and ratings for each movie
         processed_movies = []
-        for movie in queryset:
+        for movie in paginated_movies:
             processed_movie = MovieDataService.process_movie_votes_and_rating(movie)
             processed_movies.append(processed_movie)
 
         serializer = FilmSerializer(processed_movies, many=True)
         return Response(
-            {"message": "Successfully", "data": serializer.data},
+            {
+                "message": "Successfully",
+                "data": serializer.data,
+                "pagination": {
+                    "page": page,
+                    "page_size": page_size,
+                    "total_count": total_count,
+                    "total_pages": total_pages,
+                    "has_next": page < total_pages,
+                    "has_previous": page > 1,
+                },
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -772,3 +800,127 @@ class SoundMixListView(MovieMetadataListView):
 
     def get_queryset_by_movie(self, movie):
         return SoundMix.objects.filter(movie__movie_id=movie.movie_id)
+
+
+class NaturalLanguageSearchView(APIView):
+    """
+    Natural language search for movies.
+
+    POST:
+    Request body:
+    - query: Natural language search query
+
+    Returns:
+    - 200 OK: List of filtered movies
+    - 400 Bad Request: Missing or invalid query
+    - 500 Internal Server Error: Error processing search
+    """
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        """Handle natural language search request."""
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"Natural language search request received: {request.data}")
+
+        query = request.data.get("query")
+        page = int(request.data.get("page", 1))
+        page_size = min(int(request.data.get("page_size", 50)), 50)  # Max 50 per page
+
+        if not query or not isinstance(query, str) or not query.strip():
+            logger.warning("Empty query received")
+            return Response(
+                {"message": "Query is required and must be a non-empty string."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            logger.info(f"Analyzing query with AI: {query.strip()}")
+
+            # Use vector search for semantic similarity
+            vector_results = VectorSearchService.search_movies(query.strip(), top_k=200, min_similarity=0.2)
+            logger.info(f"Vector search found {len(vector_results)} similar movies")
+
+            # Also use AI filter for structured search
+            filter_data = AIQueryService.analyze_query(query.strip())
+            logger.info(f"AI filter data: {filter_data}")
+
+            # Filter movies based on AI analysis
+            filtered_movies = MovieFilterService.filter_movies(filter_data)
+            filtered_movie_ids = set(filtered_movies.values_list("movie_id", flat=True))
+            logger.info(f"Filter search found {len(filtered_movie_ids)} movies")
+
+            # Combine vector search and filter results
+            # Priority: movies that match both vector search and filters (sorted by similarity)
+            vector_movie_dict = {movie.movie_id: (movie, sim) for movie, sim in vector_results}
+            vector_movie_ids = set(vector_movie_dict.keys())
+
+            # Movies that match both (highest priority)
+            both_match_ids = vector_movie_ids & filtered_movie_ids
+            both_movies = [(vector_movie_dict[mid][0], vector_movie_dict[mid][1]) for mid in both_match_ids]
+            both_movies.sort(key=lambda x: x[1], reverse=True)  # Sort by similarity
+
+            # Movies that match vector search only (medium priority)
+            vector_only_ids = vector_movie_ids - filtered_movie_ids
+            vector_only_movies = [(vector_movie_dict[mid][0], vector_movie_dict[mid][1]) for mid in vector_only_ids]
+            vector_only_movies.sort(key=lambda x: x[1], reverse=True)
+
+            # Movies that match filter only (lowest priority)
+            filter_only_ids = filtered_movie_ids - vector_movie_ids
+            filter_only_movies = list(Movieinformation.objects.filter(movie_id__in=filter_only_ids))
+
+            # Combine: both matches first, then vector-only, then filter-only
+            combined_movies = []
+            combined_movies.extend([movie for movie, _ in both_movies])
+            combined_movies.extend([movie for movie, _ in vector_only_movies[:50]])  # Limit vector-only
+            combined_movies.extend(filter_only_movies[:50])  # Limit filter-only
+
+            # If no results from either method, return empty
+            if not combined_movies:
+                total_count = 0
+                paginated_movies = []
+            else:
+                # Calculate pagination on combined movies list
+                total_count = len(combined_movies)
+                total_pages = (total_count + page_size - 1) // page_size if total_count > 0 else 0
+                start_index = (page - 1) * page_size
+                end_index = start_index + page_size
+                paginated_movies = combined_movies[start_index:end_index]
+
+            # Process votes and ratings for each movie
+            processed_movies = []
+            for movie in paginated_movies:
+                processed_movie = MovieDataService.process_movie_votes_and_rating(movie)
+                processed_movies.append(processed_movie)
+
+            # Serialize results
+            serializer = FilmSerializer(processed_movies, many=True)
+
+            return Response(
+                {
+                    "message": "Successfully",
+                    "data": serializer.data,
+                    "pagination": {
+                        "page": page,
+                        "page_size": page_size,
+                        "total_count": total_count,
+                        "total_pages": total_pages,
+                        "has_next": page < total_pages,
+                        "has_previous": page > 1,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in natural language search: {str(e)}", exc_info=True)
+
+            return Response(
+                {"message": "Error processing natural language search."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

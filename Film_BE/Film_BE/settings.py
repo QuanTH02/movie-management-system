@@ -191,3 +191,7 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
 }
+
+# AI API Configuration
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GPT_API_KEY = os.environ.get("GPT_API_KEY") or os.environ.get("OPENAI_API_KEY", "")

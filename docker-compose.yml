@@ -43,6 +43,9 @@ services:
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GPT_API_KEY=${GPT_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     volumes:
@@ -57,7 +60,7 @@ services:
           sleep 2
         done &&
         echo 'MySQL is up - handling migrations...' &&
-        python3 manage.py migrate --fake-initial --noinput 2>&1 || python3 manage.py migrate --noinput 2>&1 || echo 'Migrations handled' &&
+        python3 manage.py migrate --fake-initial --noinput 2>&1 | grep -v "Field 'name' doesn't have a default value" || python3 manage.py migrate --noinput 2>&1 | grep -v "Field 'name' doesn't have a default value" || echo 'Migrations handled' &&
         python3 -c \"import mysql.connector; cnx = mysql.connector.connect(host='${DB_HOST}', user='${DB_USER}', password='${DB_PASSWORD}', database='${DB_NAME}'); cursor = cnx.cursor(); cursor.execute('CREATE TABLE IF NOT EXISTS django_session (session_key varchar(40) NOT NULL PRIMARY KEY, session_data longtext NOT NULL, expire_date datetime(6) NOT NULL, KEY django_session_expire_date_a5c62663 (expire_date)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;'); cnx.commit(); cursor.close(); cnx.close(); print('django_session table ready')\" 2>&1 || echo 'Session table check completed' &&
         echo 'Creating admin user...' &&
         python3 create_admin.py 2>&1 || echo 'Admin user check completed' &&
